@@ -1,6 +1,6 @@
 ; Identical to lesson 13's boot sector, but the %included files have new paths
 [org 0x7c00]
-KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
+KERNEL_OFFSET equ 0x200 ; The same one we used when linking the kernel
 
     mov [BOOT_DRIVE], dl ; Remember that the BIOS sets us the boot drive in 'dl' on boot
     mov bp, 0x9000
@@ -33,7 +33,7 @@ KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
 
 [bits 16]
 load_kernel:
-    mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
+    mov bx, KERNEL_OFFSET ; Read from disk and store in 0x512
     mov dh, 16 ; Our future kernel will be larger, make this big
     mov dl, [BOOT_DRIVE]
     
