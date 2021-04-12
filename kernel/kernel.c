@@ -2,19 +2,49 @@
 
 mode_info_t* mode_info;
 
+unsigned char* buffer1;
+unsigned char* buffer2;
+unsigned long* buffer1_long;
+unsigned long* buffer2_long;
+int pixels_in_bytes;
+
 static void putpixel(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
-    unsigned char* screen = (unsigned char*)mode_info->buffer;
     unsigned where = x * mode_info->bpp / 8 + y * mode_info->resolutionX * mode_info->bpp / 8;
-    screen[where] = b;
-    screen[where + 1] = g;
-    screen[where + 2] = r;
+    buffer2[where] = b;
+    buffer2[where + 1] = g;
+    buffer2[where + 2] = r;
+}
+
+void swapBuffers() {
+    for(int i = 0; i < pixels_in_bytes; i++)
+        buffer1[i] = buffer2[i];
 }
 
 void main(mode_info_t* mode_info_) {
     mode_info = mode_info_;
-    for(int x = 0; x < mode_info->resolutionX; x++)
-        for(int y = 0; y < mode_info->resolutionY; y++)
-            putpixel(x, y, 255, 100, 255);
+    
+    buffer1 = (unsigned char*)mode_info->buffer;
+    buffer2 = (unsigned char*)mode_info->buffer + mode_info->resolutionX * mode_info->resolutionY * mode_info->bpp / 8;
+    buffer1_long = (unsigned long*) buffer1;
+    //buffer2_long = (unsigned long*) buffer2;
+    pixels_in_bytes = mode_info->resolutionX * mode_info->resolutionY * mode_info->bpp / 8 / 4;
+    
+    for(int i = 0; i < 30; i++) {
+        for(int x = 0; x < mode_info->resolutionX; x++)
+            for(int y = 0; y < mode_info->resolutionY; y++)
+                putpixel(x, y, 255, 100, 255);
+        
+        swapBuffers();
+        
+        for(int x = 0; x < mode_info->resolutionX; x++)
+            for(int y = 0; y < mode_info->resolutionY; y++)
+                putpixel(x, y, 100, 255, 100);
+        
+        swapBuffers();
+        
+        //swapBuffers(255);
+        //swapBuffers(0);
+    }
     
     while(1);
 }
