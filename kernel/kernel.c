@@ -1,6 +1,6 @@
 #include "graphics/gfx.h"
 
-void kernel_main() {
+void kernelMain() {
     for(int c = 0; c < 3; c++) {
         for(int i = 0; i < 600; i++) {
             /*drawRect(20, 20, i, i, createColor(255, 100, 255));

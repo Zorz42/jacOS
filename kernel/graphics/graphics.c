@@ -40,12 +40,10 @@ int getScreenHeight() {
     return mode_info->resolutionY;
 }
 
-void graphics_entry(mode_info_t* mode_info_) {
-    mode_info = mode_info_;
+void initGraphics(void* vesa_mode_info) {
+    mode_info = vesa_mode_info;
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer1 = (unsigned char*)mode_info->buffer;
     buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable its not nice */);
-    
-    kernel_main();
 }
