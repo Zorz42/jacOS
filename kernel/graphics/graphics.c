@@ -15,7 +15,7 @@ void setPixel(short x, short y, int color) {
 }
 
 void drawRect(short x, short y, short w, short h, int color) {
-    unsigned int* buffer = buffer2;
+    unsigned int* buffer = buffer2 + x + y * mode_info->resolutionX;
     int step = mode_info->resolutionX - w, y2 = y + h, x2 = x + w;
     for(; y < y2; y++) {
         for(int x_ = x; x_ < x2; x_++)
@@ -45,7 +45,7 @@ void graphics_entry(mode_info_t* mode_info_) {
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer1 = (unsigned char*)mode_info->buffer;
-    buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8);
+    buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable its not nice */);
     
     kernel_main();
 }

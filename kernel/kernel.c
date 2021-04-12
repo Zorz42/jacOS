@@ -3,10 +3,16 @@
 void kernel_main() {
     for(int c = 0; c < 3; c++) {
         for(int i = 0; i < 600; i++) {
-            drawRect(0, 0, i, i, 255 + 100 * 256 + 255 * 256 * 256);
+            /*drawRect(20, 20, i, i, createColor(255, 100, 255));
             swapBuffers();
             
-            drawRect(0, 0, i, i, 100 + 255 * 256 + 100 * 256 * 256);
+            drawRect(20, 20, i, i, createColor(100, 255, 100));
+            swapBuffers();*/
+            
+            drawRect(0, 0, getScreenWidth(), getScreenHeight(), createColor(255, 100, 255));
+            swapBuffers();
+            
+            drawRect(0, 0, getScreenWidth(), getScreenHeight(), createColor(100, 255, 100));
             swapBuffers();
             
             /*for(int x = 0; x < getScreenWidth(); x++)
@@ -15,7 +21,8 @@ void kernel_main() {
             
             swapBuffers();*/
         }
-        drawRect(0, 0, 600, 600, 0);
+        //drawRect(20, 20, 600, 600, 0);
+        drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     }
     
     drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
