@@ -4,8 +4,13 @@ HEADERS = $(shell find kernel -type f -name '*.h')
 OBJ = $(addprefix build/, ${C_SOURCES:.c=.o})
 
 # Change this if your cross-compiler is somewhere else
-CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
-GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+#CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
+#GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+#LD = /usr/local/i386elfgcc/bin/i386-elf-ld
+CC = i386-elf-gcc
+GDB = i386-elf-gdb
+LD = i386-elf-ld
+
 # -g: Use debugging symbols in gcc
 #CFLAGS = -g
 CFLAGS = -std=c11 -ffreestanding -O0 # -O1 also works
@@ -20,11 +25,11 @@ build:
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 build/kernel.bin: build/kernel_entry.o ${OBJ}
-	/usr/local/i386elfgcc/bin/i386-elf-ld -o $@ -Ttext 0x200 $^ --oformat binary
+	${LD} -o $@ -Ttext 0x200 $^ --oformat binary
 
 # Used for debugging purposes
 build/kernel.elf: build/kernel_entry.o ${OBJ}
-	/usr/local/i386elfgcc/bin/i386-elf-ld -o $@ -Ttext 0x200 $^ 
+	${LD} -o $@ -Ttext 0x200 $^ 
 
 run: os-image.bin
 	qemu-system-i386 -fda os-image.bin
@@ -50,3 +55,4 @@ build/bootsect.bin: boot/bootsect.asm
 
 clean:
 	rm -rf build
+	rm os-image.bin
