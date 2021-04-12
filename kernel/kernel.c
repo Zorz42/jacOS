@@ -21,7 +21,7 @@ void swapBuffers() {
         buffer1_long[i] = buffer2_long[i];
 }
 
-void main(mode_info_t* mode_info_) {
+void kernel_main(mode_info_t* mode_info_) {
     mode_info = mode_info_;
     
     buffer1 = (unsigned char*)mode_info->buffer;
