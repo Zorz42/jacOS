@@ -1,6 +1,6 @@
 ; Identical to lesson 13's boot sector, but the %included files have new paths
 [org 0x7c00]
-KERNEL_OFFSET equ 0x200 ; The same one we used when linking the kernel
+KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
 
     mov [BOOT_DRIVE], dl ; Remember that the BIOS sets us the boot drive in 'dl' on boot
     mov bp, 0x9000
@@ -12,12 +12,12 @@ KERNEL_OFFSET equ 0x200 ; The same one we used when linking the kernel
 
     ;Set video mode
     mov ax, 4f02h
-    mov bx, 118h
+    mov bx, 115h
     int 10h
 
     ;Get video mode info
     mov ax, 4f01h
-    mov cx, 118h
+    mov cx, 115h
     mov di, modeInfo
     int 10h
     
