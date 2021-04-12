@@ -13,7 +13,7 @@ LD = i386-elf-ld
 
 # -g: Use debugging symbols in gcc
 #CFLAGS = -g
-CFLAGS = -std=c11 -ffreestanding -O0 # -O1 also works
+CFLAGS = -std=c11 -ffreestanding -Ofast # -O1 also works
 
 # First rule is run by default
 os-image.bin: build build/bootsect.bin build/kernel.bin

@@ -10,13 +10,16 @@ unsigned char* buffer1;
 unsigned int* buffer2;
 int total_pixels;
 
-void putpixel(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
-    buffer2[x + y * mode_info->resolutionX] = b + (g << 8) + (r << 16);
+void putpixel(int x, int y, int color) {
+    buffer2[x + y * mode_info->resolutionX] = color;
 }
 
 void swapBuffers() {
-    for(int i = 0; i < total_pixels; i++)
-        *((unsigned int*)(buffer1 + i * 3)) = buffer2[i];
+    for(int i = 0; i < total_pixels; i++) {
+        unsigned int* curr_pixel = (unsigned int*)(buffer1 + i * 3);
+        if(*curr_pixel ^ buffer2[i] & 0xFFFFFF)
+            *curr_pixel = buffer2[i];
+    }
 }
 
 int getScreenWidth() {
