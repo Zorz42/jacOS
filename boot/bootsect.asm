@@ -12,12 +12,12 @@ KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
 
     ;Set video mode
     mov ax, 4f02h
-    mov bx, 115h
+    mov bx, 118h
     int 10h
 
     ;Get video mode info
     mov ax, 4f01h
-    mov cx, 115h
+    mov cx, 118h
     mov di, modeInfo
     int 10h
     

@@ -10,8 +10,18 @@ unsigned char* buffer1;
 unsigned int* buffer2;
 int total_pixels;
 
-void putpixel(int x, int y, int color) {
+void setPixel(short x, short y, int color) {
     buffer2[x + y * mode_info->resolutionX] = color;
+}
+
+void drawRect(short x, short y, short w, short h, int color) {
+    unsigned int* buffer = buffer2;
+    int step = mode_info->resolutionX - w, y2 = y + h, x2 = x + w;
+    for(; y < y2; y++) {
+        for(int x_ = x; x_ < x2; x_++)
+            *buffer++ = color;
+        buffer += step;
+    }
 }
 
 void swapBuffers() {
