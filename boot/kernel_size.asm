@@ -1,0 +1,1 @@
+%define KERNEL_SECTORS_SIZE 2

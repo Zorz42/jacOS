@@ -15,6 +15,9 @@ LD = i386-elf-ld
 #CFLAGS = -g
 CFLAGS = -std=c11 -ffreestanding -Ofast
 
+#KERNEL_SIZE = $(($(stat -f%z build/kernel.bin) / 512 + 1))
+#KERNEL_SIZE = $(stat -f%z build/kernel.bin)
+
 # First rule is run by default
 os-image.bin: build build/bootsect.bin build/kernel.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
@@ -24,7 +27,7 @@ build:
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o
+build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/bootsect.bin
 	${LD} -o $@ -Ttext 0x1000 build/kernel/entry/kernel_entry.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
@@ -32,11 +35,11 @@ build/kernel.elf: build/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ 
 
 run: os-image.bin
-	qemu-system-i386 -fda os-image.bin
+	qemu-system-x86_64 -fda os-image.bin -m 2048
 
 # Open the connection to qemu and load our kernel-object file with symbols
 debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -fda os-image.bin &
+	qemu-system-x86_64 -s -m 2048 -fda os-image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
@@ -50,8 +53,10 @@ build/kernel/entry/kernel_entry.o: kernel/entry/kernel_entry.asm
 	nasm $< -f elf -o $@
 
 # rule for bootsector
-build/bootsect.bin: boot/bootsect.asm
-	nasm $< -f bin -o $@
+build/bootsect.bin: boot/bootsect.asm build/kernel.bin
+	export KERNEL_SIZE=$$(($$(stat -f%z build/kernel.bin) / 512 + 1)) && \
+	echo %define KERNEL_SECTORS_SIZE $$KERNEL_SIZE > boot/kernel_size.asm
+	nasm boot/bootsect.asm -f bin -o $@
 
 clean:
 	rm -rf build

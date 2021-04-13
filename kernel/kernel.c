@@ -22,7 +22,7 @@ void kernelMain() {
             swapBuffers();*/
         }
         //drawRect(20, 20, 600, 600, 0);
-        drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
+        //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     }
     
     drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
