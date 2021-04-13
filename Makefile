@@ -54,8 +54,7 @@ build/kernel/entry/kernel_entry.o: kernel/entry/kernel_entry.asm
 
 # rule for bootsector
 build/bootsect.bin: boot/bootsect.asm build/kernel.bin
-	export KERNEL_SIZE=$$(($$(stat -f%z build/kernel.bin) / 512 + 1)) && \
-	echo %define KERNEL_SECTORS_SIZE $$KERNEL_SIZE > boot/kernel_size.asm
+	echo %define KERNEL_SECTORS_SIZE $$(($$(stat -f%z build/kernel.bin) / 512 + 1)) > boot/kernel_size.asm
 	nasm boot/bootsect.asm -f bin -o $@
 
 clean:
