@@ -27,8 +27,8 @@ build:
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/bootsect.bin
-	${LD} -o $@ -Ttext 0x1000 build/kernel/entry/kernel_entry.o ${OBJ} --oformat binary
+build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o build/bootsect.bin
+	${LD} -o $@ -Ttext 0x1000 build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
 build/kernel.elf: build/kernel_entry.o ${OBJ}
@@ -51,6 +51,9 @@ build/kernel/%.o: kernel/%.c ${HEADERS}
 # rule for kernel entry
 build/kernel/entry/kernel_entry.o: kernel/entry/kernel_entry.asm
 	nasm $< -f elf -o $@
+build/kernel/cpu/interrupt.o: kernel/cpu/interrupt.asm
+	nasm $< -f elf -o $@
+
 
 # rule for bootsector
 build/bootsect.bin: boot/bootsect.asm build/kernel.bin
