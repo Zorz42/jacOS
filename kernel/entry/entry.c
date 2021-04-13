@@ -1,6 +1,5 @@
-#include "../graphics/gfx.h"
-#include "../cpu/idt.h"
-#include "../cpu/isr.h"
+#include "graphics/gfx.h"
+#include "cpu/isr.h"
 
 void kernelMain();
 

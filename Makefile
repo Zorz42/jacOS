@@ -13,7 +13,7 @@ LD = i386-elf-ld
 
 # -g: Use debugging symbols in gcc
 #CFLAGS = -g
-CFLAGS = -std=gnu11 -ffreestanding -Ofast
+CFLAGS = -std=gnu11 -ffreestanding -Ofast -Ikernel/
 
 #KERNEL_SIZE = $(($(stat -f%z build/kernel.bin) / 512 + 1))
 #KERNEL_SIZE = $(stat -f%z build/kernel.bin)
