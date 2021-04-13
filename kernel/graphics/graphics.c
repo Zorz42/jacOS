@@ -9,6 +9,7 @@ mode_info_t* mode_info;
 unsigned char* buffer1;
 unsigned int* buffer2;
 int total_pixels;
+extern const unsigned char font[2048];
 
 void setPixel(short x, short y, int color) {
     buffer2[x + y * mode_info->resolutionX] = color;
@@ -40,10 +41,16 @@ int getScreenHeight() {
     return mode_info->resolutionY;
 }
 
+void drawChar(int x, int y, char c) {
+    for(int x_ = 0; x_ < 8; x_++)
+        for(int y_ = 0; y_ < 16; y_++)
+            setPixel(x + x_, y + y_, createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1));
+}
+
 void initGraphics(void* vesa_mode_info) {
     mode_info = vesa_mode_info;
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer1 = (unsigned char*)mode_info->buffer;
-    buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable its not nice */);
+    buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable, but its not nice */);
 }

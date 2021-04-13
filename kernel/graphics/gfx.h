@@ -7,3 +7,4 @@ inline int createColor(unsigned char r, unsigned char g, unsigned char b) { retu
 void swapBuffers();
 int getScreenWidth();
 int getScreenHeight();
+void drawChar(int x, int y, char c);
