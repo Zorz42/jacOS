@@ -23,13 +23,13 @@ void printChar(char c) {
 void print(char* string) {
     while(*string)
         printChar(*string++);
-    swapBuffers();
 }
 
 void printl(char* string) {
     print(string);
     cursor_x = 0;
     cursor_y++;
+    swapBuffers();
 }
 
 void printHex(int x) {
@@ -41,7 +41,6 @@ void printHex(int x) {
         char result = (x >> i * 4) & 0xF;
         printChar(result + (result < 10 ? '0' : 'A' - 10));
     }
-    swapBuffers();
 }
 
 void printInt(int x) {
@@ -57,7 +56,6 @@ void printInt(int x) {
             x3 /= 10;
         printChar('0' + x3 % 10);
     }
-    swapBuffers();
 }
 
 void initText() {
