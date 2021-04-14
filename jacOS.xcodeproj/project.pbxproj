@@ -38,6 +38,7 @@
 		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; };
 		167A73BE2626DF7A00328331 /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; };
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		167A73DC2626E35000328331 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -159,6 +160,21 @@
 			productReference = 167A738E2626DF4E00328331 /* jacOS */;
 			productType = "com.apple.product-type.tool";
 		};
+		167A73DB2626E35000328331 /* jacOS-build-only */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 167A73E02626E35000328331 /* Build configuration list for PBXNativeTarget "jacOS-build-only" */;
+			buildPhases = (
+				167A73E52626E36400328331 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "jacOS-build-only";
+			productName = "jacOS-build-only";
+			productReference = 167A73DC2626E35000328331 /* jacOS-build-only */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -168,6 +184,9 @@
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					167A738D2626DF4E00328331 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					167A73DB2626E35000328331 = {
 						CreatedOnToolsVersion = 12.4;
 					};
 				};
@@ -186,6 +205,7 @@
 			projectRoot = "";
 			targets = (
 				167A738D2626DF4E00328331 /* jacOS */,
+				167A73DB2626E35000328331 /* jacOS-build-only */,
 			);
 		};
 /* End PBXProject section */
@@ -208,6 +228,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nmake run\n";
+		};
+		167A73E52626E36400328331 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nmake os-image.bin\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -343,6 +380,26 @@
 			};
 			name = Release;
 		};
+		167A73E12626E35000328331 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CKFJDZL4P;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		167A73E22626E35000328331 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CKFJDZL4P;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -360,6 +417,15 @@
 			buildConfigurations = (
 				167A73962626DF4E00328331 /* Debug */,
 				167A73972626DF4E00328331 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		167A73E02626E35000328331 /* Build configuration list for PBXNativeTarget "jacOS-build-only" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				167A73E12626E35000328331 /* Debug */,
+				167A73E22626E35000328331 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
