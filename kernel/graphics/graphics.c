@@ -1,5 +1,6 @@
 #include "mode_info.h"
 #include "gfx.h"
+#include "text/text.h"
 
 void kernel_main();
 
@@ -53,4 +54,14 @@ void initGraphics(void* vesa_mode_info) {
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer1 = (unsigned char*)mode_info->buffer;
     buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable, but its not nice */);
+
+    printl("Initializing graphics module...");
+    print("Screen buffer is at: ");
+    printHex((int)buffer1);
+    printl("");
+    print("Screen resulution is: ");
+    printInt(mode_info->resolutionX);
+    print("x");
+    printInt(mode_info->resolutionY);
+    printl("");
 }

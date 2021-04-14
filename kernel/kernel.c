@@ -3,7 +3,4 @@
 
 void kernelMain() {
     printl("Kernel loaded!");
-    printHex(244);
-    printl("");
-    printInt(424224);
 }
