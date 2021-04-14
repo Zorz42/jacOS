@@ -12,6 +12,10 @@ void print(char* string) {
         drawChar(cursor_x * 8, cursor_y * 16, *string);
         string++;
         cursor_x++;
+        if(cursor_x >= getScreenWidth() / 8) {
+            cursor_x = 0;
+            cursor_y++;
+        }
     }
     swapBuffers();
 }
