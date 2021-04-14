@@ -28,11 +28,11 @@ build:
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o
-	${LD} -o $@ -Ttext 0x1000 build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
+	${LD} -o $@ -Ttext 0x200 build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
 build/kernel.elf: build/kernel_entry.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ 
+	${LD} -o $@ -Ttext 0x200 $^
 
 run: os-image.bin
 	qemu-system-x86_64 -fda os-image.bin -m 2048

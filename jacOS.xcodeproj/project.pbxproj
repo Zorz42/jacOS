@@ -37,8 +37,8 @@
 		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; };
 		167A73BE2626DF7A00328331 /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; };
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		167A73E82626EBD400328331 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
-		167A73E92626EBD400328331 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
+		3672E1272627287C003D9BD4 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakob/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
+		3672E1282627287C003D9BD4 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakob/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -157,7 +157,7 @@
 			);
 			name = jacOS;
 			productName = jacOS;
-			productReference = 167A73E82626EBD400328331 /* jacOS */;
+			productReference = 3672E1272627287C003D9BD4 /* jacOS */;
 			productType = "com.apple.product-type.tool";
 		};
 		167A73DB2626E35000328331 /* jacOS-build-only */ = {
@@ -172,7 +172,7 @@
 			);
 			name = "jacOS-build-only";
 			productName = "jacOS-build-only";
-			productReference = 167A73E92626EBD400328331 /* jacOS-build-only */;
+			productReference = 3672E1282627287C003D9BD4 /* jacOS-build-only */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

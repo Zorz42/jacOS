@@ -1,10 +1,19 @@
 #include "graphics/gfx.h"
 #include "text/text.h"
+#include "memory/memory.h"
+
+int test[1000000];
 
 void kernelMain() {
-    printl("Kernel loaded!");
-    for(int i = 0; i < 200; i++)
-        print("A");
-    printl("test");
-    printl("test");
+    printl("Kernel initialized!");
+    
+    //for(int i = 0; i < 200; i++) // for testing speed
+        //print("A");
+    
+    malloc(200);
+    malloc(0x200);
+    
+    print("Used memory: ");
+    printInt(getUsedMemory() / 1024);
+    printl(" KB");
 }

@@ -1,14 +1,14 @@
 #include "mode_info.h"
 #include "gfx.h"
 #include "text/text.h"
+#include "memory/memory.h"
 
 void kernel_main();
 
 #define DRAW_BUFFER_BYTES_PER_PIXEL sizeof(unsigned int)
 
 mode_info_t* mode_info;
-unsigned char* buffer1;
-unsigned int* buffer2;
+unsigned int* buffer2 = 0;
 int total_pixels;
 extern const unsigned char font[2048];
 
@@ -28,7 +28,7 @@ void drawRect(short x, short y, short w, short h, int color) {
 
 void swapBuffers() {
     for(int i = 0; i < total_pixels; i++) {
-        unsigned int* curr_pixel = (unsigned int*)(buffer1 + i * 3);
+        unsigned int* curr_pixel = (unsigned int*)(mode_info->buffer + i * 3);
         if(*curr_pixel ^ buffer2[i] & 0xFFFFFF)
             *curr_pixel = buffer2[i];
     }
@@ -52,12 +52,16 @@ void initGraphics(void* vesa_mode_info) {
     mode_info = vesa_mode_info;
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
-    buffer1 = (unsigned char*)mode_info->buffer;
-    buffer2 = (unsigned int*)((unsigned char*)mode_info->buffer + total_pixels * mode_info->bpp / 8 + 4 /* main buffer might slightly overwrite first pixel and its not noticable, but its not nice */);
-
+    buffer2 = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);
+    
+    initText();
+    
     printl("Initializing graphics module...");
+    print("VESA buffer is at: ");
+    printHex((int)mode_info->buffer);
+    printl("");
     print("Screen buffer is at: ");
-    printHex((int)buffer1);
+    printHex((int)buffer2);
     printl("");
     print("Screen resulution is: ");
     printInt(mode_info->resolutionX);
