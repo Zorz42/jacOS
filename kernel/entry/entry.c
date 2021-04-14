@@ -9,4 +9,8 @@ void kernelEntry(void* data) {
     initGraphics(data);
     
     kernelMain();
+    
+    while(1) {
+        asm ("hlt");
+    }
 }
