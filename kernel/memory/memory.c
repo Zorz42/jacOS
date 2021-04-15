@@ -2,7 +2,6 @@
 #include "text/text.h"
 
 u32 curr_free_mem, heap_base;
-
 extern char* text_buffer;
 
 void* malloc(u32 size) {
@@ -18,7 +17,7 @@ void* malloc(u32 size) {
 }
 
 void initMemory() {
-    heap_base = 0x100000;
+    heap_base = 0x3d5000;
     curr_free_mem = heap_base;
     /*print("Memory initialized with heap at: ");
     printHex(curr_free_mem);

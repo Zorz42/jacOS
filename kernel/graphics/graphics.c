@@ -54,6 +54,8 @@ void initGraphics(void* vesa_mode_info) {
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer2 = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);
     
+    //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
+    
     initText();
     
     printl("Initializing graphics module...");
