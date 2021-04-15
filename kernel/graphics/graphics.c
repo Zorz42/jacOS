@@ -43,9 +43,12 @@ int getScreenHeight() {
 }
 
 void drawChar(int x, int y, char c) {
-    for(int x_ = 0; x_ < 8; x_++)
-        for(int y_ = 0; y_ < 16; y_++)
-            setPixel(x + x_, y + y_, createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1));
+    unsigned int* temp_buffer = buffer + x + y * mode_info->resolutionX;
+    for(int y_ = 0; y_ < 16; y_++) {
+        for(int x_ = 0; x_ < 8; x_++)
+            *temp_buffer++ = createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1);
+        temp_buffer += mode_info->resolutionX - 8;
+    }
 }
 
 void initGraphics(void* vesa_mode_info) {

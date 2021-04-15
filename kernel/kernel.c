@@ -10,10 +10,12 @@ void kernelMain() {
     //for(int i = 0; i < 200; i++) // for testing speed
         //print("A");
     
-    malloc(200);
-    malloc(0x200);
-    
-    print("Used memory: ");
-    printInt(getUsedMemory() / 1024);
-    printl(" KB");
+    for(int i = 0; i < 100; i++) {
+        malloc(200);
+        malloc(0x200);
+        
+        print("Used memory: ");
+        printInt(getUsedMemory() / 1024);
+        printl(" KB");
+    }
 }

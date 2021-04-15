@@ -10,13 +10,43 @@ void moveCursorTo(int x, int y) {
     cursor_y = y;
 }
 
+void updateChar(int x, int y) {
+    drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
+}
+
+void flush() {
+    swapBuffers();
+}
+
+void newLine() {
+    if(cursor_y < text_height - 1)
+        moveCursorTo(0, cursor_y + 1);
+    else {
+        //scroll text
+        moveCursorTo(0, cursor_y);
+        char* iter = text_buffer;
+        for(int y = 0; y < text_height - 1; y++) {
+            for(int x = 0; x < text_width; x++) {
+                *iter = *(iter + text_width);
+                updateChar(x, y);
+                iter++;
+            }
+        }
+        for(int x = 0; x < text_width; x++) {
+            *iter = ' ';
+            updateChar(x, text_height - 1);
+            iter++;
+        }
+    }
+    flush();
+}
+
 void printChar(char c) {
     text_buffer[cursor_x + cursor_y * text_width] = c;
-    drawChar(cursor_x * 8, cursor_y * 16, c);
-    cursor_x++;
+    updateChar(cursor_x, cursor_y);
+    moveCursorTo(cursor_x + 1, cursor_y);
     if(cursor_x >= text_width) {
-        cursor_x = 0;
-        cursor_y++;
+        newLine();
     }
 }
 
@@ -27,9 +57,7 @@ void print(char* string) {
 
 void printl(char* string) {
     print(string);
-    cursor_x = 0;
-    cursor_y++;
-    swapBuffers();
+    newLine();
 }
 
 void printHex(int x) {
