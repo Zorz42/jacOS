@@ -8,29 +8,29 @@ void kernel_main();
 #define DRAW_BUFFER_BYTES_PER_PIXEL sizeof(unsigned int)
 
 mode_info_t* mode_info;
-unsigned int* buffer2 = 0;
+unsigned int* buffer = 0;
 int total_pixels;
 extern const unsigned char font[2048];
 
 void setPixel(short x, short y, int color) {
-    buffer2[x + y * mode_info->resolutionX] = color;
+    buffer[x + y * mode_info->resolutionX] = color;
 }
 
 void drawRect(short x, short y, short w, short h, int color) {
-    unsigned int* buffer = buffer2 + x + y * mode_info->resolutionX;
+    unsigned int* temp_buffer = buffer + x + y * mode_info->resolutionX;
     int step = mode_info->resolutionX - w, y2 = y + h, x2 = x + w;
     for(; y < y2; y++) {
         for(int x_ = x; x_ < x2; x_++)
-            *buffer++ = color;
-        buffer += step;
+            *temp_buffer++ = color;
+        temp_buffer += step;
     }
 }
 
 void swapBuffers() {
     for(int i = 0; i < total_pixels; i++) {
         unsigned int* curr_pixel = (unsigned int*)(mode_info->buffer + i * 3);
-        if(*curr_pixel ^ buffer2[i] & 0xFFFFFF)
-            *curr_pixel = buffer2[i];
+        if(*curr_pixel ^ buffer[i] & 0xFFFFFF)
+            *curr_pixel = buffer[i];
     }
 }
 
@@ -52,7 +52,9 @@ void initGraphics(void* vesa_mode_info) {
     mode_info = vesa_mode_info;
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
-    buffer2 = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);
+    buffer = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);
+    
+    //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     
     //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
     
@@ -63,7 +65,7 @@ void initGraphics(void* vesa_mode_info) {
     printHex((int)mode_info->buffer);
     printl("");
     print("Screen buffer is at: ");
-    printHex((int)buffer2);
+    printHex((int)buffer);
     printl("");
     print("Screen resulution is: ");
     printInt(mode_info->resolutionX);
