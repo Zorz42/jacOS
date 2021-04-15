@@ -59,38 +59,45 @@ void printChar(char c) {
 }
 
 void print(char* string) {
-    while(*string)
-        printChar(*string++);
+    if(text_buffer)
+        while(*string)
+            printChar(*string++);
 }
 
 void printl(char* string) {
-    print(string);
-    newLine();
+    if(text_buffer) {
+        print(string);
+        newLine();
+    }
 }
 
 void printHex(int x) {
-    int end = 7;
-    while(((x >> end * 4) & 0xF) == 0)
-        end--;
-    print("0x");
-    for(int i = end; i >= 0; i--) {
-        char result = (x >> i * 4) & 0xF;
-        printChar(result + (result < 10 ? '0' : 'A' - 10));
+    if(text_buffer) {
+        int end = 7;
+        while(((x >> end * 4) & 0xF) == 0)
+            end--;
+        print("0x");
+        for(int i = end; i >= 0; i--) {
+            char result = (x >> i * 4) & 0xF;
+            printChar(result + (result < 10 ? '0' : 'A' - 10));
+        }
     }
 }
 
 void printInt(int x) {
-    int x2 = x, length = 0;
-    while(x2) {
-        length++;
-        x2 /= 10;
-    }
-    
-    for(int i = 0; i < length; i++) {
-        int x3 = x;
-        for(int i2 = 0; i2 < length - i - 1; i2++)
-            x3 /= 10;
-        printChar('0' + x3 % 10);
+    if(text_buffer) {
+        int x2 = x, length = 0;
+        while(x2) {
+            length++;
+            x2 /= 10;
+        }
+        
+        for(int i = 0; i < length; i++) {
+            int x3 = x;
+            for(int i2 = 0; i2 < length - i - 1; i2++)
+                x3 /= 10;
+            printChar('0' + x3 % 10);
+        }
     }
 }
 

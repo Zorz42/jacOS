@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		1671708526283DAA0084A22D /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
-		1671708626283DAA0084A22D /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1671708526283DAA0084A22D /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
+		1671708626283DAA0084A22D /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		167A739C2626DF7A00328331 /* keyboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keyboard.c; sourceTree = "<group>"; };
 		167A739D2626DF7A00328331 /* ports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ports.h; sourceTree = "<group>"; };
 		167A739E2626DF7A00328331 /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyboard.h; sourceTree = "<group>"; };
@@ -48,8 +48,6 @@
 				167A73D32626E08500328331 /* Makefile */,
 				167A73B82626DF7A00328331 /* boot */,
 				167A739A2626DF7A00328331 /* kernel */,
-				1671708526283DAA0084A22D /* jacOS */,
-				1671708626283DAA0084A22D /* jacOS-build-only */,
 			);
 			sourceTree = "<group>";
 		};

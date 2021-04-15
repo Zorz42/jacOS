@@ -3,8 +3,6 @@
 #include "memory/memory.h"
 #include "cpu/timer.h"
 
-int test[1000000];
-
 void kernelMain() {
     printl("Kernel initialized!");
     
