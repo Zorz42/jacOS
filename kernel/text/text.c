@@ -5,6 +5,14 @@
 int cursor_x = 0, cursor_y = 0, text_width, text_height;
 char* text_buffer = 0;
 
+int getCursorX() {
+    return cursor_x;
+}
+
+int getCursorY() {
+    return cursor_y;
+}
+
 void moveCursorTo(int x, int y) {
     cursor_x = x;
     cursor_y = y;

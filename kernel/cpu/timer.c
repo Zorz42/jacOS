@@ -1,17 +1,25 @@
 #include "timer.h"
 #include "isr.h"
 #include "drivers/ports.h"
+#include "text/text.h"
 
-u32 tick = 0;
+unsigned int tick = 0;
+extern char* text_buffer;
+
+unsigned int getTicks() {
+    return tick;
+}
+
+void delay(unsigned int ds) {
+    unsigned int start = getTicks();
+    while(getTicks() < start + ds) {
+        // waits for next interrupt and does not rapidly loop and use cycles
+        asm("hlt");
+    }
+}
 
 static void timer_callback(registers_t regs) {
     tick++;
-    //kprint("Tick: ");
-    
-    //char tick_ascii[256];
-    //int_to_ascii(tick, tick_ascii);
-    //kprint(tick_ascii);
-    //kprint("\n");
 }
 
 void init_timer(u32 freq) {

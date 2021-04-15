@@ -1,6 +1,7 @@
 #include "graphics/gfx.h"
 #include "text/text.h"
 #include "memory/memory.h"
+#include "cpu/timer.h"
 
 int test[1000000];
 
@@ -17,5 +18,12 @@ void kernelMain() {
         print("Used memory: ");
         printInt(getUsedMemory() / 1024);
         printl(" KB");
+    }
+    
+    while(1) {
+        printInt(getTicks());
+        printl("");
+        moveCursorTo(0, getCursorY() - 1);
+        delay(100);
     }
 }
