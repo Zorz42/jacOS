@@ -3,8 +3,7 @@
 #include "drivers/ports.h"
 #include "text/text.h"
 
-unsigned int tick = 0;
-extern char* text_buffer;
+static unsigned int tick = 0;
 
 unsigned int getTicks() {
     return tick;
@@ -12,10 +11,9 @@ unsigned int getTicks() {
 
 void delay(unsigned int ds) {
     unsigned int start = getTicks();
-    while(getTicks() < start + ds) {
+    while(getTicks() < start + ds)
         // waits for next interrupt and does not rapidly loop and use cycles
         asm("hlt");
-    }
 }
 
 static void timer_callback(registers_t regs) {
