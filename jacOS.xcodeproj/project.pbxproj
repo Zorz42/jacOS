@@ -55,12 +55,12 @@
 			isa = PBXGroup;
 			children = (
 				167A739B2626DF7A00328331 /* drivers */,
-				167A73A02626DF7A00328331 /* kernel.c */,
 				167A73A12626DF7A00328331 /* memory */,
 				167A73A42626DF7A00328331 /* cpu */,
 				167A73AD2626DF7A00328331 /* entry */,
 				167A73B02626DF7A00328331 /* text */,
 				167A73B32626DF7A00328331 /* graphics */,
+				167A73A02626DF7A00328331 /* kernel.c */,
 			);
 			path = kernel;
 			sourceTree = "<group>";
@@ -79,8 +79,8 @@
 		167A73A12626DF7A00328331 /* memory */ = {
 			isa = PBXGroup;
 			children = (
-				167A73A22626DF7A00328331 /* memory.c */,
 				167A73A32626DF7A00328331 /* memory.h */,
+				167A73A22626DF7A00328331 /* memory.c */,
 			);
 			path = memory;
 			sourceTree = "<group>";

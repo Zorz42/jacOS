@@ -17,11 +17,4 @@ void kernelMain() {
         printInt(getUsedMemory() / 1024);
         printl(" KB");
     }
-    
-    while(1) {
-        printInt(getTicks());
-        printl("");
-        moveCursorTo(0, getCursorY() - 1);
-        delay(100);
-    }
 }
