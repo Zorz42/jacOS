@@ -7,11 +7,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-<<<<<<< Updated upstream
 		1671708526283DAA0084A22D /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
 		1671708626283DAA0084A22D /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
-=======
->>>>>>> Stashed changes
 		167A739C2626DF7A00328331 /* keyboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keyboard.c; sourceTree = "<group>"; };
 		167A739D2626DF7A00328331 /* ports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ports.h; sourceTree = "<group>"; };
 		167A739E2626DF7A00328331 /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyboard.h; sourceTree = "<group>"; };
@@ -162,11 +159,7 @@
 			);
 			name = jacOS;
 			productName = jacOS;
-<<<<<<< Updated upstream
 			productReference = 1671708526283DAA0084A22D /* jacOS */;
-=======
-			productReference = 3672E12D26282942003D9BD4 /* jacOS */;
->>>>>>> Stashed changes
 			productType = "com.apple.product-type.tool";
 		};
 		167A73DB2626E35000328331 /* jacOS-build-only */ = {
@@ -181,11 +174,7 @@
 			);
 			name = "jacOS-build-only";
 			productName = "jacOS-build-only";
-<<<<<<< Updated upstream
 			productReference = 1671708626283DAA0084A22D /* jacOS-build-only */;
-=======
-			productReference = 3672E12E26282942003D9BD4 /* jacOS-build-only */;
->>>>>>> Stashed changes
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
