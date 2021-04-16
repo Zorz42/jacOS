@@ -105,7 +105,7 @@ void initText() {
     text_width = getScreenWidth() / 8;
     text_height = getScreenHeight() / 16;
     
-    text_buffer = (char*)malloc(text_width * text_height);
+    text_buffer = (char*)malloc(text_width * (text_height + 1));
     
     printl("Text module initialized!");
     print("Number of characters of screen is: ");

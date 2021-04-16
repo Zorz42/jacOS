@@ -6,15 +6,19 @@
 void kernelMain() {
     printl("Kernel initialized!");
     
-    //for(int i = 0; i < 200; i++) // for testing speed
-        //print("A");
-    
     for(int i = 0; i < 100; i++) {
-        malloc(200);
-        malloc(0x200);
+        malloc(0x100 - 12);
         
-        print("Used memory: ");
+        /*print("Used memory: ");
         printInt(getUsedMemory() / 1024);
         printl(" KB");
+        
+        print("Free memory: ");
+        printInt(getFreeMemory() / 1024);
+        printl(" KB");
+        
+        print("Total memory: ");
+        printInt(getTotalMemory() / 1024);
+        printl(" KB");*/
     }
 }

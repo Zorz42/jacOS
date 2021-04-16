@@ -3,4 +3,6 @@
 void* malloc(u32 size);
 
 void initMemory();
-u32 getUsedMemory();
+unsigned int getUsedMemory();
+unsigned int getTotalMemory();
+unsigned int getFreeMemory();

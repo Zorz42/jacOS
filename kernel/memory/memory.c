@@ -1,38 +1,80 @@
 #include "memory.h"
 #include "text/text.h"
 
-u32 curr_free_mem, heap_base;
+unsigned int heap_base, total_memory, used_memory;
 
-#define HEAD_ALLOCATED 0
-#define HEAD_FREE 1
+#define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
+#define HEAD_FREE 'F'
 
 typedef struct {
     u32 size;
     char free;
+    void* next;
 } malloc_head;
 
 void* malloc(u32 size) {
-    malloc_head* head = (malloc_head*)curr_free_mem;
+    malloc_head* head = (malloc_head*)heap_base;
+    
+    // find a free block
+    while(head->free != HEAD_FREE || head->size <= size) {
+        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
+            printl("Heap error: heap corruption!");
+            while(1)
+                asm("hlt");
+        }
+        
+        if(head->next == 0) {
+            printl("Heap error: out of heap memory!");
+            while(1)
+                asm("hlt");
+        }
+        
+        head = head->next;
+    }
+    
+    // split that block into two blocks
+    malloc_head* next_head = (void*)head + sizeof(malloc_head) + size;
+    next_head->free = HEAD_FREE;
+    next_head->size = head->size - size - sizeof(malloc_head);
+    next_head->next = head->next;
+    
+    head->free = HEAD_ALLOCATED;
     head->size = size;
-    curr_free_mem += size + sizeof(malloc_head);
+    head->next = next_head;
+    
+    used_memory += size + sizeof(malloc_head);
     
     print("Malloc from ");
-    printHex(curr_free_mem - size);
+    printHex((int)head + sizeof(malloc_head));
     print(" to ");
-    printHex(curr_free_mem);
+    printHex((int)head + sizeof(malloc_head) + head->size);
     printl(".");
     
-    return (void*)(curr_free_mem - size);
+    return (void*)head + sizeof(malloc_head);
 }
 
 void initMemory() {
     heap_base = 0x3d5000;
-    curr_free_mem = heap_base;
+    used_memory = 0;
+    total_memory = 0x1000000;
+    
+    malloc_head* main_head = (malloc_head*)heap_base;
+    main_head->free = HEAD_FREE;
+    main_head->size = total_memory - sizeof(malloc_head);
+    main_head->next = 0;
     /*print("Memory initialized with heap at: ");
     printHex(curr_free_mem);
     printl("");*/
 }
 
-u32 getUsedMemory() {
-    return curr_free_mem - heap_base;
+unsigned int getUsedMemory() {
+    return used_memory;
+}
+
+unsigned int getTotalMemory() {
+    return total_memory;
+}
+
+unsigned int getFreeMemory() {
+    return total_memory - used_memory;
 }
