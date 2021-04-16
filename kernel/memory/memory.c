@@ -54,15 +54,27 @@ void* malloc(u32 size) {
 }
 
 void mergeBlocks(malloc_head* block1, malloc_head* block2) {
-    //block1->size += block2->size + sizeof(malloc_head);
-    //block1->next = block2->next;
+    block1->size += block2->size + sizeof(malloc_head);
+    block1->next = block2->next;
 }
 
 void free(void* ptr) {
     malloc_head* head = ptr - sizeof(malloc_head);
+    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
+        printl("Heap error: freeing invalid memory!");
+        while(1)
+            asm("hlt");
+    }
+    
+    if(head->free == HEAD_FREE) {
+        printl("Heap error: freeing already free memory!");
+        while(1)
+            asm("hlt");
+    }
+    
     head->free = HEAD_FREE;
     
-    if(((malloc_head*)head->next)->free == HEAD_FREE)
+    if(head->next && ((malloc_head*)head->next)->free == HEAD_FREE)
         mergeBlocks(head, head->next);
     
     print("Free ");

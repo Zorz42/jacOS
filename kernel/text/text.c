@@ -74,9 +74,10 @@ void printl(char* string) {
 void printHex(int x) {
     if(text_buffer) {
         int end = 7;
-        while(((x >> end * 4) & 0xF) == 0)
+        while(((x >> end * 4) & 0xF) == 0 && end > 0)
             end--;
         print("0x");
+        
         for(int i = end; i >= 0; i--) {
             char result = (x >> i * 4) & 0xF;
             printChar(result + (result < 10 ? '0' : 'A' - 10));
@@ -91,6 +92,9 @@ void printInt(int x) {
             length++;
             x2 /= 10;
         }
+        
+        if(length == 0)
+            length = 1;
         
         for(int i = 0; i < length; i++) {
             int x3 = x;
