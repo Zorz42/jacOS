@@ -8,6 +8,9 @@ void kernelMain() {
     void* prev_alloc = 0;
     
     for(int i = 0; i < 100; i++) {
+        printl("");
+        printInt(i);
+        printl(". time:");
         void* alloc1 = malloc(0x10000);
         void* alloc2 = malloc(0x50000);
         free(alloc1);
@@ -23,7 +26,7 @@ void kernelMain() {
         
         prev_alloc = alloc1;
         
-        /*print("Used memory: ");
+        print("Used memory: ");
         printInt(getUsedMemory() / 1024);
         printl(" KB");
         
@@ -33,6 +36,6 @@ void kernelMain() {
         
         print("Total memory: ");
         printInt(getTotalMemory() / 1024);
-        printl(" KB");*/
+        printl(" KB");
     }
 }

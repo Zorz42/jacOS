@@ -9,7 +9,7 @@ unsigned int heap_base, total_memory, used_memory;
 typedef struct {
     u32 size;
     char free;
-    void* next;
+    void* next, *prev;
 } malloc_head;
 
 void* malloc(u32 size) {
@@ -37,6 +37,7 @@ void* malloc(u32 size) {
     next_head->free = HEAD_FREE;
     next_head->size = head->size - size - sizeof(malloc_head);
     next_head->next = head->next;
+    next_head->prev = head;
     
     head->free = HEAD_ALLOCATED;
     head->size = size;
@@ -73,9 +74,12 @@ void free(void* ptr) {
     }
     
     head->free = HEAD_FREE;
+    used_memory -= head->size + sizeof(malloc_head);
     
     if(head->next && ((malloc_head*)head->next)->free == HEAD_FREE)
         mergeBlocks(head, head->next);
+    if(head->prev && ((malloc_head*)head->prev)->free == HEAD_FREE)
+        mergeBlocks(head->prev, head);
     
     print("Free ");
     printHex((int)(ptr - sizeof(malloc_head)));
@@ -91,6 +95,7 @@ void initMemory() {
     main_head->free = HEAD_FREE;
     main_head->size = total_memory - sizeof(malloc_head);
     main_head->next = 0;
+    main_head->prev = 0;
     /*print("Memory initialized with heap at: ");
     printHex(curr_free_mem);
     printl("");*/
