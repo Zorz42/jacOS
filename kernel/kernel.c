@@ -5,9 +5,23 @@
 
 void kernelMain() {
     printl("Kernel initialized!");
+    void* prev_alloc = 0;
     
     for(int i = 0; i < 100; i++) {
-        malloc(0x100 - 12);
+        void* alloc1 = malloc(0x10000);
+        void* alloc2 = malloc(0x50000);
+        free(alloc1);
+        void* alloc3 = malloc(0x20000);
+        void* alloc4 = malloc(0x60000);
+        free(alloc2);
+        free(alloc3);
+        free(alloc4);
+        
+        print("Memory change: ");
+        printHex(alloc1 - prev_alloc);
+        printl("");
+        
+        prev_alloc = alloc1;
         
         /*print("Used memory: ");
         printInt(getUsedMemory() / 1024);

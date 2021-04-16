@@ -59,7 +59,7 @@ void initGraphics(void* vesa_mode_info) {
     
     //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     
-    //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY / 4 - 1, 255);
+    //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
     
     initText();
     

@@ -53,6 +53,23 @@ void* malloc(u32 size) {
     return (void*)head + sizeof(malloc_head);
 }
 
+void mergeBlocks(malloc_head* block1, malloc_head* block2) {
+    //block1->size += block2->size + sizeof(malloc_head);
+    //block1->next = block2->next;
+}
+
+void free(void* ptr) {
+    malloc_head* head = ptr - sizeof(malloc_head);
+    head->free = HEAD_FREE;
+    
+    if(((malloc_head*)head->next)->free == HEAD_FREE)
+        mergeBlocks(head, head->next);
+    
+    print("Free ");
+    printHex((int)(ptr - sizeof(malloc_head)));
+    printl(".");
+}
+
 void initMemory() {
     heap_base = 0x3d5000;
     used_memory = 0;
