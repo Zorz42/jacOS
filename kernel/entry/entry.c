@@ -7,9 +7,10 @@ void kernelMain();
 void kernelEntry(void* data) {
     isr_install();
     irq_install();
+    
     initMemory();
     initGraphics(data);
-    
+
     kernelMain();
     
     while(1)

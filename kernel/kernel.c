@@ -1,13 +1,18 @@
+#include "kernel.h"
 #include "graphics/gfx.h"
 #include "text/text.h"
 #include "memory/memory.h"
 #include "cpu/timer.h"
 
+void onKeyEvent(Key key, char up) {
+    printl("Key pressed!");
+}
+
 void kernelMain() {
     printl("Kernel initialized!");
     void* prev_alloc = 0;
     
-    for(int i = 0; i < 100; i++) {
+    for(int i = 0; i < 1; i++) {
         printl("");
         printInt(i);
         printl(". time:");
@@ -37,5 +42,7 @@ void kernelMain() {
         print("Total memory: ");
         printInt(getTotalMemory() / 1024);
         printl(" KB");
+        
+        //delay(10);
     }
 }

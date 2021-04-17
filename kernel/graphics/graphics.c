@@ -12,6 +12,10 @@ unsigned int* buffer = 0;
 int total_pixels;
 extern const unsigned char font[2048];
 
+int createColor(unsigned char r, unsigned char g, unsigned char b) {
+    return b + (g << 8) + (r << 16);
+}
+
 void setPixel(short x, short y, int color) {
     buffer[x + y * mode_info->resolutionX] = color;
 }
