@@ -4,8 +4,27 @@
 #include "memory/memory.h"
 #include "cpu/timer.h"
 
-void onKeyEvent(Key key, char up) {
-    printl("Key pressed!");
+#define MAX_CMD_LENGTH 100
+char curr_shell_cmd[MAX_CMD_LENGTH];
+
+void onKeyEvent(Key key, bool up) {
+    static int cmd_length = 0;
+    if(!up) {
+        char c = keyToAscii(key);
+        if(c) {
+            curr_shell_cmd[cmd_length] = c;
+            cmd_length++;
+            
+            printChar(c);
+        } else if(key == KEY_BACKSPACE && cmd_length) {
+            moveCursorTo(getCursorX() - 1, getCursorY());
+            printChar(' ');
+            moveCursorTo(getCursorX() - 1, getCursorY());
+            cmd_length--;
+            curr_shell_cmd[cmd_length] = 0;
+        }
+        flush();
+    }
 }
 
 void kernelMain() {

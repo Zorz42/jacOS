@@ -6,20 +6,28 @@
 
 Key scancodeToKey(u8 scancode);
 
-static void keyboard_callback(registers_t regs) {
+static void keyboardCallback(registers_t regs) {
     /* The PIC leaves us the scancode in port 0x60 */
     u8 scancode = port_byte_in(0x60);
-    char up = 0;
+    bool up = false;
     if(scancode >= 0x80) {
-        up = 1;
+        up = true;
         scancode -= 0x80;
     }
     Key key = scancodeToKey(scancode);
     onKeyEvent(key, up);
 }
 
+char keyToAscii(Key key) {
+    if(key >= KEY_A && key <= KEY_Z)
+        return 'a' + key - KEY_A;
+    if(key == KEY_SPACE)
+        return ' ';
+    return 0;
+}
+
 void initKeyboard() {
-    register_interrupt_handler(IRQ1, keyboard_callback);
+    register_interrupt_handler(IRQ1, keyboardCallback);
 }
 
 Key scancodeToKey(u8 scancode) {
