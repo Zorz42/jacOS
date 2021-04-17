@@ -1,7 +1,7 @@
-C_SOURCES = $(shell find kernel -type f -name '*.c')
+C_SOURCES = $(shell find kernel -type f -name '*.cpp')
 HEADERS = $(shell find kernel -type f -name '*.h')
 # Nice syntax for file extension replacement
-OBJ = $(addprefix build/, ${C_SOURCES:.c=.o})
+OBJ = $(addprefix build/, ${C_SOURCES:.cpp=.o})
 
 # Change this if your cross-compiler is somewhere else
 #CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
@@ -14,7 +14,7 @@ LD = i386-elf-ld
 # -g: Use debugging symbols in gcc
 #CFLAGS = -g
 OPTIMISATION = -O0
-CFLAGS = -std=gnu11 -ffreestanding $(OPTIMISATION) -Ikernel/
+CFLAGS = -std=gnu++11 -ffreestanding $(OPTIMISATION) -Ikernel/
 KERNEL_OFFSET = 0x1000
 
 #KERNEL_SIZE = $(($(stat -f%z build/kernel.bin) / 512 + 1))
@@ -45,8 +45,8 @@ debug: os-image.bin kernel.elf
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
-# To make an object, always compile from its .c
-build/kernel/%.o: kernel/%.c ${HEADERS}
+# To make an object, always compile from its .cpp
+build/kernel/%.o: kernel/%.cpp ${HEADERS}
 	@mkdir -p $(@D)
 	${CC} ${CFLAGS} -c $< -o $@
 

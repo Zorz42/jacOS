@@ -4,6 +4,8 @@
 void initKeyboard();
 
 typedef enum {
+    KEY_UNKNOWN = -1,
+    
     // numbers
     KEY_0 = 0,
     KEY_1 = 1,

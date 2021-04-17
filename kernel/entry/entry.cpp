@@ -4,7 +4,7 @@
 
 void kernelMain();
 
-void kernelEntry(void* data) {
+extern "C" void kernelEntry(void* data) {
     isr_install();
     irq_install();
     

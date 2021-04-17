@@ -58,13 +58,13 @@ void printChar(char c) {
     }
 }
 
-void print(char* string) {
+void print(const char* string) {
     if(text_buffer)
         while(*string)
             printChar(*string++);
 }
 
-void printl(char* string) {
+void printl(const char* string) {
     if(text_buffer) {
         print(string);
         newLine();

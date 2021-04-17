@@ -26,7 +26,7 @@ void kernelMain() {
         free(alloc4);
         
         print("Memory change: ");
-        printHex(alloc1 - prev_alloc);
+        printHex((int)alloc1 - (int)prev_alloc);
         printl("");
         
         prev_alloc = alloc1;

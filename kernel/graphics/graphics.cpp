@@ -2,6 +2,7 @@
 #include "gfx.h"
 #include "text/text.h"
 #include "memory/memory.h"
+#include "font.h"
 
 void kernel_main();
 
@@ -10,7 +11,6 @@ void kernel_main();
 mode_info_t* mode_info;
 unsigned int* buffer = 0;
 int total_pixels;
-extern const unsigned char font[2048];
 
 int createColor(unsigned char r, unsigned char g, unsigned char b) {
     return b + (g << 8) + (r << 16);
@@ -56,7 +56,7 @@ void drawChar(int x, int y, char c) {
 }
 
 void initGraphics(void* vesa_mode_info) {
-    mode_info = vesa_mode_info;
+    mode_info = (mode_info_t*)vesa_mode_info;
     
     total_pixels = mode_info->resolutionX * mode_info->resolutionY;
     buffer = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);

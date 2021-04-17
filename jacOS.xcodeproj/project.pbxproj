@@ -7,31 +7,31 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		1620BB11262ADE6000BBB6D8 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
-		1620BB12262ADE6000BBB6D8 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		1620BB16262AFCF300BBB6D8 /* keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = keyboard.h; sourceTree = "<group>"; };
-		1620BB17262AFCF300BBB6D8 /* keyboard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = keyboard.c; sourceTree = "<group>"; };
+		1620BB17262AFCF300BBB6D8 /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
 		1620BB1C262AFEBE00BBB6D8 /* kernel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kernel.h; sourceTree = "<group>"; };
+		1660A1A5262B4D2400864ABB /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
+		1660A1A6262B4D2400864ABB /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		167A739D2626DF7A00328331 /* ports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ports.h; sourceTree = "<group>"; };
-		167A739F2626DF7A00328331 /* ports.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ports.c; sourceTree = "<group>"; };
-		167A73A02626DF7A00328331 /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
-		167A73A22626DF7A00328331 /* memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
+		167A739F2626DF7A00328331 /* ports.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ports.cpp; sourceTree = "<group>"; };
+		167A73A02626DF7A00328331 /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kernel.cpp; sourceTree = "<group>"; };
+		167A73A22626DF7A00328331 /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		167A73A32626DF7A00328331 /* memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
-		167A73A52626DF7A00328331 /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
+		167A73A52626DF7A00328331 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timer.cpp; sourceTree = "<group>"; };
 		167A73A62626DF7A00328331 /* idt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = idt.h; sourceTree = "<group>"; };
 		167A73A72626DF7A00328331 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
-		167A73A82626DF7A00328331 /* isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = isr.c; sourceTree = "<group>"; };
+		167A73A82626DF7A00328331 /* isr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isr.cpp; sourceTree = "<group>"; };
 		167A73A92626DF7A00328331 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timer.h; sourceTree = "<group>"; };
-		167A73AA2626DF7A00328331 /* idt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = idt.c; sourceTree = "<group>"; };
+		167A73AA2626DF7A00328331 /* idt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = idt.cpp; sourceTree = "<group>"; };
 		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; };
 		167A73AC2626DF7A00328331 /* isr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isr.h; sourceTree = "<group>"; };
 		167A73AE2626DF7A00328331 /* kernel_entry.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_entry.asm; sourceTree = "<group>"; };
-		167A73AF2626DF7A00328331 /* entry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entry.c; sourceTree = "<group>"; };
+		167A73AF2626DF7A00328331 /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		167A73B12626DF7A00328331 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
-		167A73B22626DF7A00328331 /* text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = text.c; sourceTree = "<group>"; };
-		167A73B42626DF7A00328331 /* graphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = graphics.c; sourceTree = "<group>"; };
+		167A73B22626DF7A00328331 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
+		167A73B42626DF7A00328331 /* graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphics.cpp; sourceTree = "<group>"; };
 		167A73B52626DF7A00328331 /* mode_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mode_info.h; sourceTree = "<group>"; };
-		167A73B62626DF7A00328331 /* font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = font.c; sourceTree = "<group>"; };
+		167A73B62626DF7A00328331 /* font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
 		167A73B72626DF7A00328331 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
 		167A73B92626DF7A00328331 /* gdt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = gdt.asm; sourceTree = "<group>"; };
 		167A73BA2626DF7A00328331 /* switch_pm.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = switch_pm.asm; sourceTree = "<group>"; };
@@ -47,7 +47,7 @@
 			isa = PBXGroup;
 			children = (
 				1620BB16262AFCF300BBB6D8 /* keyboard.h */,
-				1620BB17262AFCF300BBB6D8 /* keyboard.c */,
+				1620BB17262AFCF300BBB6D8 /* keyboard.cpp */,
 			);
 			path = keyboard;
 			sourceTree = "<group>";
@@ -71,7 +71,7 @@
 				167A73AD2626DF7A00328331 /* entry */,
 				167A73B02626DF7A00328331 /* text */,
 				167A73B32626DF7A00328331 /* graphics */,
-				167A73A02626DF7A00328331 /* kernel.c */,
+				167A73A02626DF7A00328331 /* kernel.cpp */,
 				1620BB1C262AFEBE00BBB6D8 /* kernel.h */,
 			);
 			path = kernel;
@@ -81,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				167A739D2626DF7A00328331 /* ports.h */,
-				167A739F2626DF7A00328331 /* ports.c */,
+				167A739F2626DF7A00328331 /* ports.cpp */,
 			);
 			path = drivers;
 			sourceTree = "<group>";
@@ -90,7 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				167A73A32626DF7A00328331 /* memory.h */,
-				167A73A22626DF7A00328331 /* memory.c */,
+				167A73A22626DF7A00328331 /* memory.cpp */,
 			);
 			path = memory;
 			sourceTree = "<group>";
@@ -99,11 +99,11 @@
 			isa = PBXGroup;
 			children = (
 				167A73A92626DF7A00328331 /* timer.h */,
-				167A73A52626DF7A00328331 /* timer.c */,
+				167A73A52626DF7A00328331 /* timer.cpp */,
 				167A73A62626DF7A00328331 /* idt.h */,
 				167A73A72626DF7A00328331 /* types.h */,
-				167A73A82626DF7A00328331 /* isr.c */,
-				167A73AA2626DF7A00328331 /* idt.c */,
+				167A73A82626DF7A00328331 /* isr.cpp */,
+				167A73AA2626DF7A00328331 /* idt.cpp */,
 				167A73AB2626DF7A00328331 /* interrupt.asm */,
 				167A73AC2626DF7A00328331 /* isr.h */,
 			);
@@ -114,7 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				167A73AE2626DF7A00328331 /* kernel_entry.asm */,
-				167A73AF2626DF7A00328331 /* entry.c */,
+				167A73AF2626DF7A00328331 /* entry.cpp */,
 			);
 			path = entry;
 			sourceTree = "<group>";
@@ -123,7 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				167A73B12626DF7A00328331 /* text.h */,
-				167A73B22626DF7A00328331 /* text.c */,
+				167A73B22626DF7A00328331 /* text.cpp */,
 			);
 			path = text;
 			sourceTree = "<group>";
@@ -131,9 +131,9 @@
 		167A73B32626DF7A00328331 /* graphics */ = {
 			isa = PBXGroup;
 			children = (
-				167A73B42626DF7A00328331 /* graphics.c */,
+				167A73B42626DF7A00328331 /* graphics.cpp */,
 				167A73B52626DF7A00328331 /* mode_info.h */,
-				167A73B62626DF7A00328331 /* font.c */,
+				167A73B62626DF7A00328331 /* font.h */,
 				167A73B72626DF7A00328331 /* gfx.h */,
 			);
 			path = graphics;
@@ -167,7 +167,7 @@
 			);
 			name = jacOS;
 			productName = jacOS;
-			productReference = 1620BB11262ADE6000BBB6D8 /* jacOS */;
+			productReference = 1660A1A5262B4D2400864ABB /* jacOS */;
 			productType = "com.apple.product-type.tool";
 		};
 		167A73DB2626E35000328331 /* jacOS-build-only */ = {
@@ -182,7 +182,7 @@
 			);
 			name = "jacOS-build-only";
 			productName = "jacOS-build-only";
-			productReference = 1620BB12262ADE6000BBB6D8 /* jacOS-build-only */;
+			productReference = 1660A1A6262B4D2400864ABB /* jacOS-build-only */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

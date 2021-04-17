@@ -29,11 +29,11 @@ void* malloc(u32 size) {
                 asm("hlt");
         }
         
-        head = head->next;
+        head = (malloc_head*)head->next;
     }
     
     // split that block into two blocks
-    malloc_head* next_head = (void*)head + sizeof(malloc_head) + size;
+    malloc_head* next_head = (malloc_head*)((void*)head + sizeof(malloc_head) + size);
     next_head->free = HEAD_FREE;
     next_head->size = head->size - size - sizeof(malloc_head);
     next_head->next = head->next;
@@ -60,7 +60,7 @@ void mergeBlocks(malloc_head* block1, malloc_head* block2) {
 }
 
 void free(void* ptr) {
-    malloc_head* head = ptr - sizeof(malloc_head);
+    malloc_head* head = (malloc_head*)(ptr - sizeof(malloc_head));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
         printl("Heap error: freeing invalid memory!");
         while(1)
@@ -77,9 +77,9 @@ void free(void* ptr) {
     used_memory -= head->size + sizeof(malloc_head);
     
     if(head->next && ((malloc_head*)head->next)->free == HEAD_FREE)
-        mergeBlocks(head, head->next);
+        mergeBlocks(head, (malloc_head*)head->next);
     if(head->prev && ((malloc_head*)head->prev)->free == HEAD_FREE)
-        mergeBlocks(head->prev, head);
+        mergeBlocks((malloc_head*)head->prev, head);
     
     print("Free ");
     printHex((int)(ptr - sizeof(malloc_head)));

@@ -82,6 +82,6 @@ Key scancodeToKey(u8 scancode) {
             //kprint("Keypad *");
         case 0x38: return KEY_LALT;
         case 0x39: return KEY_SPACE;
-        default: break;
+        default: return KEY_UNKNOWN;
     }
 }
