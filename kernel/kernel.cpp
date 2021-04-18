@@ -6,13 +6,25 @@
 
 #define MAX_CMD_LENGTH 100
 char curr_shell_cmd[MAX_CMD_LENGTH];
+int cmd_length;
+
+void resetCommand() {
+    cmd_length = 0;
+    curr_shell_cmd[0] = 0;
+    print("> ");
+    flush();
+}
+
+void onCommand() {
+    printl(&curr_shell_cmd[0]);
+}
 
 void onKeyEvent(Key key, bool up) {
-    static int cmd_length = 0;
     if(!up) {
         char c = keyToAscii(key);
         if(c) {
             curr_shell_cmd[cmd_length] = c;
+            curr_shell_cmd[cmd_length + 1] = 0;
             cmd_length++;
             
             printChar(c);
@@ -22,6 +34,10 @@ void onKeyEvent(Key key, bool up) {
             moveCursorTo(getCursorX() - 1, getCursorY());
             cmd_length--;
             curr_shell_cmd[cmd_length] = 0;
+        } else if(key == KEY_ENTER) {
+            printl("");
+            onCommand();
+            resetCommand();
         }
         flush();
     }
@@ -29,9 +45,11 @@ void onKeyEvent(Key key, bool up) {
 
 void kernelMain() {
     printl("Kernel initialized!");
-    void* prev_alloc = 0;
+    resetCommand();
     
-    for(int i = 0; i < 1; i++) {
+    /*void* prev_alloc = 0;
+    
+    for(int i = 0; i < 100; i++) {
         printl("");
         printInt(i);
         printl(". time:");
@@ -63,5 +81,5 @@ void kernelMain() {
         printl(" KB");
         
         //delay(10);
-    }
+    }*/
 }

@@ -73,5 +73,6 @@ enum Key {
 
 void initKeyboard();
 char keyToAscii(Key key);
+bool getKeyState(Key key);
 
 #endif /* keyboard_h */

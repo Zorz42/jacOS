@@ -5,6 +5,7 @@
 #include "kernel.h"
 
 Key scancodeToKey(u8 scancode);
+bool keyStates[KEY_COUNT];
 
 static void keyboardCallback(registers_t regs) {
     /* The PIC leaves us the scancode in port 0x60 */
@@ -15,15 +16,23 @@ static void keyboardCallback(registers_t regs) {
         scancode -= 0x80;
     }
     Key key = scancodeToKey(scancode);
+    if(key != KEY_UNKNOWN)
+        keyStates[key] = !up;
     onKeyEvent(key, up);
 }
 
 char keyToAscii(Key key) {
     if(key >= KEY_A && key <= KEY_Z)
-        return 'a' + key - KEY_A;
+        return (getKeyState(KEY_LSHIFT) || getKeyState(KEY_RSHIFT) ? 'A' : 'a') + key - KEY_A;
     if(key == KEY_SPACE)
         return ' ';
+    if(key >= KEY_0 && key <= KEY_9)
+        return '0' + key - KEY_0;
     return 0;
+}
+
+bool getKeyState(Key key) {
+    return keyStates[key];
 }
 
 void initKeyboard() {

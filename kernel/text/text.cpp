@@ -2,8 +2,12 @@
 #include "graphics/gfx.h"
 #include "memory/memory.h"
 
-int cursor_x = 0, cursor_y = 0, text_width, text_height;
+int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
 char* text_buffer = 0;
+
+void updateChar(int x, int y) {
+    drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
+}
 
 int getCursorX() {
     return cursor_x;
@@ -13,25 +17,31 @@ int getCursorY() {
     return cursor_y;
 }
 
+void updateCursor() {
+    updateChar(prev_x, prev_y);
+    drawRect(cursor_x * 8, cursor_y * 16, 8, 16, createColor(255, 255, 255));
+    prev_x = cursor_x;
+    prev_y = cursor_y;
+}
+
 void moveCursorTo(int x, int y) {
     cursor_x = x;
     cursor_y = y;
-}
-
-void updateChar(int x, int y) {
-    drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
+    updateCursor();
 }
 
 void flush() {
+    updateCursor();
     swapBuffers();
 }
 
 void newLine() {
-    if(cursor_y < text_height - 1)
-        moveCursorTo(0, cursor_y + 1);
-    else {
+    if(cursor_y < text_height - 1) {
+        cursor_x = 0;
+        cursor_y++;
+    } else {
         //scroll text
-        moveCursorTo(0, cursor_y);
+        cursor_x = 0;
         char* iter = text_buffer;
         for(int y = 0; y < text_height - 1; y++) {
             for(int x = 0; x < text_width; x++) {
@@ -52,7 +62,7 @@ void newLine() {
 void printChar(char c) {
     text_buffer[cursor_x + cursor_y * text_width] = c;
     updateChar(cursor_x, cursor_y);
-    moveCursorTo(cursor_x + 1, cursor_y);
+    cursor_x++;
     if(cursor_x >= text_width) {
         newLine();
     }
