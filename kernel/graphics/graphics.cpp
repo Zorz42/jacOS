@@ -8,9 +8,9 @@ void kernel_main();
 
 #define DRAW_BUFFER_BYTES_PER_PIXEL sizeof(unsigned int)
 
-mode_info_t* mode_info;
-unsigned int* buffer = 0;
-int total_pixels;
+static mode_info_t* mode_info;
+static unsigned int* buffer = 0;
+static int total_pixels;
 
 int createColor(unsigned char r, unsigned char g, unsigned char b) {
     return b + (g << 8) + (r << 16);

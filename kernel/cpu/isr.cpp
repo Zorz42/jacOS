@@ -3,8 +3,9 @@
 #include "drivers/ports.h"
 #include "timer.h"
 #include "keyboard/keyboard.h"
+#include "text/text.h"
 
-isr_t interrupt_handlers[256];
+static isr_t interrupt_handlers[256];
 
 /* Can't do this with a loop because we need the address
  * of the function names */
@@ -76,7 +77,7 @@ void isr_install() {
 }
 
 /* To print the message which defines every exception */
-const char *exception_messages[] = {
+static const char *exception_messages[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -115,13 +116,12 @@ const char *exception_messages[] = {
 };
 
 extern "C" void isr_handler(registers_t r) {
-    /*kprint("received interrupt: ");
-    char s[3];
-    int_to_ascii(r.int_no, s);
-    kprint(s);
-    kprint("\n");
-    kprint(exception_messages[r.int_no]);
-    kprint("\n");*/
+    print("received interrupt: ");
+    printInt(r.int_no);
+    printl("");
+    printl(exception_messages[r.int_no]);
+    while(true)
+        asm volatile("hlt");
 }
 
 void register_interrupt_handler(u8 n, isr_t handler) {

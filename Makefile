@@ -14,7 +14,7 @@ LD = i386-elf-ld
 # -g: Use debugging symbols in gcc
 #CFLAGS = -g
 OPTIMISATION = -O0
-CFLAGS = -std=gnu++11 -ffreestanding $(OPTIMISATION) -Ikernel/
+CFLAGS = -std=gnu++17 -ffreestanding $(OPTIMISATION) -Ikernel/
 KERNEL_OFFSET = 0x1000
 
 #KERNEL_SIZE = $(($(stat -f%z build/kernel.bin) / 512 + 1))

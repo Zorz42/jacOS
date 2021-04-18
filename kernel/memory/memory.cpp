@@ -1,7 +1,7 @@
 #include "memory.h"
 #include "text/text.h"
 
-unsigned int heap_base, total_memory, used_memory;
+static unsigned int heap_base, total_memory, used_memory;
 
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
@@ -19,14 +19,14 @@ void* malloc(u32 size) {
     while(head->free != HEAD_FREE || head->size <= size) {
         if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
             printl("Heap error: heap corruption!");
-            while(1)
-                asm("hlt");
+            while(true)
+                asm volatile("hlt");
         }
         
         if(head->next == 0) {
             printl("Heap error: out of heap memory!");
-            while(1)
-                asm("hlt");
+            while(true)
+                asm volatile("hlt");
         }
         
         head = (malloc_head*)head->next;
@@ -54,7 +54,7 @@ void* malloc(u32 size) {
     return (void*)((int)head + (int)sizeof(malloc_head));
 }
 
-void mergeBlocks(malloc_head* block1, malloc_head* block2) {
+static void mergeBlocks(malloc_head* block1, malloc_head* block2) {
     block1->size += block2->size + sizeof(malloc_head);
     block1->next = block2->next;
 }
@@ -63,14 +63,14 @@ void free(void* ptr) {
     malloc_head* head = (malloc_head*)((int)ptr - sizeof(malloc_head));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
         printl("Heap error: freeing invalid memory!");
-        while(1)
-            asm("hlt");
+        while(true)
+            asm volatile("hlt");
     }
     
     if(head->free == HEAD_FREE) {
         printl("Heap error: freeing already free memory!");
-        while(1)
-            asm("hlt");
+        while(true)
+            asm volatile("hlt");
     }
     
     head->free = HEAD_FREE;

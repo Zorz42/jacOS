@@ -5,17 +5,16 @@
 #include "cpu/timer.h"
 
 #define MAX_CMD_LENGTH 100
-char curr_shell_cmd[MAX_CMD_LENGTH];
-int cmd_length;
+static char curr_shell_cmd[MAX_CMD_LENGTH];
+static int cmd_length;
 
-void resetCommand() {
+static void resetCommand() {
     cmd_length = 0;
     curr_shell_cmd[0] = 0;
     print("> ");
-    flush();
 }
 
-void onCommand() {
+static void onCommand() {
     printl(&curr_shell_cmd[0]);
 }
 
@@ -24,9 +23,7 @@ void onKeyEvent(Key key, bool up) {
         char c = keyToAscii(key);
         if(c) {
             curr_shell_cmd[cmd_length] = c;
-            curr_shell_cmd[cmd_length + 1] = 0;
-            cmd_length++;
-            
+            curr_shell_cmd[++cmd_length] = 0;
             printChar(c);
         } else if(key == KEY_BACKSPACE && cmd_length) {
             moveCursorTo(getCursorX() - 1, getCursorY());
@@ -46,6 +43,7 @@ void onKeyEvent(Key key, bool up) {
 void kernelMain() {
     printl("Kernel initialized!");
     resetCommand();
+    flush();
     
     /*void* prev_alloc = 0;
     

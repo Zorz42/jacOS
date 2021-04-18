@@ -27,7 +27,7 @@ typedef struct mode_info_block {
     unsigned char* buffer;
     u32 offScreenMemOff;
     u16 offScreenMemSize;
-    u8  reserved1 [206];
+    //u8  reserved1 [206];
 } mode_info_t;
 
 #endif

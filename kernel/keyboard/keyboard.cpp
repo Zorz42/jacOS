@@ -4,8 +4,8 @@
 #include "text/text.h"
 #include "kernel.h"
 
-Key scancodeToKey(u8 scancode);
-bool keyStates[KEY_COUNT];
+static Key scancodeToKey(u8 scancode);
+static bool keyStates[KEY_COUNT];
 
 static void keyboardCallback(registers_t regs) {
     /* The PIC leaves us the scancode in port 0x60 */
@@ -39,7 +39,7 @@ void initKeyboard() {
     register_interrupt_handler(IRQ1, keyboardCallback);
 }
 
-Key scancodeToKey(u8 scancode) {
+static Key scancodeToKey(u8 scancode) {
     switch (scancode) {
         case 0x1: return KEY_ESCAPE;
         case 0x2: return KEY_1;

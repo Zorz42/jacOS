@@ -13,6 +13,6 @@ extern "C" void kernelEntry(void* data) {
 
     kernelMain();
     
-    while(1)
-        asm ("hlt");
+    while(true)
+        asm volatile("hlt");
 }

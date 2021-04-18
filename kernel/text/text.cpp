@@ -2,10 +2,10 @@
 #include "graphics/gfx.h"
 #include "memory/memory.h"
 
-int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
-char* text_buffer = 0;
+static int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
+static char* text_buffer = 0;
 
-void updateChar(int x, int y) {
+static void updateChar(int x, int y) {
     drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
 }
 
@@ -35,7 +35,7 @@ void flush() {
     swapBuffers();
 }
 
-void newLine() {
+static void newLine() {
     if(cursor_y < text_height - 1) {
         cursor_x = 0;
         cursor_y++;
