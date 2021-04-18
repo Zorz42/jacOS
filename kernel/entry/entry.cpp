@@ -1,6 +1,7 @@
 #include "graphics/gfx.h"
 #include "cpu/isr.h"
 #include "memory/memory.h"
+#include "drivers/vesa/vesa.h"
 
 void kernelMain();
 
@@ -9,8 +10,9 @@ extern "C" void kernelEntry(void* data) {
     irq_install();
     
     initMemory();
-    initGraphics(data);
-
+    vesa::init(data);
+    initGraphics();
+    
     kernelMain();
     
     while(true)

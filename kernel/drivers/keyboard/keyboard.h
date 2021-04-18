@@ -1,6 +1,8 @@
 #ifndef keyboard_h
 #define keyboard_h
 
+namespace keyboard {
+
 enum Key {
     KEY_UNKNOWN,
     
@@ -71,8 +73,10 @@ enum Key {
     KEY_COUNT,
 };
 
-void initKeyboard();
+void init();
 char keyToAscii(Key key);
 bool getKeyState(Key key);
+
+}
 
 #endif /* keyboard_h */

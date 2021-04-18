@@ -1,8 +1,8 @@
 #ifndef kernel_h
 #define kernel_h
 
-#include "keyboard/keyboard.h"
+#include "drivers/keyboard/keyboard.h"
 
-void onKeyEvent(Key key, bool up);
+void onKeyEvent(keyboard::Key key, bool up);
 
 #endif /* kernel_h */

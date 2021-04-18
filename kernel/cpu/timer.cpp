@@ -1,6 +1,6 @@
 #include "timer.h"
 #include "isr.h"
-#include "drivers/ports.h"
+#include "drivers/ports/ports.h"
 #include "text/text.h"
 
 static unsigned int tick = 0;
@@ -29,8 +29,8 @@ void init_timer(u32 freq) {
     u8 low  = (u8)(divisor & 0xFF);
     u8 high = (u8)( (divisor >> 8) & 0xFF);
     /* Send the command */
-    port_byte_out(0x43, 0x36); /* Command port */
-    port_byte_out(0x40, low);
-    port_byte_out(0x40, high);
+    ports::byteOut(0x43, 0x36); /* Command port */
+    ports::byteOut(0x40, low);
+    ports::byteOut(0x40, high);
 }
 

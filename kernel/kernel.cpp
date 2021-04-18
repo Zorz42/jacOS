@@ -18,22 +18,23 @@ static void onCommand() {
     printl(&curr_shell_cmd[0]);
 }
 
-void onKeyEvent(Key key, bool up) {
+void onKeyEvent(keyboard::Key key, bool up) {
     if(!up) {
         char c = keyToAscii(key);
         if(c) {
             curr_shell_cmd[cmd_length] = c;
             curr_shell_cmd[++cmd_length] = 0;
             printChar(c);
-        } else if(key == KEY_BACKSPACE && cmd_length) {
+        } else if(key == keyboard::KEY_BACKSPACE && cmd_length) {
             moveCursorTo(getCursorX() - 1, getCursorY());
             printChar(' ');
             moveCursorTo(getCursorX() - 1, getCursorY());
             cmd_length--;
             curr_shell_cmd[cmd_length] = 0;
-        } else if(key == KEY_ENTER) {
+        } else if(key == keyboard::KEY_ENTER) {
             printl("");
-            onCommand();
+            if(curr_shell_cmd[0])
+                onCommand();
             resetCommand();
         }
         flush();

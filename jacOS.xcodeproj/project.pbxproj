@@ -28,7 +28,6 @@
 		167A73B12626DF7A00328331 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		167A73B22626DF7A00328331 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		167A73B42626DF7A00328331 /* graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphics.cpp; sourceTree = "<group>"; };
-		167A73B52626DF7A00328331 /* mode_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mode_info.h; sourceTree = "<group>"; };
 		167A73B62626DF7A00328331 /* font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
 		167A73B72626DF7A00328331 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
 		167A73B92626DF7A00328331 /* gdt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = gdt.asm; sourceTree = "<group>"; };
@@ -40,6 +39,8 @@
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		167FB5B1262C2B7600AA5F51 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
 		167FB5B2262C2B7600AA5F51 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
+		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
+		167FB5C0262C467500AA5F51 /* vesa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vesa.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -64,7 +65,6 @@
 		167A739A2626DF7A00328331 /* kernel */ = {
 			isa = PBXGroup;
 			children = (
-				1620BB15262AFCE600BBB6D8 /* keyboard */,
 				167A739B2626DF7A00328331 /* drivers */,
 				167A73A12626DF7A00328331 /* memory */,
 				167A73A42626DF7A00328331 /* cpu */,
@@ -80,8 +80,9 @@
 		167A739B2626DF7A00328331 /* drivers */ = {
 			isa = PBXGroup;
 			children = (
-				167A739D2626DF7A00328331 /* ports.h */,
-				167A739F2626DF7A00328331 /* ports.cpp */,
+				167FB5BE262C45C100AA5F51 /* vesa */,
+				167FB5B9262C41BA00AA5F51 /* ports */,
+				1620BB15262AFCE600BBB6D8 /* keyboard */,
 			);
 			path = drivers;
 			sourceTree = "<group>";
@@ -131,10 +132,9 @@
 		167A73B32626DF7A00328331 /* graphics */ = {
 			isa = PBXGroup;
 			children = (
-				167A73B62626DF7A00328331 /* font.h */,
-				167A73B52626DF7A00328331 /* mode_info.h */,
-				167A73B72626DF7A00328331 /* gfx.h */,
 				167A73B42626DF7A00328331 /* graphics.cpp */,
+				167A73B62626DF7A00328331 /* font.h */,
+				167A73B72626DF7A00328331 /* gfx.h */,
 			);
 			path = graphics;
 			sourceTree = "<group>";
@@ -150,6 +150,24 @@
 				167A73BE2626DF7A00328331 /* print.asm */,
 			);
 			path = boot;
+			sourceTree = "<group>";
+		};
+		167FB5B9262C41BA00AA5F51 /* ports */ = {
+			isa = PBXGroup;
+			children = (
+				167A739D2626DF7A00328331 /* ports.h */,
+				167A739F2626DF7A00328331 /* ports.cpp */,
+			);
+			path = ports;
+			sourceTree = "<group>";
+		};
+		167FB5BE262C45C100AA5F51 /* vesa */ = {
+			isa = PBXGroup;
+			children = (
+				167FB5C0262C467500AA5F51 /* vesa.h */,
+				167FB5BF262C467500AA5F51 /* vesa.cpp */,
+			);
+			path = vesa;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

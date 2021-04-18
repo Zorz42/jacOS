@@ -1,28 +1,22 @@
-#include "mode_info.h"
 #include "gfx.h"
 #include "text/text.h"
 #include "memory/memory.h"
 #include "font.h"
+#include "drivers/vesa/vesa.h"
 
 void kernel_main();
-
-#define DRAW_BUFFER_BYTES_PER_PIXEL sizeof(unsigned int)
-
-static mode_info_t* mode_info;
-static unsigned int* buffer = 0;
-static int total_pixels;
 
 int createColor(unsigned char r, unsigned char g, unsigned char b) {
     return b + (g << 8) + (r << 16);
 }
 
 void setPixel(short x, short y, int color) {
-    buffer[x + y * mode_info->resolutionX] = color;
+    vesa::getVideoBuffer()[x + y * vesa::getScreenWidth()] = color;
 }
 
 void drawRect(short x, short y, short w, short h, int color) {
-    unsigned int* temp_buffer = buffer + x + y * mode_info->resolutionX;
-    int step = mode_info->resolutionX - w, y2 = y + h, x2 = x + w;
+    unsigned int* temp_buffer = vesa::getVideoBuffer() + x + y * vesa::getScreenWidth();
+    int step = vesa::getScreenWidth() - w, y2 = y + h, x2 = x + w;
     for(; y < y2; y++) {
         for(int x_ = x; x_ < x2; x_++)
             *temp_buffer++ = color;
@@ -31,36 +25,27 @@ void drawRect(short x, short y, short w, short h, int color) {
 }
 
 void swapBuffers() {
-    for(int i = 0; i < total_pixels; i++) {
-        unsigned int* curr_pixel = (unsigned int*)(mode_info->buffer + i * 3);
-        if(*curr_pixel ^ buffer[i] & 0xFFFFFF)
-            *curr_pixel = buffer[i];
-    }
+    vesa::swapBuffers();
 }
 
 int getScreenWidth() {
-    return mode_info->resolutionX;
+    return vesa::getScreenWidth();
 }
 
 int getScreenHeight() {
-    return mode_info->resolutionY;
+    return vesa::getScreenHeight();
 }
 
 void drawChar(int x, int y, char c) {
-    unsigned int* temp_buffer = buffer + x + y * mode_info->resolutionX;
+    unsigned int* temp_buffer = vesa::getVideoBuffer() + x + y * vesa::getScreenWidth();
     for(int y_ = 0; y_ < 16; y_++) {
         for(int x_ = 0; x_ < 8; x_++)
             *temp_buffer++ = createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1);
-        temp_buffer += mode_info->resolutionX - 8;
+        temp_buffer += vesa::getScreenWidth() - 8;
     }
 }
 
-void initGraphics(void* vesa_mode_info) {
-    mode_info = (mode_info_t*)vesa_mode_info;
-    
-    total_pixels = mode_info->resolutionX * mode_info->resolutionY;
-    buffer = (unsigned int*)malloc(total_pixels * DRAW_BUFFER_BYTES_PER_PIXEL);
-    
+void initGraphics() {
     //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     
     //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
@@ -69,14 +54,14 @@ void initGraphics(void* vesa_mode_info) {
     
     printl("Initializing graphics module...");
     print("VESA buffer is at: ");
-    printHex((int)mode_info->buffer);
+    printHex((int)vesa::getVideoBuffer());
     printl("");
     print("Screen buffer is at: ");
-    printHex((int)buffer);
+    printHex((int)vesa::getVideoBuffer());
     printl("");
     print("Screen resulution is: ");
-    printInt(mode_info->resolutionX);
+    printInt(vesa::getScreenWidth());
     print("x");
-    printInt(mode_info->resolutionY);
+    printInt(vesa::getScreenHeight());
     printl("");
 }
