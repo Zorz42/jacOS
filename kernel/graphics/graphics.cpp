@@ -3,8 +3,7 @@
 #include "memory/memory.h"
 #include "font.h"
 #include "drivers/vesa/vesa.h"
-
-void kernel_main();
+#include "kernel.h"
 
 int createColor(unsigned char r, unsigned char g, unsigned char b) {
     return b + (g << 8) + (r << 16);

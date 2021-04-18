@@ -109,3 +109,11 @@ unsigned int getTotalMemory() {
 unsigned int getFreeMemory() {
     return total_memory - used_memory;
 }
+
+void* operator new(unsigned long size) {
+    return malloc(size);
+}
+
+void* operator new[](unsigned long size) {
+    return malloc(size);
+}

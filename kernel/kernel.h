@@ -4,5 +4,6 @@
 #include "drivers/keyboard/keyboard.h"
 
 void onKeyEvent(keyboard::Key key, bool up);
+void kernelMain();
 
 #endif /* kernel_h */
