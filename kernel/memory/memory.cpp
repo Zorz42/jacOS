@@ -18,13 +18,13 @@ void* malloc(u32 size) {
     // find a free block
     while(head->free != HEAD_FREE || head->size <= size) {
         if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-            printl("Heap error: heap corruption!");
+            text::cout << "Heap error: heap corruption!" << text::endl;
             while(true)
                 asm volatile("hlt");
         }
         
         if(head->next == 0) {
-            printl("Heap error: out of heap memory!");
+            text::cout << "Heap error: out of heap memory!" << text::endl;
             while(true)
                 asm volatile("hlt");
         }
@@ -45,11 +45,8 @@ void* malloc(u32 size) {
     
     used_memory += size + sizeof(malloc_head);
     
-    print("Malloc from ");
-    printHex((int)head + sizeof(malloc_head));
-    print(" to ");
-    printHex((int)head + sizeof(malloc_head) + head->size);
-    printl(".");
+    text::cout << 10;
+    text::cout << "Malloc from " << text::hex << (int)head + sizeof(malloc_head) << " to " << (int)head + sizeof(malloc_head) + head->size << "." << text::endl;
     
     return (void*)((int)head + (int)sizeof(malloc_head));
 }
@@ -62,13 +59,13 @@ static void mergeBlocks(malloc_head* block1, malloc_head* block2) {
 void free(void* ptr) {
     malloc_head* head = (malloc_head*)((int)ptr - sizeof(malloc_head));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-        printl("Heap error: freeing invalid memory!");
+        text::cout << "Heap error: freeing invalid memory!" << text::endl;
         while(true)
             asm volatile("hlt");
     }
     
     if(head->free == HEAD_FREE) {
-        printl("Heap error: freeing already free memory!");
+        text::cout << "Heap error: freeing already free memory!" << text::endl;
         while(true)
             asm volatile("hlt");
     }
@@ -81,9 +78,7 @@ void free(void* ptr) {
     if(head->prev && ((malloc_head*)head->prev)->free == HEAD_FREE)
         mergeBlocks((malloc_head*)head->prev, head);
     
-    print("Free ");
-    printHex((int)ptr - sizeof(malloc_head));
-    printl(".");
+    text::cout << "Free " << text::hex << (int)ptr - sizeof(malloc_head) << "." << text::endl;
 }
 
 void initMemory() {

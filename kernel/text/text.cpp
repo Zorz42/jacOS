@@ -2,37 +2,14 @@
 #include "graphics/gfx.h"
 #include "memory/memory.h"
 
+enum printMode {MODE_DEC, MODE_HEX};
+
 static int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
 static char* text_buffer = 0;
+static printMode print_mode = MODE_DEC;
 
 static void updateChar(int x, int y) {
-    drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
-}
-
-int getCursorX() {
-    return cursor_x;
-}
-
-int getCursorY() {
-    return cursor_y;
-}
-
-void updateCursor() {
-    updateChar(prev_x, prev_y);
-    drawRect(cursor_x * 8, cursor_y * 16, 8, 16, createColor(255, 255, 255));
-    prev_x = cursor_x;
-    prev_y = cursor_y;
-}
-
-void moveCursorTo(int x, int y) {
-    cursor_x = x;
-    cursor_y = y;
-    updateCursor();
-}
-
-void flush() {
-    updateCursor();
-    swapBuffers();
+    gfx::drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
 }
 
 static void newLine() {
@@ -56,75 +33,150 @@ static void newLine() {
             iter++;
         }
     }
+}
+
+static void printChar(char c) {
+    if(c == '\n')
+        newLine();
+    else {
+        text_buffer[cursor_x + cursor_y * text_width] = c;
+        updateChar(cursor_x, cursor_y);
+        cursor_x++;
+        if(cursor_x >= text_width)
+            newLine();
+    }
+}
+
+int text::getCursorX() {
+    return cursor_x;
+}
+
+int text::getCursorY() {
+    return cursor_y;
+}
+
+void text::flush() {
+    // update cursor
+    updateChar(prev_x, prev_y);
+    gfx::drawRect(cursor_x * 8, cursor_y * 16, 8, 16, gfx::createColor(255, 255, 255));
+    prev_x = cursor_x;
+    prev_y = cursor_y;
+    
+    gfx::swapBuffers();
+}
+
+void text::moveCursorTo(int x, int y) {
+    cursor_x = x;
+    cursor_y = y;
     flush();
 }
 
-void printChar(char c) {
-    text_buffer[cursor_x + cursor_y * text_width] = c;
-    updateChar(cursor_x, cursor_y);
-    cursor_x++;
-    if(cursor_x >= text_width) {
-        newLine();
-    }
-}
-
-void print(const char* string) {
+text::_out_stream text::_out_stream::operator<<(const char* string) {
     if(text_buffer)
         while(*string)
             printChar(*string++);
+    return *this;
 }
 
-void printl(const char* string) {
-    if(text_buffer) {
-        print(string);
-        newLine();
+text::_out_stream text::_out_stream::operator<<(char character) {
+    printChar(character);
+    return *this;
+}
+
+long long div(long long a, long long b) {
+    long long result = 0;
+    while(a >= b) {
+        a -= b;
+        result++;
     }
+    return result;
 }
 
-void printHex(int x) {
-    if(text_buffer) {
-        int end = 7;
-        while(((x >> end * 4) & 0xF) == 0 && end > 0)
-            end--;
-        print("0x");
-        
-        for(int i = end; i >= 0; i--) {
-            char result = (x >> i * 4) & 0xF;
-            printChar(result + (result < 10 ? '0' : 'A' - 10));
-        }
-    }
+long long mod(long long a, long long b) {
+    while(a >= b)
+        a -= b;
+    return a;
 }
 
-void printInt(int x) {
-    if(text_buffer) {
-        int x2 = x, length = 0;
-        while(x2) {
-            length++;
-            x2 /= 10;
+text::_out_stream text::_out_stream::operator<<(long long number) {
+    if(text_buffer)
+        switch(print_mode) {
+            case MODE_DEC: {
+                long long x2 = number, length = 0;
+                while(x2) {
+                    length++;
+                    x2 = div(x2, 10);
+                }
+                
+                if(length == 0)
+                    length = 1;
+                
+                for(int i = 0; i < length; i++) {
+                    long long x3 = number;
+                    for(int i2 = 0; i2 < length - i - 1; i2++)
+                        x3 = div(x3, 10);
+                    printChar('0' + mod(x3, 10));
+                }
+                break;
+            }
+            case MODE_HEX: {
+                int end = 7;
+                while(((number >> end * 4) & 0xF) == 0 && end > 0)
+                    end--;
+                *this << "0x";
+                
+                for(int i = end; i >= 0; i--) {
+                    char result = (number >> i * 4) & 0xF;
+                    *this << result + (result < 10 ? '0' : 'A' - 10);
+                }
+                break;
+            }
         }
-        
-        if(length == 0)
-            length = 1;
-        
-        for(int i = 0; i < length; i++) {
-            int x3 = x;
-            for(int i2 = 0; i2 < length - i - 1; i2++)
-                x3 /= 10;
-            printChar('0' + x3 % 10);
-        }
-    }
+    return *this;
 }
 
-void initText() {
-    text_width = getScreenWidth() / 8;
-    text_height = getScreenHeight() / 16;
+text::_out_stream text::_out_stream::operator<<(long number) {
+    return operator<<((long long)number);
+}
+
+text::_out_stream text::_out_stream::operator<<(int number) {
+    return operator<<((long long)number);
+}
+
+text::_out_stream text::_out_stream::operator<<(unsigned long long number) {
+    return  operator<<((long long)number);
+}
+
+text::_out_stream text::_out_stream::operator<<(unsigned long number) {
+    return operator<<((long long)number);
+}
+
+text::_out_stream text::_out_stream::operator<<(unsigned int number) {
+    return operator<<((long long)number);
+}
+
+text::_out_stream text::_out_stream::operator<<(_hex _) {
+    print_mode = MODE_HEX;
+    return *this;
+}
+
+text::_out_stream text::_out_stream::operator<<(_dec _) {
+    print_mode = MODE_DEC;
+    return *this;
+}
+
+text::_out_stream text::_out_stream::operator<<(_endl _) {
+    newLine();
+    flush();
+    print_mode = MODE_DEC;
+    return *this;
+}
+
+void text::init() {
+    text_width = gfx::getScreenWidth() / 8;
+    text_height = gfx::getScreenHeight() / 16;
     
     text_buffer = (char*)malloc(text_width * (text_height + 1));
     
-    printl("Text module initialized!");
-    print("Number of characters of screen is: ");
-    printInt(text_width);
-    print("x");
-    printInt(text_height);
-    printl("");
+    cout << "Text module initialized!" << endl << "Number of characters of screen is: " << text_width << "x" << text_height << endl;
 }

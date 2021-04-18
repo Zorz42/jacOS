@@ -11,11 +11,11 @@ static int cmd_length;
 static void resetCommand() {
     cmd_length = 0;
     curr_shell_cmd[0] = 0;
-    print("> ");
+    text::cout << "> ";
 }
 
 static void onCommand() {
-    printl(&curr_shell_cmd[0]);
+    text::cout << &curr_shell_cmd[0] << text::endl;
 }
 
 void onKeyEvent(keyboard::Key key, bool up) {
@@ -24,27 +24,27 @@ void onKeyEvent(keyboard::Key key, bool up) {
         if(c) {
             curr_shell_cmd[cmd_length] = c;
             curr_shell_cmd[++cmd_length] = 0;
-            printChar(c);
+            text::cout << c << text::endl;
         } else if(key == keyboard::KEY_BACKSPACE && cmd_length) {
-            moveCursorTo(getCursorX() - 1, getCursorY());
-            printChar(' ');
-            moveCursorTo(getCursorX() - 1, getCursorY());
+            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
+            text::cout << " " << text::endl;
+            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
             cmd_length--;
             curr_shell_cmd[cmd_length] = 0;
         } else if(key == keyboard::KEY_ENTER) {
-            printl("");
+            text::cout << text::endl;
             if(curr_shell_cmd[0])
                 onCommand();
             resetCommand();
         }
-        flush();
+        text::flush();
     }
 }
 
 void kernelMain() {
-    printl("Kernel initialized!");
+    text::cout << "Kernel initialized!" << text::endl;
     resetCommand();
-    flush();
+    text::flush();
     
     /*void* prev_alloc = 0;
     

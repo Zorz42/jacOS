@@ -11,7 +11,7 @@ extern "C" void kernelEntry(void* data) {
     
     initMemory();
     vesa::init(data);
-    initGraphics();
+    gfx::init();
     
     kernelMain();
     

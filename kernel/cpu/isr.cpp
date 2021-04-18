@@ -116,10 +116,7 @@ static const char *exception_messages[] = {
 };
 
 extern "C" void isr_handler(registers_t r) {
-    print("received interrupt: ");
-    printInt(r.int_no);
-    printl("");
-    printl(exception_messages[r.int_no]);
+    text::cout << "received interrupt: " << r.int_no << text::endl << exception_messages[r.int_no] << text::endl;
     while(true)
         asm volatile("hlt");
 }
