@@ -45,7 +45,6 @@ void* malloc(u32 size) {
     
     used_memory += size + sizeof(malloc_head);
     
-    text::cout << 10;
     text::cout << "Malloc from " << text::hex << (int)head + sizeof(malloc_head) << " to " << (int)head + sizeof(malloc_head) + head->size << "." << text::endl;
     
     return (void*)((int)head + (int)sizeof(malloc_head));

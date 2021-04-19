@@ -24,7 +24,7 @@ void onKeyEvent(keyboard::Key key, bool up) {
         if(c) {
             curr_shell_cmd[cmd_length] = c;
             curr_shell_cmd[++cmd_length] = 0;
-            text::cout << c << text::endl;
+            text::cout << c;
         } else if(key == keyboard::KEY_BACKSPACE && cmd_length) {
             text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
             text::cout << " " << text::endl;

@@ -5,7 +5,7 @@
 enum printMode {MODE_DEC, MODE_HEX};
 
 static int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
-static char* text_buffer = 0;
+static char* text_buffer = nullptr;
 static printMode print_mode = MODE_DEC;
 
 static void updateChar(int x, int y) {
@@ -79,7 +79,8 @@ text::_out_stream text::_out_stream::operator<<(const char* string) {
 }
 
 text::_out_stream text::_out_stream::operator<<(char character) {
-    printChar(character);
+    if(text_buffer)
+        printChar(character);
     return *this;
 }
 
@@ -127,7 +128,7 @@ text::_out_stream text::_out_stream::operator<<(long long number) {
                 
                 for(int i = end; i >= 0; i--) {
                     char result = (number >> i * 4) & 0xF;
-                    *this << result + (result < 10 ? '0' : 'A' - 10);
+                    *this << char(result + (result < 10 ? '0' : 'A' - 10));
                 }
                 break;
             }
@@ -166,8 +167,10 @@ text::_out_stream text::_out_stream::operator<<(_dec _) {
 }
 
 text::_out_stream text::_out_stream::operator<<(_endl _) {
-    newLine();
-    flush();
+    if(text_buffer) {
+        newLine();
+        flush();
+    }
     print_mode = MODE_DEC;
     return *this;
 }
