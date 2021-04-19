@@ -5,10 +5,6 @@
 #include "drivers/vesa/vesa.h"
 #include "kernel.h"
 
-int gfx::createColor(unsigned char r, unsigned char g, unsigned char b) {
-    return b + (g << 8) + (r << 16);
-}
-
 void gfx::setPixel(short x, short y, int color) {
     vesa::lineHasChanged(y);
     vesa::getVideoBuffer()[x + y * vesa::getScreenWidth()] = color;
@@ -42,7 +38,7 @@ void gfx::drawChar(int x, int y, char c) {
     for(int y_ = 0; y_ < 16; y_++) {
         vesa::lineHasChanged(y + y_);
         for(int x_ = 0; x_ < 8; x_++)
-            *temp_buffer++ = createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1);
+            *temp_buffer++ = (font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1 ? COLOR(255, 255, 255) : 0;
         temp_buffer += vesa::getScreenWidth() - 8;
     }
 }

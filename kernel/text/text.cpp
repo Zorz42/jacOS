@@ -9,7 +9,7 @@ static char* text_buffer = nullptr;
 static printMode print_mode = MODE_DEC;
 
 static void updateChar(int x, int y) {
-    gfx::drawChar(x * 8, y * 16, text_buffer[x + y * text_width]);
+    gfx::drawChar(x << 3, y << 4, text_buffer[x + y * text_width]);
 }
 
 static void newLine() {
@@ -35,18 +35,6 @@ static void newLine() {
     }
 }
 
-static void printChar(char c) {
-    if(c == '\n')
-        newLine();
-    else {
-        text_buffer[cursor_x + cursor_y * text_width] = c;
-        updateChar(cursor_x, cursor_y);
-        cursor_x++;
-        if(cursor_x >= text_width)
-            newLine();
-    }
-}
-
 int text::getCursorX() {
     return cursor_x;
 }
@@ -59,7 +47,7 @@ void text::flush() {
     // update cursor
     if(prev_x != cursor_x || prev_y != cursor_y) {
         updateChar(prev_x, prev_y);
-        gfx::drawRect(cursor_x * 8, cursor_y * 16, 8, 16, gfx::createColor(255, 255, 255));
+        gfx::drawRect(cursor_x * 8, cursor_y * 16, 8, 16, COLOR(255, 255, 255));
         prev_x = cursor_x;
         prev_y = cursor_y;
     }
@@ -76,13 +64,21 @@ void text::moveCursorTo(int x, int y) {
 text::_out_stream text::_out_stream::operator<<(const char* string) {
     if(text_buffer)
         while(*string)
-            printChar(*string++);
+            *this << *string++;
     return *this;
 }
 
 text::_out_stream text::_out_stream::operator<<(char character) {
-    if(text_buffer)
-        printChar(character);
+    if(text_buffer) {
+        if(character == '\n')
+            newLine();
+        else {
+            text_buffer[cursor_x + cursor_y * text_width] = character;
+            updateChar(cursor_x, cursor_y);
+            if(++cursor_x >= text_width)
+                newLine();
+        }
+    }
     return *this;
 }
 
@@ -118,7 +114,7 @@ text::_out_stream text::_out_stream::operator<<(long long number) {
                     long long x3 = number;
                     for(int i2 = 0; i2 < length - i - 1; i2++)
                         x3 = div(x3, 10);
-                    printChar('0' + mod(x3, 10));
+                    *this << char('0' + mod(x3, 10));
                 }
                 break;
             }

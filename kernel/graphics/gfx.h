@@ -1,10 +1,11 @@
 namespace gfx {
 
+#define COLOR(r, b, g) int((int)(b) + ((int)(g) << 8) + ((int)(r) << 16))
+
 void init(void* data);
 
 void setPixel(short x, short y, int color);
 void drawRect(short x, short y, short w, short h, int color);
-int createColor(unsigned char r, unsigned char g, unsigned char b);
 
 void swapBuffers();
 int getScreenWidth();

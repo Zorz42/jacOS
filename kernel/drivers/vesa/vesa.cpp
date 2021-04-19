@@ -29,12 +29,14 @@ struct mode_info {
     //u8  reserved1 [206];
 };
 
-mode_info* mode_information = nullptr;
+static mode_info* mode_information = nullptr;
 static unsigned int* buffer = nullptr;
 static bool* changed_lines = nullptr;
+static int total_pixels = -1;
 
 void vesa::init(void* info) {
     mode_information = (mode_info*)info;
+    total_pixels = vesa::getScreenWidth() * vesa::getScreenHeight();
     buffer = (unsigned int*)malloc(getTotalPixels() * getBytesPerPixel());
     changed_lines = (bool*)malloc(getScreenHeight());
 }
@@ -48,7 +50,7 @@ int vesa::getScreenHeight() {
 }
 
 int vesa::getTotalPixels() {
-    return vesa::getScreenWidth() * vesa::getScreenHeight();
+    return total_pixels;
 }
 
 int vesa::getBytesPerPixel() {
@@ -65,8 +67,7 @@ void vesa::swapBuffers() {
     for(int y = 0; y < getScreenHeight(); y++) {
         if(changed_lines[y]) {
             for(int x = 0; x < getScreenWidth(); x++) {
-                *((unsigned int*)curr_pixel) = (buffer[i] & 0xFFFFFF);
-                i++;
+                *((unsigned int*)curr_pixel) = (buffer[i++] & 0xFFFFFF);
                 curr_pixel += 3;
             }
             changed_lines[y] = false;
