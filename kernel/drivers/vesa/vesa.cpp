@@ -30,11 +30,13 @@ struct mode_info {
 };
 
 mode_info* mode_information = nullptr;
-static unsigned int* buffer = 0;
+static unsigned int* buffer = nullptr;
+static bool* changed_lines = nullptr;
 
 void vesa::init(void* info) {
     mode_information = (mode_info*)info;
     buffer = (unsigned int*)malloc(getTotalPixels() * getBytesPerPixel());
+    changed_lines = (bool*)malloc(getScreenHeight());
 }
 
 int vesa::getScreenWidth() {
@@ -58,9 +60,23 @@ unsigned int* vesa::getVideoBuffer() {
 }
 
 void vesa::swapBuffers() {
-    for(int i = 0; i < getTotalPixels(); i++) {
-        unsigned int* curr_pixel = (unsigned int*)(mode_information->buffer + i * 3);
-        if(*curr_pixel ^ buffer[i] & 0xFFFFFF)
-            *curr_pixel = (buffer[i] & 0xFFFFFF) | (*curr_pixel & 0xFF000000);
+    unsigned char* curr_pixel = mode_information->buffer;
+    int i = 0;
+    for(int y = 0; y < getScreenHeight(); y++) {
+        if(changed_lines[y]) {
+            for(int x = 0; x < getScreenWidth(); x++) {
+                *((unsigned int*)curr_pixel) = (buffer[i] & 0xFFFFFF);
+                i++;
+                curr_pixel += 3;
+            }
+            changed_lines[y] = false;
+        } else {
+            i += getScreenWidth();
+            curr_pixel += getScreenWidth() * 3;
+        }
     }
+}
+
+void vesa::lineHasChanged(int y) {
+    changed_lines[y] = true;
 }

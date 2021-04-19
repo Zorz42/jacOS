@@ -57,10 +57,12 @@ int text::getCursorY() {
 
 void text::flush() {
     // update cursor
-    updateChar(prev_x, prev_y);
-    gfx::drawRect(cursor_x * 8, cursor_y * 16, 8, 16, gfx::createColor(255, 255, 255));
-    prev_x = cursor_x;
-    prev_y = cursor_y;
+    if(prev_x != cursor_x || prev_y != cursor_y) {
+        updateChar(prev_x, prev_y);
+        gfx::drawRect(cursor_x * 8, cursor_y * 16, 8, 16, gfx::createColor(255, 255, 255));
+        prev_x = cursor_x;
+        prev_y = cursor_y;
+    }
     
     gfx::swapBuffers();
 }

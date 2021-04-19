@@ -18,6 +18,8 @@ int getScreenHeight();
 int getTotalPixels();
 int getBytesPerPixel();
 
+void lineHasChanged(int y);
+
 unsigned int* getVideoBuffer();
 void swapBuffers();
 

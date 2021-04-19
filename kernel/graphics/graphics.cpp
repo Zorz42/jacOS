@@ -10,6 +10,7 @@ int gfx::createColor(unsigned char r, unsigned char g, unsigned char b) {
 }
 
 void gfx::setPixel(short x, short y, int color) {
+    vesa::lineHasChanged(y);
     vesa::getVideoBuffer()[x + y * vesa::getScreenWidth()] = color;
 }
 
@@ -17,6 +18,7 @@ void gfx::drawRect(short x, short y, short w, short h, int color) {
     unsigned int* temp_buffer = vesa::getVideoBuffer() + x + y * vesa::getScreenWidth();
     int step = vesa::getScreenWidth() - w, y2 = y + h, x2 = x + w;
     for(; y < y2; y++) {
+        vesa::lineHasChanged(y);
         for(int x_ = x; x_ < x2; x_++)
             *temp_buffer++ = color;
         temp_buffer += step;
@@ -38,6 +40,7 @@ int gfx::getScreenHeight() {
 void gfx::drawChar(int x, int y, char c) {
     unsigned int* temp_buffer = vesa::getVideoBuffer() + x + y * vesa::getScreenWidth();
     for(int y_ = 0; y_ < 16; y_++) {
+        vesa::lineHasChanged(y + y_);
         for(int x_ = 0; x_ < 8; x_++)
             *temp_buffer++ = createColor(255, 255, 255) * ((font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1);
         temp_buffer += vesa::getScreenWidth() - 8;
