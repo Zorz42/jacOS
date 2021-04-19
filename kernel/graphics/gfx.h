@@ -1,6 +1,6 @@
 namespace gfx {
 
-void init();
+void init(void* data);
 
 void setPixel(short x, short y, int color);
 void drawRect(short x, short y, short w, short h, int color);

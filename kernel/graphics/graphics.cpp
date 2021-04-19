@@ -44,10 +44,11 @@ void gfx::drawChar(int x, int y, char c) {
     }
 }
 
-void gfx::init() {
+void gfx::init(void* data) {
     //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
     //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
     
+    vesa::init(data);
     text::init();
     
     text::cout << "Initializing graphics module..." << text::endl << "VESA buffer is at: " << text::hex << (int)vesa::getVideoBuffer << text::endl << "Screen buffer is at: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << text::endl;

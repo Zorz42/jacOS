@@ -61,6 +61,6 @@ void vesa::swapBuffers() {
     for(int i = 0; i < getTotalPixels(); i++) {
         unsigned int* curr_pixel = (unsigned int*)(mode_information->buffer + i * 3);
         if(*curr_pixel ^ buffer[i] & 0xFFFFFF)
-            *curr_pixel = buffer[i];
+            *curr_pixel = (buffer[i] & 0xFFFFFF) | (*curr_pixel & 0xFF000000);
     }
 }

@@ -10,8 +10,7 @@ extern "C" void kernelEntry(void* data) {
     irq_install();
     
     initMemory();
-    vesa::init(data);
-    gfx::init();
+    gfx::init(data);
     
     kernelMain();
     

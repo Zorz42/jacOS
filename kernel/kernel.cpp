@@ -27,12 +27,12 @@ void onKeyEvent(keyboard::Key key, bool up) {
             text::cout << c;
         } else if(key == keyboard::KEY_BACKSPACE && cmd_length) {
             text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
-            text::cout << " " << text::endl;
+            text::cout << " ";
             text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
             cmd_length--;
             curr_shell_cmd[cmd_length] = 0;
         } else if(key == keyboard::KEY_ENTER) {
-            text::cout << text::endl;
+            text::cout << "\n";
             if(curr_shell_cmd[0])
                 onCommand();
             resetCommand();
