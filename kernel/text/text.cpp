@@ -82,39 +82,24 @@ text::_out_stream text::_out_stream::operator<<(char character) {
     return *this;
 }
 
-long long div(long long a, long long b) {
-    long long result = 0;
-    while(a >= b) {
-        a -= b;
-        result++;
-    }
-    return result;
-}
-
-long long mod(long long a, long long b) {
-    while(a >= b)
-        a -= b;
-    return a;
-}
-
-text::_out_stream text::_out_stream::operator<<(long long number) {
+text::_out_stream text::_out_stream::operator<<(long number) {
     if(text_buffer)
         switch(print_mode) {
             case MODE_DEC: {
-                long long x2 = number, length = 0;
+                long x2 = number, length = 0;
                 while(x2) {
                     length++;
-                    x2 = div(x2, 10);
+                    x2 = x2 / 10;
                 }
                 
                 if(length == 0)
                     length = 1;
                 
                 for(int i = 0; i < length; i++) {
-                    long long x3 = number;
+                    long x3 = number;
                     for(int i2 = 0; i2 < length - i - 1; i2++)
-                        x3 = div(x3, 10);
-                    *this << char('0' + mod(x3, 10));
+                        x3 = x3 / 10;
+                    *this << char('0' + x3 % 10);
                 }
                 break;
             }
@@ -134,24 +119,16 @@ text::_out_stream text::_out_stream::operator<<(long long number) {
     return *this;
 }
 
-text::_out_stream text::_out_stream::operator<<(long number) {
-    return operator<<((long long)number);
-}
-
 text::_out_stream text::_out_stream::operator<<(int number) {
-    return operator<<((long long)number);
-}
-
-text::_out_stream text::_out_stream::operator<<(unsigned long long number) {
-    return  operator<<((long long)number);
+    return operator<<((long)number);
 }
 
 text::_out_stream text::_out_stream::operator<<(unsigned long number) {
-    return operator<<((long long)number);
+    return  operator<<((long)number);
 }
 
 text::_out_stream text::_out_stream::operator<<(unsigned int number) {
-    return operator<<((long long)number);
+    return operator<<((long)number);
 }
 
 text::_out_stream text::_out_stream::operator<<(_hex _) {

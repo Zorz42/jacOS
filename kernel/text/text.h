@@ -9,10 +9,8 @@ class _out_stream {
 public:
     _out_stream operator<<(const char* string);
     _out_stream operator<<(char character);
-    _out_stream operator<<(long long number);
     _out_stream operator<<(long number);
     _out_stream operator<<(int number);
-    _out_stream operator<<(unsigned long long number);
     _out_stream operator<<(unsigned long number);
     _out_stream operator<<(unsigned int number);
     _out_stream operator<<(_hex _);

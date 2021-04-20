@@ -46,17 +46,6 @@ void kernelMain() {
     resetCommand();
     text::flush();
     
-    int start = getTicks();
-    
-    for(int i = 0; i < 24 / 8; i++) {
-        for(int i2 = 0; i2 < gfx::getScreenWidth() / 8; i2++) {
-            text::cout << /*char('A' + i)*/99999999;
-            text::flush();
-        }
-    }
-    
-    text::cout << text::endl << getTicks() - start << text::endl;
-    
     /*void* prev_alloc = 0;
     
     for(int i = 0; i < 100; i++) {
