@@ -3,6 +3,7 @@
 #include "text/text.h"
 #include "memory/memory.h"
 #include "cpu/timer.h"
+#include "drivers/disk/disk.h"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];
@@ -43,6 +44,10 @@ void onKeyEvent(keyboard::Key key, bool up) {
 
 void kernelMain() {
     text::cout << "Kernel initialized!" << text::endl;
+    text::cout << "Reading from disk..." << text::endl;
+    disk::read();
+    text::cout << *(int*)0x10000000 << text::endl;
+    
     resetCommand();
     text::flush();
     

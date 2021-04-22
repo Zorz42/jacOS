@@ -21,7 +21,7 @@ KERNEL_OFFSET = 0x1000
 #KERNEL_SIZE = $(stat -f%z build/kernel.bin)
 
 # First rule is run by default
-os-image.bin: build build/bootsect.bin build/kernel.bin
+os-image.bin: build build/bootsect.bin #build/kernel.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
 
 build:
@@ -29,15 +29,15 @@ build:
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o
-	${LD} -o $@ -Ttext $(KERNEL_OFFSET) build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
+build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o build/kernel/drivers/disk/disk-temp.o
+	${LD} -o $@ -Ttext $(KERNEL_OFFSET) build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o build/kernel/drivers/disk/disk-temp.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
 build/kernel.elf: build/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext $(KERNEL_OFFSET) $^
 
 run: os-image.bin
-	qemu-system-x86_64 -fda os-image.bin -m 2048
+	qemu-system-x86_64 -fda os-image.bin -m 2048 -drive format=raw,file=disk.img
 
 # Open the connection to qemu and load our kernel-object file with symbols
 debug: os-image.bin kernel.elf
@@ -54,6 +54,8 @@ build/kernel/%.o: kernel/%.cpp ${HEADERS}
 build/kernel/entry/kernel_entry.o: kernel/entry/kernel_entry.asm
 	nasm $< -f elf -o $@
 build/kernel/cpu/interrupt.o: kernel/cpu/interrupt.asm
+	nasm $< -f elf -o $@
+build/kernel/drivers/disk/disk-temp.o: kernel/drivers/disk/disk-temp.asm
 	nasm $< -f elf -o $@
 
 

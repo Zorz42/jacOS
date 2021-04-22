@@ -37,10 +37,14 @@
 		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; };
 		167A73BE2626DF7A00328331 /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; };
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		167BA3DE262CAD4900E4694D /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakobzorz/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
-		167BA3DF262CAD4900E4694D /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakobzorz/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
 		167FB5C0262C467500AA5F51 /* vesa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vesa.h; sourceTree = "<group>"; };
+		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
+		168CF16C2631E2E400C0C0F2 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
+		168CF16E2631E7AC00C0C0F2 /* disk-temp.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = "disk-temp.asm"; sourceTree = "<group>"; };
+		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
+		168CF1722631E9BF00C0C0F2 /* disk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = disk.h; sourceTree = "<group>"; };
+		168CF1772631F63800C0C0F2 /* disk.img */ = {isa = PBXFileReference; lastKnownFileType = file; path = disk.img; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -56,9 +60,12 @@
 		167A73852626DF4E00328331 = {
 			isa = PBXGroup;
 			children = (
+				168CF1772631F63800C0C0F2 /* disk.img */,
 				167A73D32626E08500328331 /* Makefile */,
 				167A73B82626DF7A00328331 /* boot */,
 				167A739A2626DF7A00328331 /* kernel */,
+				168CF16B2631E2E400C0C0F2 /* jacOS */,
+				168CF16C2631E2E400C0C0F2 /* jacOS-build-only */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +87,7 @@
 		167A739B2626DF7A00328331 /* drivers */ = {
 			isa = PBXGroup;
 			children = (
+				168CF16D2631E79400C0C0F2 /* disk */,
 				167FB5BE262C45C100AA5F51 /* vesa */,
 				167FB5B9262C41BA00AA5F51 /* ports */,
 				1620BB15262AFCE600BBB6D8 /* keyboard */,
@@ -170,6 +178,16 @@
 			path = vesa;
 			sourceTree = "<group>";
 		};
+		168CF16D2631E79400C0C0F2 /* disk */ = {
+			isa = PBXGroup;
+			children = (
+				168CF16E2631E7AC00C0C0F2 /* disk-temp.asm */,
+				168CF1722631E9BF00C0C0F2 /* disk.h */,
+				168CF1712631E9BF00C0C0F2 /* disk.cpp */,
+			);
+			path = disk;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -185,7 +203,7 @@
 			);
 			name = jacOS;
 			productName = jacOS;
-			productReference = 167BA3DE262CAD4900E4694D /* jacOS */;
+			productReference = 168CF16B2631E2E400C0C0F2 /* jacOS */;
 			productType = "com.apple.product-type.tool";
 		};
 		167A73DB2626E35000328331 /* jacOS-build-only */ = {
@@ -200,7 +218,7 @@
 			);
 			name = "jacOS-build-only";
 			productName = "jacOS-build-only";
-			productReference = 167BA3DF262CAD4900E4694D /* jacOS-build-only */;
+			productReference = 168CF16C2631E2E400C0C0F2 /* jacOS-build-only */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
