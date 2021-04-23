@@ -45,8 +45,8 @@ void onKeyEvent(keyboard::Key key, bool up) {
 void kernelMain() {
     text::cout << "Kernel initialized!" << text::endl;
     text::cout << "Reading from disk..." << text::endl;
-    disk::read();
-    text::cout << *(int*)0x10000000 << text::endl;
+    void* result = disk::read(0, 1, 0, 1);
+    text::cout << *(int*)result << text::endl;
     
     resetCommand();
     text::flush();
