@@ -41,7 +41,6 @@
 		167FB5C0262C467500AA5F51 /* vesa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vesa.h; sourceTree = "<group>"; };
 		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
 		168CF16C2631E2E400C0C0F2 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
-		168CF16E2631E7AC00C0C0F2 /* disk-temp.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = "disk-temp.asm"; sourceTree = "<group>"; };
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = disk.h; sourceTree = "<group>"; };
 		168CF1772631F63800C0C0F2 /* disk.img */ = {isa = PBXFileReference; lastKnownFileType = file; path = disk.img; sourceTree = "<group>"; };
@@ -181,7 +180,6 @@
 		168CF16D2631E79400C0C0F2 /* disk */ = {
 			isa = PBXGroup;
 			children = (
-				168CF16E2631E7AC00C0C0F2 /* disk-temp.asm */,
 				168CF1722631E9BF00C0C0F2 /* disk.h */,
 				168CF1712631E9BF00C0C0F2 /* disk.cpp */,
 			);

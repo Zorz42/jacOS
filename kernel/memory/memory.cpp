@@ -45,7 +45,7 @@ void* malloc(u32 size) {
     
     used_memory += size + sizeof(malloc_head);
     
-    text::cout << "Malloc from " << text::hex << (int)head + sizeof(malloc_head) << " to " << (int)head + sizeof(malloc_head) + head->size << "." << text::endl;
+    //text::cout/* << "Malloc from " << text::hex << (int)head + sizeof(malloc_head) << " to " << (int)head + sizeof(malloc_head) + head->size << "."*/ << text::endl;
     
     return (void*)((int)head + (int)sizeof(malloc_head));
 }
@@ -77,7 +77,7 @@ void free(void* ptr) {
     if(head->prev && ((malloc_head*)head->prev)->free == HEAD_FREE)
         mergeBlocks((malloc_head*)head->prev, head);
     
-    text::cout << "Free " << text::hex << (int)ptr - sizeof(malloc_head) << "." << text::endl;
+    //text::cout << "Free " << text::hex << (int)ptr - sizeof(malloc_head) << "." << text::endl;
 }
 
 void initMemory() {

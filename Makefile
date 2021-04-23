@@ -29,8 +29,8 @@ build:
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o build/kernel/drivers/disk/disk-temp.o
-	${LD} -o $@ -Ttext $(KERNEL_OFFSET) build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o build/kernel/drivers/disk/disk-temp.o ${OBJ} --oformat binary
+build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o
+	${LD} -o $@ -Ttext $(KERNEL_OFFSET) build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
 build/kernel.elf: build/kernel_entry.o ${OBJ}
@@ -54,8 +54,6 @@ build/kernel/%.o: kernel/%.cpp ${HEADERS}
 build/kernel/entry/kernel_entry.o: kernel/entry/kernel_entry.asm
 	nasm $< -f elf -o $@
 build/kernel/cpu/interrupt.o: kernel/cpu/interrupt.asm
-	nasm $< -f elf -o $@
-build/kernel/drivers/disk/disk-temp.o: kernel/drivers/disk/disk-temp.asm
 	nasm $< -f elf -o $@
 
 

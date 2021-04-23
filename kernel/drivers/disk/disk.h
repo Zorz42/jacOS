@@ -5,7 +5,7 @@
 
 namespace disk {
 
-void* read(u8 head, u8 sector, u16 cylinder, u8 sector_count);
+void* read(u8 head, u16 cylinder, u8 sector, u8 sector_count);
 
 }
 
