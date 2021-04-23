@@ -31,5 +31,5 @@ void* disk::read(u8 head, u16 cylinder, u8 sector, u8 sector_count) {
     asm volatile("mov $0x1f0, %edx");
     asm volatile("rep insw");
     
-    return (void*)result;
+    return result;
 }
