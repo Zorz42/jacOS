@@ -30,4 +30,4 @@ disk_error:
     ;call print ; check out the code at http://stanislavs.org/helppc/int_13-1.html
     jmp $
 
-DISK_ERROR: db "Disk read error! Try adding -fda to your qemu arguments!", 0
+DISK_ERROR: db "Disk read error!", 0

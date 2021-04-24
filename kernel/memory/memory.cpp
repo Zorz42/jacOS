@@ -6,11 +6,11 @@ static unsigned int heap_base, total_memory, used_memory;
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
 
-typedef struct {
+struct malloc_head {
     u32 size;
     char free;
     void* next, *prev;
-} malloc_head;
+};
 
 void* malloc(u32 size) {
     malloc_head* head = (malloc_head*)heap_base;
@@ -80,7 +80,7 @@ void free(void* ptr) {
     //text::cout << "Free " << text::hex << (int)ptr - sizeof(malloc_head) << "." << text::endl;
 }
 
-void initMemory() {
+void mem::init() {
     heap_base = 0x3d5000;
     used_memory = 0;
     total_memory = 0x1000000;
@@ -92,15 +92,15 @@ void initMemory() {
     main_head->prev = 0;
 }
 
-unsigned int getUsedMemory() {
+unsigned int mem::getUsed() {
     return used_memory;
 }
 
-unsigned int getTotalMemory() {
+unsigned int mem::getTotal() {
     return total_memory;
 }
 
-unsigned int getFreeMemory() {
+unsigned int mem::getFree() {
     return total_memory - used_memory;
 }
 

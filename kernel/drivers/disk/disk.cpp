@@ -15,6 +15,9 @@ void* disk::read(u8 head, u16 cylinder, u8 sector, u8 sector_count) {
     
     void* result = malloc(sector_count * 512);
 
+    asm volatile("mov $0x1f7, %edx");
+    asm volatile("mov $0x20, %al");
+    
     asm volatile("still_going:");
     asm volatile("in %dx, %al");
     asm volatile("test $8, %al");

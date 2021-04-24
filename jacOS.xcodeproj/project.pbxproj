@@ -23,7 +23,6 @@
 		167A73AA2626DF7A00328331 /* idt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = idt.cpp; sourceTree = "<group>"; };
 		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; };
 		167A73AC2626DF7A00328331 /* isr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isr.h; sourceTree = "<group>"; };
-		167A73AE2626DF7A00328331 /* kernel_entry.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_entry.asm; sourceTree = "<group>"; };
 		167A73AF2626DF7A00328331 /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		167A73B12626DF7A00328331 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		167A73B22626DF7A00328331 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
@@ -37,6 +36,9 @@
 		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; };
 		167A73BE2626DF7A00328331 /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; };
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		167E4AD72634354300BE05BA /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		167E4AD82634354300BE05BA /* main.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = main.asm; sourceTree = "<group>"; };
+		167E4AD92634354300BE05BA /* test-program.img */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-program.img"; sourceTree = "<group>"; };
 		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
 		167FB5C0262C467500AA5F51 /* vesa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vesa.h; sourceTree = "<group>"; };
 		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +63,7 @@
 				167A73D32626E08500328331 /* Makefile */,
 				167A73B82626DF7A00328331 /* boot */,
 				167A739A2626DF7A00328331 /* kernel */,
+				167E4AD62634354300BE05BA /* test-program */,
 				168CF16B2631E2E400C0C0F2 /* jacOS */,
 				168CF16C2631E2E400C0C0F2 /* jacOS-build-only */,
 			);
@@ -119,7 +122,6 @@
 		167A73AD2626DF7A00328331 /* entry */ = {
 			isa = PBXGroup;
 			children = (
-				167A73AE2626DF7A00328331 /* kernel_entry.asm */,
 				167A73AF2626DF7A00328331 /* entry.cpp */,
 			);
 			path = entry;
@@ -155,6 +157,16 @@
 				167A73BE2626DF7A00328331 /* print.asm */,
 			);
 			path = boot;
+			sourceTree = "<group>";
+		};
+		167E4AD62634354300BE05BA /* test-program */ = {
+			isa = PBXGroup;
+			children = (
+				167E4AD72634354300BE05BA /* Makefile */,
+				167E4AD82634354300BE05BA /* main.asm */,
+				167E4AD92634354300BE05BA /* test-program.img */,
+			);
+			path = "test-program";
 			sourceTree = "<group>";
 		};
 		167FB5B9262C41BA00AA5F51 /* ports */ = {

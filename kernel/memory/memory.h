@@ -3,13 +3,17 @@
 
 #include "cpu/types.h"
 
+namespace mem {
+
+void init();
+unsigned int getUsed();
+unsigned int getTotal();
+unsigned int getFree();
+
+}
+
 void* malloc(u32 size);
 void free(void* ptr);
-
-void initMemory();
-unsigned int getUsedMemory();
-unsigned int getTotalMemory();
-unsigned int getFreeMemory();
 
 void* operator new(unsigned long size);
 void* operator new[](unsigned long size);
