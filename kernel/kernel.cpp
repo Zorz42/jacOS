@@ -9,6 +9,13 @@
 static char curr_shell_cmd[MAX_CMD_LENGTH];
 static int cmd_length;
 
+static bool strcmp(const char* a, const char* b) {
+    for(int i = 0; a[i] != 0; i++)
+        if(a[i] != b[i])
+            return false;
+    return true;
+}
+
 static void resetCommand() {
     cmd_length = 0;
     curr_shell_cmd[0] = 0;
@@ -16,7 +23,16 @@ static void resetCommand() {
 }
 
 static void onCommand() {
-    text::cout << &curr_shell_cmd[0] << text::endl;
+    if(strcmp(&curr_shell_cmd[0], "run")) {
+        void* result = disk::read(0, 0, 1, 20);
+        text::cout << "Running program!" << text::endl;
+        typedef void (*call_module_t)(void);
+        call_module_t program = (call_module_t)result;
+        program();
+        text::cout << "Program ended! " << *(int*)0x1000000 << text::endl;
+    } else {
+        text::cout << "Unknown command: " << &curr_shell_cmd[0] << text::endl;
+    }
 }
 
 void onKeyEvent(keyboard::Key key, bool up) {
@@ -44,17 +60,6 @@ void onKeyEvent(keyboard::Key key, bool up) {
 
 void kernelMain() {
     text::cout << "Kernel initialized!" << text::endl;
-    text::cout << "Reading from disk..." << text::endl;
-    void* result = disk::read(0, 0, 1, 20);
-    //text::cout << *((int*)result) << text::endl;
-    
-    typedef void (*call_module_t)(void);
-    
-    call_module_t program = (call_module_t)result;
-    
-    program();
-    
-    text::cout << "Program ended! " << *(int*)0x1000000 << text::endl;
     
     resetCommand();
     text::flush();
