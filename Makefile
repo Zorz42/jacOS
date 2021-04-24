@@ -33,16 +33,17 @@ build/kernel.bin: ${OBJ} build/kernel/entry/kernel_entry.o build/kernel/cpu/inte
 	${LD} -o $@ -Ttext $(KERNEL_OFFSET) build/kernel/entry/kernel_entry.o build/kernel/cpu/interrupt.o ${OBJ} --oformat binary
 
 # Used for debugging purposes
-build/kernel.elf: build/kernel_entry.o ${OBJ}
-	${LD} -o $@ -Ttext $(KERNEL_OFFSET) $^
+#build/kernel.elf: build/kernel_entry.o ${OBJ}
+#	${LD} -o $@ -Ttext $(KERNEL_OFFSET) $^
 
-run: os-image.bin
-	qemu-system-x86_64 -fda os-image.bin -m 2048 -drive format=raw,file=disk.img
+run: os-image.bin test-program/test-program.img
+	qemu-system-x86_64 -fda os-image.bin -m 2048 -drive format=raw,file=test-program/test-program.img
 
 # Open the connection to qemu and load our kernel-object file with symbols
-debug: os-image.bin kernel.elf
-	qemu-system-x86_64 -s -m 2048 -fda os-image.bin &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+# NOT SUPPORTED
+#debug: os-image.bin kernel.elf
+#	qemu-system-x86_64 -s -m 2048 -fda os-image.bin &
+#	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
 # To make an object, always compile from its .cpp
@@ -61,6 +62,10 @@ build/kernel/cpu/interrupt.o: kernel/cpu/interrupt.asm
 build/bootsect.bin: boot/bootsect.asm build/kernel.bin
 	echo %define KERNEL_SECTORS_SIZE $$(($$(stat -f%z build/kernel.bin) / 512 + 1)) > boot/kernel_size.asm
 	nasm boot/bootsect.asm -f bin -o $@
+
+.PHONY: test-program/test-program.img
+test-program/test-program.img:
+	cd test-program && make test-program.img
 
 clean:
 	rm -rf build

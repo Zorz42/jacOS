@@ -86,6 +86,10 @@ text::_out_stream text::_out_stream::operator<<(long number) {
     if(text_buffer)
         switch(print_mode) {
             case MODE_DEC: {
+                if(number < 0) {
+                    *this << '-';
+                    number *= -1;
+                }
                 long x2 = number, length = 0;
                 while(x2) {
                     length++;
