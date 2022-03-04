@@ -26,15 +26,18 @@ static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
         void* result = disk::read(0, 0, 1, 20);
         text::cout << "Running program!" << text::endl;
-        typedef void (*call_module_t)(void);
+        typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
-        program();
+        int exit_code = program();
         free(result);
-        text::cout << "Program ended! " << *(int*)0x1000000 << text::endl;
+        text::cout << "Program ended with exit code " << exit_code << "! " << text::endl;
+        text::cout << *(int*)0x1000000 << text::endl;
+        
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::cout << "Used memory: " << mem::getUsed() / 1024 << " KB" << text::endl
         << "Free memory: " << mem::getFree() / 1024 << " KB" << text::endl
         << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
+        
     } else {
         text::cout << "Unknown command: " << &curr_shell_cmd[0] << text::endl;
     }
