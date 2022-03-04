@@ -38,8 +38,8 @@
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
 		167FB5C0262C467500AA5F51 /* vesa.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vesa.hpp; sourceTree = "<group>"; };
-		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
-		168CF16C2631E2E400C0C0F2 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
+		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakob/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
+		168CF16C2631E2E400C0C0F2 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakob/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disk.hpp; sourceTree = "<group>"; };
 		368BD4E927D26D3600D134DF /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
@@ -64,8 +64,6 @@
 				167A739A2626DF7A00328331 /* kernel */,
 				368BD4E727D2698400D134DF /* program */,
 				167E4AD62634354300BE05BA /* test-program */,
-				168CF16B2631E2E400C0C0F2 /* jacOS */,
-				168CF16C2631E2E400C0C0F2 /* jacOS-build-only */,
 			);
 			sourceTree = "<group>";
 		};
