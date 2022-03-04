@@ -1,8 +1,8 @@
-#include "keyboard.h"
-#include "drivers/ports/ports.h"
-#include "cpu/isr.h"
-#include "text/text.h"
-#include "kernel.h"
+#include "keyboard.hpp"
+#include "drivers/ports/ports.hpp"
+#include "cpu/isr.hpp"
+#include "text/text.hpp"
+#include "kernel.hpp"
 
 static keyboard::Key scancodeToKey(u8 scancode);
 static bool keyStates[keyboard::KEY_COUNT];

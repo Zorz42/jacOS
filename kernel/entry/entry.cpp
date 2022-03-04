@@ -1,8 +1,8 @@
-#include "graphics/gfx.h"
-#include "cpu/isr.h"
-#include "memory/memory.h"
-#include "drivers/vesa/vesa.h"
-#include "text/text.h"
+#include "graphics/gfx.hpp"
+#include "cpu/isr.hpp"
+#include "memory/memory.hpp"
+#include "drivers/vesa/vesa.hpp"
+#include "text/text.hpp"
 
 void kernelMain();
 

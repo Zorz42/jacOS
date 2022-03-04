@@ -1,7 +1,7 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "types.h"
+#include "types.hpp"
 
 /* ISRs reserved for CPU exceptions */
 extern "C" void isr0();

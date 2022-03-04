@@ -1,7 +1,7 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-#include "cpu/types.h"
+#include "cpu/types.hpp"
 
 namespace ports {
 

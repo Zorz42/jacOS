@@ -1,9 +1,9 @@
-#include "kernel.h"
-#include "graphics/gfx.h"
-#include "text/text.h"
-#include "memory/memory.h"
-#include "cpu/timer.h"
-#include "drivers/disk/disk.h"
+#include "kernel.hpp"
+#include "graphics/gfx.hpp"
+#include "text/text.hpp"
+#include "memory/memory.hpp"
+#include "cpu/timer.hpp"
+#include "drivers/disk/disk.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];
@@ -72,9 +72,7 @@ void kernelMain() {
     /*void* prev_alloc = 0;
     
     for(int i = 0; i < 100; i++) {
-        printl("");
-        printInt(i);
-        printl(". time:");
+        text::cout << text::endl << i << ". time:" << text::endl;
         void* alloc1 = malloc(0x10000);
         void* alloc2 = malloc(0x50000);
         free(alloc1);
@@ -84,23 +82,14 @@ void kernelMain() {
         free(alloc3);
         free(alloc4);
         
-        print("Memory change: ");
-        printHex((int)alloc1 - (int)prev_alloc);
-        printl("");
+        
+        text::cout << "Memory change: " << (int)alloc1 - (int)prev_alloc << text::endl;
         
         prev_alloc = alloc1;
         
-        print("Used memory: ");
-        printInt(getUsedMemory() / 1024);
-        printl(" KB");
-        
-        print("Free memory: ");
-        printInt(getFreeMemory() / 1024);
-        printl(" KB");
-        
-        print("Total memory: ");
-        printInt(getTotalMemory() / 1024);
-        printl(" KB");
+        text::cout << "Used memory: " << mem::getUsed() / 1024 << " KB" << text::endl;
+        text::cout << "Free memory: " << mem::getFree() / 1024 << " KB" << text::endl;
+        text::cout << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
         
         //delay(10);
     }*/

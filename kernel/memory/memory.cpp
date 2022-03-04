@@ -1,5 +1,5 @@
-#include "memory.h"
-#include "text/text.h"
+#include "memory.hpp"
+#include "text/text.hpp"
 
 static unsigned int heap_base, total_memory, used_memory;
 

@@ -8,7 +8,7 @@
 #ifndef vesa_h
 #define vesa_h
 
-#include "cpu/types.h"
+#include "cpu/types.hpp"
 
 namespace vesa {
 

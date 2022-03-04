@@ -1,8 +1,8 @@
-#include "disk.h"
-#include "drivers/ports/ports.h"
-#include "text/text.h"
-#include "memory/memory.h"
-#include "graphics/gfx.h"
+#include "disk.hpp"
+#include "drivers/ports/ports.hpp"
+#include "text/text.hpp"
+#include "memory/memory.hpp"
+#include "graphics/gfx.hpp"
 
 
 void* disk::read(u8 head, u16 cylinder, u8 sector, u8 sector_count) {

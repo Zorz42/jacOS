@@ -1,7 +1,7 @@
 #ifndef disk_h
 #define disk_h
 
-#include "cpu/types.h"
+#include "cpu/types.hpp"
 
 namespace disk {
 

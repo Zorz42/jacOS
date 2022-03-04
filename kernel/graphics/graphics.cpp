@@ -1,9 +1,9 @@
-#include "gfx.h"
-#include "text/text.h"
-#include "memory/memory.h"
-#include "font.h"
-#include "drivers/vesa/vesa.h"
-#include "kernel.h"
+#include "gfx.hpp"
+#include "text/text.hpp"
+#include "memory/memory.hpp"
+#include "font.hpp"
+#include "drivers/vesa/vesa.hpp"
+#include "kernel.hpp"
 
 void gfx::setPixel(short x, short y, int color) {
     vesa::lineHasChanged(y);

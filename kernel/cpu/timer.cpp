@@ -1,7 +1,7 @@
-#include "timer.h"
-#include "isr.h"
-#include "drivers/ports/ports.h"
-#include "text/text.h"
+#include "timer.hpp"
+#include "isr.hpp"
+#include "drivers/ports/ports.hpp"
+#include "text/text.hpp"
 
 static unsigned int tick = 0;
 

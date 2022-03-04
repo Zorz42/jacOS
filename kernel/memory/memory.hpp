@@ -1,7 +1,7 @@
 #ifndef memory_h
 #define memory_h
 
-#include "cpu/types.h"
+#include "cpu/types.hpp"
 
 namespace mem {
 

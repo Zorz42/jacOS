@@ -1,6 +1,6 @@
-#include "vesa.h"
-#include "text/text.h"
-#include "memory/memory.h"
+#include "vesa.hpp"
+#include "text/text.hpp"
+#include "memory/memory.hpp"
 
 struct mode_info {
     u16 attributes;
