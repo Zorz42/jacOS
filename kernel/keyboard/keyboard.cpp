@@ -1,14 +1,13 @@
 #include "keyboard.hpp"
 #include "ports/ports.hpp"
 #include "interrupts/interrupts.hpp"
-#include "text/text.hpp"
-#include "kernel.hpp"
 
 #define EVENT_QUEUE_SIZE 100
 
 static keyboard::Key scancodeToKey(u8 scancode);
 static bool keyStates[keyboard::KEY_COUNT];
-static keyboard::KeyEvent key_events[EVENT_QUEUE_SIZE];
+static keyboard::KeyEvent key_events_queue[EVENT_QUEUE_SIZE];
+int queue_top = 0, queue_bottom = 0;
 
 static void keyboardCallback(Registers regs) {
     /* The PIC leaves us the scancode in port 0x60 */
@@ -21,7 +20,26 @@ static void keyboardCallback(Registers regs) {
     keyboard::Key key = scancodeToKey(scancode);
     if(key != keyboard::KEY_UNKNOWN)
         keyStates[key] = !up;
-    onKeyEvent(key, up);
+    
+    key_events_queue[queue_top].active = true;
+    key_events_queue[queue_top].up = up;
+    key_events_queue[queue_top].key = key;
+    queue_top++;
+    if(queue_top == EVENT_QUEUE_SIZE)
+        queue_top = 0;
+}
+
+bool keyboard::hasKeyEvent() {
+    return queue_top != queue_bottom;
+}
+
+keyboard::KeyEvent keyboard::getKeyEvent() {
+    KeyEvent result = key_events_queue[queue_bottom];
+    key_events_queue[queue_bottom].active = false;
+    queue_bottom++;
+    if(queue_bottom == EVENT_QUEUE_SIZE)
+        queue_bottom = 0;
+    return result;
 }
 
 char keyboard::keyToAscii(Key key) {

@@ -40,7 +40,7 @@ static void onCommand() {
         << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "sleep")) {
-        //Timer::delay(1000);
+        timer::delay(1000);
     
     } else {
         text::cout << "Unknown command: " << &curr_shell_cmd[0] << text::endl;
@@ -77,6 +77,10 @@ void kernelMain() {
     text::flush();
     
     while(true) {
+        while(keyboard::hasKeyEvent()) {
+            keyboard::KeyEvent event = keyboard::getKeyEvent();
+            onKeyEvent(event.key, event.up);
+        }
         asm("hlt");
     }
 }

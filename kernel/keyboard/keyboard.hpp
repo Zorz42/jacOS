@@ -81,4 +81,7 @@ void init();
 char keyToAscii(Key key);
 bool getKeyState(Key key);
 
+bool hasKeyEvent();
+KeyEvent getKeyEvent();
+
 }
