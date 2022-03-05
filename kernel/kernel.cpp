@@ -1,9 +1,9 @@
 #include "kernel.hpp"
 #include "graphics/gfx.hpp"
 #include "text/text.hpp"
-#include "drivers/memory/memory.hpp"
-#include "cpu/timer/timer.hpp"
-#include "drivers/disk/disk.hpp"
+#include "memory/memory.hpp"
+#include "timer/timer.hpp"
+#include "disk/disk.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];

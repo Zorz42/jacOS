@@ -1,13 +1,13 @@
 #include "keyboard.hpp"
-#include "drivers/ports/ports.hpp"
-#include "cpu/isr/isr.hpp"
+#include "ports/ports.hpp"
+#include "interrupts/interrupts.hpp"
 #include "text/text.hpp"
 #include "kernel.hpp"
 
 static keyboard::Key scancodeToKey(u8 scancode);
 static bool keyStates[keyboard::KEY_COUNT];
 
-static void keyboardCallback(registers_t regs) {
+static void keyboardCallback(Registers regs) {
     /* The PIC leaves us the scancode in port 0x60 */
     u8 scancode = ports::byteIn(0x60);
     bool up = false;
@@ -36,7 +36,7 @@ bool keyboard::getKeyState(Key key) {
 }
 
 void keyboard::init() {
-    register_interrupt_handler(IRQ1, keyboardCallback);
+    Interrupts::registerHandler(IRQ1, keyboardCallback);
 }
 
 static keyboard::Key scancodeToKey(u8 scancode) {

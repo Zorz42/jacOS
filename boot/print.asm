@@ -5,7 +5,7 @@ print:
 ; while (string[i] != 0) { print string[i]; i++ }
 
 ; the comparison for string end (null byte)
-start:
+start_print:
     mov al, [bx] ; 'bx' is the base address for the string
     cmp al, 0 
     je done
@@ -16,7 +16,7 @@ start:
 
     ; increment pointer and do next loop
     add bx, 1
-    jmp start
+    jmp start_print
 
 done:
     popa

@@ -1,9 +1,6 @@
-#ifndef kernel_h
-#define kernel_h
+#pragma once
 
-#include "drivers/keyboard/keyboard.hpp"
+#include "keyboard/keyboard.hpp"
 
 void onKeyEvent(keyboard::Key key, bool up);
 void kernelMain();
-
-#endif /* kernel_h */

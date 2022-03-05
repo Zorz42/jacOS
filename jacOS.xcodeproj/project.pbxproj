@@ -16,13 +16,11 @@
 		167A73A22626DF7A00328331 /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		167A73A32626DF7A00328331 /* memory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = memory.hpp; sourceTree = "<group>"; };
 		167A73A52626DF7A00328331 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timer.cpp; sourceTree = "<group>"; };
-		167A73A62626DF7A00328331 /* idt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = idt.hpp; sourceTree = "<group>"; };
 		167A73A72626DF7A00328331 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = types.hpp; sourceTree = "<group>"; };
-		167A73A82626DF7A00328331 /* isr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isr.cpp; sourceTree = "<group>"; };
+		167A73A82626DF7A00328331 /* interrupts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interrupts.cpp; sourceTree = "<group>"; };
 		167A73A92626DF7A00328331 /* timer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = timer.hpp; sourceTree = "<group>"; };
-		167A73AA2626DF7A00328331 /* idt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = idt.cpp; sourceTree = "<group>"; };
 		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; };
-		167A73AC2626DF7A00328331 /* isr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = isr.hpp; sourceTree = "<group>"; };
+		167A73AC2626DF7A00328331 /* interrupts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = interrupts.hpp; sourceTree = "<group>"; };
 		167A73AF2626DF7A00328331 /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		167A73B12626DF7A00328331 /* text.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = text.hpp; sourceTree = "<group>"; };
 		167A73B22626DF7A00328331 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
@@ -75,8 +73,13 @@
 			isa = PBXGroup;
 			children = (
 				167A73A72626DF7A00328331 /* types.hpp */,
-				167A739B2626DF7A00328331 /* drivers */,
-				167A73A42626DF7A00328331 /* cpu */,
+				167FB5B9262C41BA00AA5F51 /* ports */,
+				3687C9C727D388E800F0F62C /* interrupts */,
+				167A73A12626DF7A00328331 /* memory */,
+				168CF16D2631E79400C0C0F2 /* disk */,
+				167FB5BE262C45C100AA5F51 /* vesa */,
+				3687C9C427D36E9800F0F62C /* timer */,
+				1620BB15262AFCE600BBB6D8 /* keyboard */,
 				167A73AD2626DF7A00328331 /* entry */,
 				167A73B02626DF7A00328331 /* text */,
 				167A73B32626DF7A00328331 /* graphics */,
@@ -86,18 +89,6 @@
 			path = kernel;
 			sourceTree = "<group>";
 		};
-		167A739B2626DF7A00328331 /* drivers */ = {
-			isa = PBXGroup;
-			children = (
-				167FB5B9262C41BA00AA5F51 /* ports */,
-				167A73A12626DF7A00328331 /* memory */,
-				168CF16D2631E79400C0C0F2 /* disk */,
-				167FB5BE262C45C100AA5F51 /* vesa */,
-				1620BB15262AFCE600BBB6D8 /* keyboard */,
-			);
-			path = drivers;
-			sourceTree = "<group>";
-		};
 		167A73A12626DF7A00328331 /* memory */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,17 +96,6 @@
 				167A73A22626DF7A00328331 /* memory.cpp */,
 			);
 			path = memory;
-			sourceTree = "<group>";
-		};
-		167A73A42626DF7A00328331 /* cpu */ = {
-			isa = PBXGroup;
-			children = (
-				3687C9C527D36EA700F0F62C /* isr */,
-				3687C9C427D36E9800F0F62C /* timer */,
-				3687C9C327D36E8D00F0F62C /* idt */,
-				167A73AB2626DF7A00328331 /* interrupt.asm */,
-			);
-			path = cpu;
 			sourceTree = "<group>";
 		};
 		167A73AD2626DF7A00328331 /* entry */ = {
@@ -193,15 +173,6 @@
 			path = disk;
 			sourceTree = "<group>";
 		};
-		3687C9C327D36E8D00F0F62C /* idt */ = {
-			isa = PBXGroup;
-			children = (
-				167A73A62626DF7A00328331 /* idt.hpp */,
-				167A73AA2626DF7A00328331 /* idt.cpp */,
-			);
-			path = idt;
-			sourceTree = "<group>";
-		};
 		3687C9C427D36E9800F0F62C /* timer */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,13 +182,14 @@
 			path = timer;
 			sourceTree = "<group>";
 		};
-		3687C9C527D36EA700F0F62C /* isr */ = {
+		3687C9C727D388E800F0F62C /* interrupts */ = {
 			isa = PBXGroup;
 			children = (
-				167A73AC2626DF7A00328331 /* isr.hpp */,
-				167A73A82626DF7A00328331 /* isr.cpp */,
+				167A73AC2626DF7A00328331 /* interrupts.hpp */,
+				167A73A82626DF7A00328331 /* interrupts.cpp */,
+				167A73AB2626DF7A00328331 /* interrupt.asm */,
 			);
-			path = isr;
+			path = interrupts;
 			sourceTree = "<group>";
 		};
 		368BD4E727D2698400D134DF /* program */ = {

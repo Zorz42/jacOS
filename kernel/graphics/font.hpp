@@ -1,3 +1,5 @@
+#pragma once
+
 const unsigned char font[2048] = {
     /* 0 0x00 '^@' */
     0x00, /* 00000000 */

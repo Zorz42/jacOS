@@ -1,5 +1,4 @@
-#ifndef keyboard_h
-#define keyboard_h
+#pragma once
 
 namespace keyboard {
 
@@ -78,5 +77,3 @@ char keyToAscii(Key key);
 bool getKeyState(Key key);
 
 }
-
-#endif /* keyboard_h */

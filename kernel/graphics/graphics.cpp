@@ -1,8 +1,8 @@
 #include "gfx.hpp"
 #include "text/text.hpp"
-#include "drivers/memory/memory.hpp"
+#include "memory/memory.hpp"
 #include "font.hpp"
-#include "drivers/vesa/vesa.hpp"
+#include "vesa/vesa.hpp"
 #include "kernel.hpp"
 
 void gfx::setPixel(short x, short y, int color) {

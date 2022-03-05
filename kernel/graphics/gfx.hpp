@@ -1,3 +1,5 @@
+#pragma once
+
 namespace gfx {
 
 #define COLOR(r, b, g) int((int)(b) + ((int)(g) << 8) + ((int)(r) << 16))

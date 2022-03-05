@@ -4,9 +4,10 @@ LD = i386-elf-ld
 
 PROGRAM_NAME = test-program
 
-KERNEL_SOURCES = $(shell find kernel -type f -name '*.cpp')
+KERNEL_SOURCES = $(shell find kernel -type f -name '*.cpp') $(shell find kernel -type f -name '*.asm')
 KERNEL_HEADERS = $(shell find kernel -type f -name '*.hpp')
-KERNEL_OBJ = build/kernel/entry/entry.o $(filter-out build/kernel/entry/entry.o, $(addprefix build/, ${KERNEL_SOURCES:.cpp=.o}))
+_KERNEL_OBJ = ${KERNEL_SOURCES:.cpp=.o}
+KERNEL_OBJ = build/kernel/entry/entry.o $(filter-out build/kernel/entry/entry.o, $(addprefix build/, ${_KERNEL_OBJ:.asm=.o}))
 
 PROGRAM_SOURCES = $(shell find ${PROGRAM_NAME} -type f -name '*.cpp')
 PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp')
@@ -19,15 +20,15 @@ KERNEL_OFFSET = 0x1000
 .PHONY: run clean
 
 run: os-image.bin ${PROGRAM_NAME}.img
-	qemu-system-x86_64 -fda os-image.bin -drive format=raw,file=test-program.img -m 2048
+	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2048
 
 os-image.bin: build/bootsect.bin build/kernel.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${KERNEL_OBJ} build/kernel/cpu/interrupt.o
-	${LD} -o $@ -Tlink.ld ${KERNEL_OBJ} build/kernel/cpu/interrupt.o --oformat binary
+build/kernel.bin: ${KERNEL_OBJ}
+	${LD} -o $@ -Tlink.ld ${KERNEL_OBJ} --oformat binary
 
 # Generic rules for wildcards
 # To make an object, always compile from its .cpp
@@ -35,7 +36,8 @@ build/%.o: %.cpp ${KERNEL_HEADERS}
 	@mkdir -p $(@D)
 	${CC} ${CFLAGS} -c $< -o $@
 
-build/kernel/cpu/interrupt.o: kernel/cpu/interrupt.asm
+build/%.o: %.asm
+	@mkdir -p $(@D)
 	nasm $< -f elf -o $@
 
 # rule for bootsector

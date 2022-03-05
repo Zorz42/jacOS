@@ -1,5 +1,4 @@
 #include "memory.hpp"
-#include "text/text.hpp"
 
 static unsigned int heap_base, total_memory, used_memory;
 
@@ -17,17 +16,11 @@ void* malloc(u32 size) {
     
     // find a free block
     while(head->free != HEAD_FREE || head->size <= size) {
-        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-            text::cout << "Heap error: heap corruption!" << text::endl;
-            while(true)
-                asm volatile("hlt");
-        }
+        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
+            asm("int $20");
         
-        if(head->next == 0) {
-            text::cout << "Heap error: out of heap memory!" << text::endl;
-            while(true)
-                asm volatile("hlt");
-        }
+        if(head->next == 0)
+            asm("int $21");
         
         head = (malloc_head*)head->next;
     }
@@ -45,8 +38,6 @@ void* malloc(u32 size) {
     
     used_memory += size + sizeof(malloc_head);
     
-    //text::cout/* << "Malloc from " << text::hex << (int)head + sizeof(malloc_head) << " to " << (int)head + sizeof(malloc_head) + head->size << "."*/ << text::endl;
-    
     return (void*)((int)head + (int)sizeof(malloc_head));
 }
 
@@ -57,17 +48,11 @@ static void mergeBlocks(malloc_head* block1, malloc_head* block2) {
 
 void free(void* ptr) {
     malloc_head* head = (malloc_head*)((int)ptr - sizeof(malloc_head));
-    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-        text::cout << "Heap error: freeing invalid memory!" << text::endl;
-        while(true)
-            asm volatile("hlt");
-    }
+    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
+        asm("int $22");
     
-    if(head->free == HEAD_FREE) {
-        text::cout << "Heap error: freeing already free memory!" << text::endl;
-        while(true)
-            asm volatile("hlt");
-    }
+    if(head->free == HEAD_FREE)
+        asm("int $23");
     
     head->free = HEAD_FREE;
     used_memory -= head->size + sizeof(malloc_head);
@@ -76,8 +61,6 @@ void free(void* ptr) {
         mergeBlocks(head, (malloc_head*)head->next);
     if(head->prev && ((malloc_head*)head->prev)->free == HEAD_FREE)
         mergeBlocks((malloc_head*)head->prev, head);
-    
-    //text::cout << "Free " << text::hex << (int)ptr - sizeof(malloc_head) << "." << text::endl;
 }
 
 void mem::init() {

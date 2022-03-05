@@ -1,6 +1,6 @@
 #include "text.hpp"
 #include "graphics/gfx.hpp"
-#include "drivers/memory/memory.hpp"
+#include "memory/memory.hpp"
 
 enum printMode {MODE_DEC, MODE_HEX};
 

@@ -1,6 +1,6 @@
-#include "cpu/timer/timer.hpp"
-#include "cpu/isr/isr.hpp"
-#include "drivers/ports/ports.hpp"
+#include "timer/timer.hpp"
+#include "interrupts/interrupts.hpp"
+#include "ports/ports.hpp"
 #include "text/text.hpp"
 
 static unsigned int tick = 0;
@@ -16,13 +16,13 @@ void delay(unsigned int ds) {
         asm("hlt");
 }
 
-static void timer_callback(registers_t regs) {
+static void timer_callback(Registers regs) {
     tick++;
 }
 
 void init_timer(u32 freq) {
     /* Install the function we just wrote */
-    register_interrupt_handler(IRQ0, timer_callback);
+    Interrupts::registerHandler(IRQ0, timer_callback);
 
     /* Get the PIT value: hardware clock at 1193180 Hz */
     u32 divisor = 1193180 / freq;
