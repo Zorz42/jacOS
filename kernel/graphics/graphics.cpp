@@ -44,9 +44,6 @@ void gfx::drawChar(int x, int y, char c) {
 }
 
 void gfx::init(void* data) {
-    //drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
-    //drawRect(0, 0, mode_info->resolutionX, mode_info->resolutionY, 255);
-    
     vesa::init(data);
     text::init();
     

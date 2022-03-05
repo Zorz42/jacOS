@@ -30,7 +30,7 @@ static void onCommand() {
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
         int exit_code = program();
-        free(result);
+        //free(result);
         text::cout << "Program ended with exit code " << exit_code << "! " << text::endl;
         text::cout << *(int*)0x1000000 << text::endl;
         
@@ -81,6 +81,6 @@ void kernelMain() {
             keyboard::KeyEvent event = keyboard::getKeyEvent();
             onKeyEvent(event.key, event.up);
         }
-        asm("hlt");
+        timer::delay(20);
     }
 }
