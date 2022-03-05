@@ -9,8 +9,8 @@
 void kernelMain();
 
 extern "C" void kernelEntry(void* data) {
-    Interrupts::init();
-    init_timer(100);
+    interrupts::init();
+    timer::init(1000);
     keyboard::init();
     
     mem::init();
@@ -18,6 +18,5 @@ extern "C" void kernelEntry(void* data) {
     
     kernelMain();
     
-    while(true)
-        asm volatile("hlt");
+    ports::wordOut(0x604, 0x2000);
 }

@@ -36,7 +36,7 @@ bool keyboard::getKeyState(Key key) {
 }
 
 void keyboard::init() {
-    Interrupts::registerHandler(IRQ1, keyboardCallback);
+    interrupts::registerHandler(IRQ1, keyboardCallback);
 }
 
 static keyboard::Key scancodeToKey(u8 scancode) {

@@ -4,6 +4,7 @@
 #include "memory/memory.hpp"
 #include "timer/timer.hpp"
 #include "disk/disk.hpp"
+#include "ports/ports.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];
@@ -38,6 +39,9 @@ static void onCommand() {
         << "Free memory: " << mem::getFree() / 1024 << " KB" << text::endl
         << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
         
+    } else if(strcmp(&curr_shell_cmd[0], "sleep")) {
+        //Timer::delay(1000);
+    
     } else {
         text::cout << "Unknown command: " << &curr_shell_cmd[0] << text::endl;
     }
@@ -72,28 +76,6 @@ void kernelMain() {
     resetCommand();
     text::flush();
     
-    /*void* prev_alloc = 0;
-    
-    for(int i = 0; i < 100; i++) {
-        text::cout << text::endl << i << ". time:" << text::endl;
-        void* alloc1 = malloc(0x10000);
-        void* alloc2 = malloc(0x50000);
-        free(alloc1);
-        void* alloc3 = malloc(0x20000);
-        void* alloc4 = malloc(0x60000);
-        free(alloc2);
-        free(alloc3);
-        free(alloc4);
-        
-        
-        text::cout << "Memory change: " << (int)alloc1 - (int)prev_alloc << text::endl;
-        
-        prev_alloc = alloc1;
-        
-        text::cout << "Used memory: " << mem::getUsed() / 1024 << " KB" << text::endl;
-        text::cout << "Free memory: " << mem::getFree() / 1024 << " KB" << text::endl;
-        text::cout << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
-        
-        //delay(10);
-    }*/
+    while(true)
+        asm("hlt");
 }

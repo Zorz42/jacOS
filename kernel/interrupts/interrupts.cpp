@@ -4,7 +4,7 @@
 #include "keyboard/keyboard.hpp"
 #include "text/text.hpp"
 
-static Interrupts::Handler interrupt_handlers[256];
+static interrupts::Handler interrupt_handlers[256];
 
 struct IdtGate {
     u16 low_offset;
@@ -81,7 +81,7 @@ extern "C" void irq13();
 extern "C" void irq14();
 extern "C" void irq15();
 
-void Interrupts::init() {
+void interrupts::init() {
     const u32 isr_arr[32] = {(u32)isr0, (u32)isr1, (u32)isr2, (u32)isr3, (u32)isr4, (u32)isr5, (u32)isr6, (u32)isr7, (u32)isr8, (u32)isr9, (u32)isr10, (u32)isr11, (u32)isr12, (u32)isr13, (u32)isr14, (u32)isr15, (u32)isr16, (u32)isr17, (u32)isr18, (u32)isr19, (u32)isr20, (u32)isr21, (u32)isr22, (u32)isr23, (u32)isr24, (u32)isr25, (u32)isr26, (u32)isr27, (u32)isr28, (u32)isr29, (u32)isr30, (u32)isr31};
     
     for(int i = 0; i < 32; i++)
@@ -110,7 +110,7 @@ void Interrupts::init() {
     asm volatile("sti");
 }
 
-void Interrupts::registerHandler(u8 n, Handler handler) {
+void interrupts::registerHandler(u8 n, Handler handler) {
     interrupt_handlers[n] = handler;
 }
 
@@ -120,7 +120,7 @@ extern "C" void irqHandler(Registers registers) {
     ports::byteOut(0x20, 0x20);
 
     if (interrupt_handlers[registers.int_no] != 0) {
-        Interrupts::Handler handler = interrupt_handlers[registers.int_no];
+        interrupts::Handler handler = interrupt_handlers[registers.int_no];
         handler(registers);
     }
 }

@@ -27,7 +27,7 @@ struct Registers {
    u32 eip, cs, eflags, useresp, ss;
 };
 
-namespace Interrupts {
+namespace interrupts {
 
 void init();
 
