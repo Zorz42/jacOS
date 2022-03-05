@@ -1,15 +1,12 @@
 #include "graphics/gfx.hpp"
-#include "cpu/isr.hpp"
-#include "memory/memory.hpp"
+#include "cpu/isr/isr.hpp"
+#include "drivers/memory/memory.hpp"
 #include "drivers/vesa/vesa.hpp"
 #include "text/text.hpp"
 
 void kernelMain();
 
-extern "C" void kernelEntry() {
-    void* data = 0;
-    asm volatile("mov %%ebx, %0" : "=r"(data) :: "%ebx"); // we get vesa info address in ebx register
-    
+extern "C" void kernelEntry(void* data) {
     isr_install();
     irq_install();
     

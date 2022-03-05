@@ -1,7 +1,5 @@
-#ifndef PORTS_H
-#define PORTS_H
-
-#include "cpu/types.hpp"
+#pragma once
+#include "types.hpp"
 
 namespace ports {
 
@@ -11,5 +9,3 @@ unsigned short wordIn(u16 port);
 void wordOut(u16 port, u16 data);
 
 }
-
-#endif

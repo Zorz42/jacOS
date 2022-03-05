@@ -1,7 +1,7 @@
-#include "isr.hpp"
-#include "idt.hpp"
+#include "cpu/isr/isr.hpp"
+#include "cpu/idt/idt.hpp"
 #include "drivers/ports/ports.hpp"
-#include "timer.hpp"
+#include "cpu/timer/timer.hpp"
 #include "drivers/keyboard/keyboard.hpp"
 #include "text/text.hpp"
 

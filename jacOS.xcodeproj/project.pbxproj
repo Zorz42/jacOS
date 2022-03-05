@@ -38,10 +38,11 @@
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
 		167FB5C0262C467500AA5F51 /* vesa.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vesa.hpp; sourceTree = "<group>"; };
-		168CF16B2631E2E400C0C0F2 /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = jacOS; path = /Users/jakob/jacOS/build/Debug/jacOS; sourceTree = "<absolute>"; };
-		168CF16C2631E2E400C0C0F2 /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "jacOS-build-only"; path = "/Users/jakob/jacOS/build/Debug/jacOS-build-only"; sourceTree = "<absolute>"; };
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disk.hpp; sourceTree = "<group>"; };
+		3687C9C027D36BD000F0F62C /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
+		3687C9C127D36BD000F0F62C /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3687C9C227D36BEA00F0F62C /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
 		368BD4E927D26D3600D134DF /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		368BD4EA27D272A800D134DF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,19 +60,22 @@
 		167A73852626DF4E00328331 = {
 			isa = PBXGroup;
 			children = (
+				3687C9C227D36BEA00F0F62C /* link.ld */,
 				167A73D32626E08500328331 /* Makefile */,
 				167A73B82626DF7A00328331 /* boot */,
 				167A739A2626DF7A00328331 /* kernel */,
 				368BD4E727D2698400D134DF /* program */,
 				167E4AD62634354300BE05BA /* test-program */,
+				3687C9C027D36BD000F0F62C /* jacOS */,
+				3687C9C127D36BD000F0F62C /* jacOS-build-only */,
 			);
 			sourceTree = "<group>";
 		};
 		167A739A2626DF7A00328331 /* kernel */ = {
 			isa = PBXGroup;
 			children = (
+				167A73A72626DF7A00328331 /* types.hpp */,
 				167A739B2626DF7A00328331 /* drivers */,
-				167A73A12626DF7A00328331 /* memory */,
 				167A73A42626DF7A00328331 /* cpu */,
 				167A73AD2626DF7A00328331 /* entry */,
 				167A73B02626DF7A00328331 /* text */,
@@ -85,9 +89,10 @@
 		167A739B2626DF7A00328331 /* drivers */ = {
 			isa = PBXGroup;
 			children = (
+				167FB5B9262C41BA00AA5F51 /* ports */,
+				167A73A12626DF7A00328331 /* memory */,
 				168CF16D2631E79400C0C0F2 /* disk */,
 				167FB5BE262C45C100AA5F51 /* vesa */,
-				167FB5B9262C41BA00AA5F51 /* ports */,
 				1620BB15262AFCE600BBB6D8 /* keyboard */,
 			);
 			path = drivers;
@@ -105,13 +110,9 @@
 		167A73A42626DF7A00328331 /* cpu */ = {
 			isa = PBXGroup;
 			children = (
-				167A73A62626DF7A00328331 /* idt.hpp */,
-				167A73A72626DF7A00328331 /* types.hpp */,
-				167A73A92626DF7A00328331 /* timer.hpp */,
-				167A73AC2626DF7A00328331 /* isr.hpp */,
-				167A73A52626DF7A00328331 /* timer.cpp */,
-				167A73A82626DF7A00328331 /* isr.cpp */,
-				167A73AA2626DF7A00328331 /* idt.cpp */,
+				3687C9C527D36EA700F0F62C /* isr */,
+				3687C9C427D36E9800F0F62C /* timer */,
+				3687C9C327D36E8D00F0F62C /* idt */,
 				167A73AB2626DF7A00328331 /* interrupt.asm */,
 			);
 			path = cpu;
@@ -192,6 +193,33 @@
 			path = disk;
 			sourceTree = "<group>";
 		};
+		3687C9C327D36E8D00F0F62C /* idt */ = {
+			isa = PBXGroup;
+			children = (
+				167A73A62626DF7A00328331 /* idt.hpp */,
+				167A73AA2626DF7A00328331 /* idt.cpp */,
+			);
+			path = idt;
+			sourceTree = "<group>";
+		};
+		3687C9C427D36E9800F0F62C /* timer */ = {
+			isa = PBXGroup;
+			children = (
+				167A73A92626DF7A00328331 /* timer.hpp */,
+				167A73A52626DF7A00328331 /* timer.cpp */,
+			);
+			path = timer;
+			sourceTree = "<group>";
+		};
+		3687C9C527D36EA700F0F62C /* isr */ = {
+			isa = PBXGroup;
+			children = (
+				167A73AC2626DF7A00328331 /* isr.hpp */,
+				167A73A82626DF7A00328331 /* isr.cpp */,
+			);
+			path = isr;
+			sourceTree = "<group>";
+		};
 		368BD4E727D2698400D134DF /* program */ = {
 			isa = PBXGroup;
 			children = (
@@ -215,7 +243,7 @@
 			);
 			name = jacOS;
 			productName = jacOS;
-			productReference = 168CF16B2631E2E400C0C0F2 /* jacOS */;
+			productReference = 3687C9C027D36BD000F0F62C /* jacOS */;
 			productType = "com.apple.product-type.tool";
 		};
 		167A73DB2626E35000328331 /* jacOS-build-only */ = {
@@ -230,7 +258,7 @@
 			);
 			name = "jacOS-build-only";
 			productName = "jacOS-build-only";
-			productReference = 168CF16C2631E2E400C0C0F2 /* jacOS-build-only */;
+			productReference = 3687C9C127D36BD000F0F62C /* jacOS-build-only */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

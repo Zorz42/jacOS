@@ -1,8 +1,8 @@
 #include "kernel.hpp"
 #include "graphics/gfx.hpp"
 #include "text/text.hpp"
-#include "memory/memory.hpp"
-#include "cpu/timer.hpp"
+#include "drivers/memory/memory.hpp"
+#include "cpu/timer/timer.hpp"
 #include "drivers/disk/disk.hpp"
 
 #define MAX_CMD_LENGTH 100

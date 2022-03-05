@@ -1,6 +1,6 @@
 #include "keyboard.hpp"
 #include "drivers/ports/ports.hpp"
-#include "cpu/isr.hpp"
+#include "cpu/isr/isr.hpp"
 #include "text/text.hpp"
 #include "kernel.hpp"
 

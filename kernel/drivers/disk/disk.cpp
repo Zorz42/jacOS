@@ -1,7 +1,7 @@
 #include "disk.hpp"
 #include "drivers/ports/ports.hpp"
 #include "text/text.hpp"
-#include "memory/memory.hpp"
+#include "drivers/memory/memory.hpp"
 #include "graphics/gfx.hpp"
 
 

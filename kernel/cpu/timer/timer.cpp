@@ -1,5 +1,5 @@
-#include "timer.hpp"
-#include "isr.hpp"
+#include "cpu/timer/timer.hpp"
+#include "cpu/isr/isr.hpp"
 #include "drivers/ports/ports.hpp"
 #include "text/text.hpp"
 

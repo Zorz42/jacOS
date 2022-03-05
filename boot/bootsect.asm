@@ -45,6 +45,7 @@ load_kernel:
 [bits 32]
 BEGIN_PM:
     mov ebx, modeInfo
+    push ebx
     call KERNEL_OFFSET ; Give control to the kernel
     jmp $ ; Stay here when the kernel returns control to us (if ever)
 

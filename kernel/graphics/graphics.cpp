@@ -1,6 +1,6 @@
 #include "gfx.hpp"
 #include "text/text.hpp"
-#include "memory/memory.hpp"
+#include "drivers/memory/memory.hpp"
 #include "font.hpp"
 #include "drivers/vesa/vesa.hpp"
 #include "kernel.hpp"

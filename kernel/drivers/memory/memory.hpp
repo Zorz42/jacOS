@@ -1,7 +1,5 @@
-#ifndef memory_h
-#define memory_h
-
-#include "cpu/types.hpp"
+#pragma once
+#include "types.hpp"
 
 namespace mem {
 
@@ -17,5 +15,3 @@ void free(void* ptr);
 
 void* operator new(unsigned long size);
 void* operator new[](unsigned long size);
-
-#endif
