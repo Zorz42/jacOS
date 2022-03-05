@@ -5,6 +5,7 @@
 #include "text/text.hpp"
 #include "timer/timer.hpp"
 #include "keyboard/keyboard.hpp"
+#include "ports/ports.hpp"
 
 void kernelMain();
 

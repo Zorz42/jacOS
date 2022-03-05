@@ -4,8 +4,11 @@
 #include "text/text.hpp"
 #include "kernel.hpp"
 
+#define EVENT_QUEUE_SIZE 100
+
 static keyboard::Key scancodeToKey(u8 scancode);
 static bool keyStates[keyboard::KEY_COUNT];
+static keyboard::KeyEvent key_events[EVENT_QUEUE_SIZE];
 
 static void keyboardCallback(Registers regs) {
     /* The PIC leaves us the scancode in port 0x60 */

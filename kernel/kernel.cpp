@@ -76,6 +76,7 @@ void kernelMain() {
     resetCommand();
     text::flush();
     
-    while(true)
+    while(true) {
         asm("hlt");
+    }
 }

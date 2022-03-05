@@ -72,6 +72,11 @@ enum Key {
     KEY_COUNT,
 };
 
+struct KeyEvent {
+    Key key;
+    bool up, active = false;
+};
+
 void init();
 char keyToAscii(Key key);
 bool getKeyState(Key key);
