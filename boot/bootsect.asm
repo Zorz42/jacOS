@@ -7,9 +7,8 @@ KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
     mov bp, 0x9000
     mov sp, bp
     
-    ; idk what this does
-    ;mov ax, ds
-    ;mov es, ax
+    mov ax, ds
+    mov es, ax
 
     ;Set video mode
     mov ax, 4f02h
@@ -19,7 +18,7 @@ KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
     ;Get video mode info
     mov ax, 4f01h
     mov cx, 118h
-    mov di, modeInfo
+    mov di, MODE_INFO
     int 10h
     
     call load_kernel ; read the kernel from disk
@@ -44,14 +43,16 @@ load_kernel:
 
 [bits 32]
 BEGIN_PM:
-    mov ebx, modeInfo
+    mov ebx, MODE_INFO
     push ebx
+    
     call KERNEL_OFFSET ; Give control to the kernel
+    
     jmp $ ; Stay here when the kernel returns control to us (if ever)
-
+    
 
 BOOT_DRIVE db 0 ; It is a good idea to store it in memory because 'dl' may get overwritten
-modeInfo    TIMES 256 db 0
+MODE_INFO times 256 db 0
 
 ; padding
 times 510 - ($-$$) db 0

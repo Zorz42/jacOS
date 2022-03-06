@@ -25,11 +25,3 @@ unsigned int mem::getTotal() {
 unsigned int mem::getFree() {
     return total_memory - used_memory;
 }
-
-void* operator new(unsigned long size) {
-    return malloc(size);
-}
-
-void* operator new[](unsigned long size) {
-    return malloc(size);
-}

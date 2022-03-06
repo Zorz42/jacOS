@@ -27,7 +27,7 @@ os-image.bin: build/bootsect.bin build/kernel.bin
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${KERNEL_OBJ}
+build/kernel.bin: ${KERNEL_OBJ} link.ld ${KERNEL_HEADERS}
 	${LD} -o $@ -Tlink.ld ${KERNEL_OBJ} --oformat binary
 
 # Generic rules for wildcards

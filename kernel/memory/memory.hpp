@@ -12,5 +12,3 @@ unsigned int getFree();
 
 void* malloc(u32 size);
 
-void* operator new(unsigned long size);
-void* operator new[](unsigned long size);

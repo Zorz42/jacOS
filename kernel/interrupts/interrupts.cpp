@@ -1,7 +1,5 @@
 #include "interrupts.hpp"
 #include "ports/ports.hpp"
-#include "timer/timer.hpp"
-#include "keyboard/keyboard.hpp"
 #include "text/text.hpp"
 
 static interrupts::Handler interrupt_handlers[256];
