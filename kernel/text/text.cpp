@@ -123,6 +123,19 @@ text::_out_stream text::_out_stream::operator<<(long number) {
     return *this;
 }
 
+#define FLOAT_COUT_PRECISION 10000
+
+text::_out_stream text::_out_stream::operator<<(float number) {
+    *this << (long)number;
+    float floating = number - (int)number;
+    long floating_long = floating * FLOAT_COUT_PRECISION;
+    while(floating_long != 0 && floating_long % 10 == 0)
+        floating_long /= 10;
+    if(floating_long != 0)
+        *this << "." << floating_long;
+    return *this;
+}
+
 text::_out_stream text::_out_stream::operator<<(int number) {
     return operator<<((long)number);
 }

@@ -149,7 +149,7 @@ static const char *exception_messages[] = {
     "Out of Heap Memory",
     "Freeing Invalid Memory",
     "Freeing Freed Memory",
-    "Reserved",
+    "Cannot Find Free Region",
 
     "Reserved",
     "Reserved",

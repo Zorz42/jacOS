@@ -1,30 +1,35 @@
-; Identical to lesson 13's boot sector, but the %included files have new paths
-
 [org 0x7c00]
 KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
+MODE_INFO_OFFSET equ 0x7d00 ; Where the vesa mode info will be saved
+RAM_INFO_OFFSET equ 0x7e00 ; Where the ram info will be saved
 
-    mov [BOOT_DRIVE], dl ; Remember that the BIOS sets us the boot drive in 'dl' on boot
-    mov bp, 0x9000
-    mov sp, bp
-    
-    mov ax, ds
-    mov es, ax
 
-    ;Set video mode
-    mov ax, 4f02h
-    mov bx, 118h
-    int 10h
+mov [BOOT_DRIVE], dl
+mov bp, 0x9000
+mov sp, bp
 
-    ;Get video mode info
-    mov ax, 4f01h
-    mov cx, 118h
-    mov di, MODE_INFO
-    int 10h
-    
-    call load_kernel ; read the kernel from disk
+mov ax, ds
+mov es, ax
 
-    call switch_to_pm ; disable interrupts, load GDT,  etc. Finally jumps to 'BEGIN_PM'
-    jmp $ ; Never executed
+; Set video mode
+mov ax, 4f02h
+mov bx, 118h
+int 10h
+
+; Get video mode info
+mov ax, 4f01h
+mov cx, 118h
+mov di, MODE_INFO_OFFSET
+int 10h
+
+
+call get_ram_info
+
+call load_kernel ; read the kernel from disk
+
+call switch_to_pm ; disable interrupts, load GDT,  etc. Finally jumps to 'BEGIN_PM'
+jmp $ ; Never executed
+
 
 %include "boot/print.asm"
 %include "boot/disk.asm"
@@ -34,25 +39,42 @@ KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
 
 [bits 16]
 load_kernel:
-    mov bx, KERNEL_OFFSET ; Read from disk and store in 0x512
-    mov dh, KERNEL_SECTORS_SIZE ; Our future kernel will be larger, make this big
+    mov bx, KERNEL_OFFSET
+    mov dh, KERNEL_SECTORS_SIZE
     mov dl, [BOOT_DRIVE]
     
     call disk_load
     ret
 
+get_ram_info:
+    pusha
+    mov di, RAM_INFO_OFFSET
+    
+    mov ebx, 0
+    mov edx, 0x534D4150
+    
+gather_ram_entry:
+    mov eax, 0xE820
+    mov ecx, 24
+    int 0x15
+    cmp ebx, 0
+    je get_ram_info_end
+    add di, 24
+    jmp gather_ram_entry
+    
+get_ram_info_end:
+    popa
+    ret
+
+
 [bits 32]
 BEGIN_PM:
-    mov ebx, MODE_INFO
-    push ebx
-    
     call KERNEL_OFFSET ; Give control to the kernel
     
-    jmp $ ; Stay here when the kernel returns control to us (if ever)
+    jmp $
     
 
-BOOT_DRIVE db 0 ; It is a good idea to store it in memory because 'dl' may get overwritten
-MODE_INFO times 256 db 0
+BOOT_DRIVE db 0
 
 ; padding
 times 510 - ($-$$) db 0

@@ -3,7 +3,7 @@
 
 namespace vesa {
 
-void init(void* info);
+void init();
 int getScreenWidth();
 int getScreenHeight();
 int getTotalPixels();

@@ -9,13 +9,14 @@
 
 void kernelMain();
 
-extern "C" void kernelEntry(void* data) {
+extern "C" void kernelEntry() {
     interrupts::init();
-    timer::init(1000);
-    keyboard::init();
     
     mem::init();
-    gfx::init(data);
+    gfx::init();
+    
+    timer::init(1000);
+    keyboard::init();
     
     kernelMain();
     

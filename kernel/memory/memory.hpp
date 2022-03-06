@@ -10,5 +10,5 @@ unsigned int getFree();
 
 }
 
-void* malloc(u32 size);
+void* malloc(u32 size, bool page_align=false);
 void free(void* ptr);

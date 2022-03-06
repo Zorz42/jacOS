@@ -34,8 +34,8 @@ static unsigned int* buffer = nullptr;
 static bool* changed_lines = nullptr;
 static int total_pixels = -1;
 
-void vesa::init(void* info) {
-    mode_information = (mode_info*)info;
+void vesa::init() {
+    mode_information = (mode_info*)0x7d00;
     total_pixels = vesa::getScreenWidth() * vesa::getScreenHeight();
     buffer = (unsigned int*)malloc(getTotalPixels() * getBytesPerPixel());
     changed_lines = (bool*)malloc(getScreenHeight());

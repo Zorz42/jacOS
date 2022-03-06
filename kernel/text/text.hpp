@@ -12,6 +12,7 @@ public:
     _out_stream operator<<(char character);
     _out_stream operator<<(long number);
     _out_stream operator<<(int number);
+    _out_stream operator<<(float number);
     _out_stream operator<<(unsigned long number);
     _out_stream operator<<(unsigned int number);
     _out_stream operator<<(_hex _);

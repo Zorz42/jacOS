@@ -23,6 +23,23 @@ static void resetCommand() {
     text::cout << "> ";
 }
 
+void printSize(int bytes) {
+    if(bytes < 1024)
+        text::cout << bytes << "B";
+    else if(bytes / 1024 < 1024)
+        text::cout << bytes / 1024 << "kB";
+    else if(bytes / 1024 / 1024 < 1024) {
+        float megabytes = float(bytes / 1024) / 1024.f;
+        int floating = (megabytes - (int)megabytes) * 100;
+        text::cout << (int)megabytes << "." << floating << "MB";
+    }
+    else {
+        float gigabytes = float(bytes / 1024 / 1024) / 1024.f;
+        int floating = (gigabytes - (int)gigabytes) * 100;
+        text::cout << (int)gigabytes << "." << floating << "GB";
+    }
+}
+
 static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
         void* result = disk::read(0, 0, 1, 20);
@@ -35,9 +52,17 @@ static void onCommand() {
         text::cout << *(int*)0x1000000 << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
-        text::cout << "Used memory: " << mem::getUsed() / 1024 << " KB" << text::endl
-        << "Free memory: " << mem::getFree() / 1024 << " KB" << text::endl
-        << "Total memory: " << mem::getTotal() / 1024 << " KB" << text::endl;
+        text::cout << "Used memory: ";
+        printSize(mem::getUsed());
+        text::cout << text::endl;
+        
+        text::cout << "Free memory: ";
+        printSize(mem::getFree());
+        text::cout << text::endl;
+        
+        text::cout << "Total memory: ";
+        printSize(mem::getTotal());
+        text::cout << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "sleep")) {
         timer::delay(1000);
@@ -72,11 +97,11 @@ static void onKeyEvent(keyboard::Key key, bool up) {
 }
 
 void kernelMain() {
-    text::cout << "Kernel initialized!" << text::endl;
+    text::cout << "Kernel initialized!" << 55.123f << text::endl;
     
     resetCommand();
     text::flush();
-
+    
     while(true) {
         while(keyboard::hasKeyEvent()) {
             keyboard::KeyEvent event = keyboard::getKeyEvent();
