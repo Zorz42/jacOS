@@ -6,9 +6,9 @@ static unsigned int heap_base, total_memory, used_memory;
 #define HEAD_FREE 'F'
 
 struct MallocHead {
-    u32 size;
+    unsigned int size;
     char free;
-    void* next, *prev;
+    MallocHead *next, *prev;
 };
 
 struct MemInfo {
@@ -21,30 +21,57 @@ void* mem::alloc(u32 size, bool page_align) {
     MallocHead* head = (MallocHead*)heap_base;
     
     // find a free block
-    while(head->free != HEAD_FREE || head->size <= size) {
+    while(true) {
         if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
             asm("int $20");
         
+        if(page_align) {
+            if(head->free == HEAD_FREE) {
+                // align address
+                unsigned int address = ((unsigned int)head) + sizeof(MallocHead) - 1;
+                address &= 0xFFFFF000;
+                address += 0x1000;
+                // check if the aligned block fits into the free block
+                if((unsigned int)head + sizeof(MallocHead) + head->size >= address + size) {
+                    MallocHead* new_head = (MallocHead*)(address - sizeof(MallocHead));
+                    new_head->size = (unsigned int)head + sizeof(MallocHead) + head->size - address;
+                    new_head->next = head->next;
+                    new_head->prev = head;
+                    head->next = new_head;
+                    head->size = address - (unsigned int)head - sizeof(MallocHead);
+                    new_head->free = HEAD_FREE;
+                    
+                    head = new_head;
+                    break;
+                }
+            }
+        } else {
+            if(head->free == HEAD_FREE && head->size >= size)
+                break;
+        }
         if(head->next == 0)
             asm("int $21");
         
         head = (MallocHead*)head->next;
     }
     
-    // split that block into two blocks
-    MallocHead* next_head = (MallocHead*)((int)head + (int)sizeof(MallocHead) + (int)size);
-    next_head->free = HEAD_FREE;
-    next_head->size = head->size - size - sizeof(MallocHead);
-    next_head->next = head->next;
-    next_head->prev = head;
+    if(head->size - size > sizeof(MallocHead)) {
+        // split that block into two blocks
+        MallocHead* next_head = (MallocHead*)((unsigned int)head + sizeof(MallocHead) + size);
+        next_head->free = HEAD_FREE;
+        next_head->size = head->size - size - sizeof(MallocHead);
+        next_head->next = head->next;
+        next_head->prev = head;
+        
+        head->size = size;
+        head->next = next_head;
+    }
     
     head->free = HEAD_ALLOCATED;
-    head->size = size;
-    head->next = next_head;
     
-    used_memory += size + sizeof(MallocHead);
+    used_memory += head->size + sizeof(MallocHead);
     
-    return (void*)((int)head + (int)sizeof(MallocHead));
+    return (void*)((unsigned int)head + sizeof(MallocHead));
 }
 
 static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
@@ -53,7 +80,7 @@ static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
 }
 
 void mem::free(void* ptr) {
-    MallocHead* head = (MallocHead*)((int)ptr - sizeof(MallocHead));
+    MallocHead* head = (MallocHead*)((unsigned int)ptr - sizeof(MallocHead));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
         asm("int $22");
     
