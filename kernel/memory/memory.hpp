@@ -11,4 +11,4 @@ unsigned int getFree();
 }
 
 void* malloc(u32 size);
-
+void free(void* ptr);
