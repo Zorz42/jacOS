@@ -20,7 +20,8 @@ KERNEL_OFFSET = 0x1000
 .PHONY: run clean
 
 run: os-image.bin ${PROGRAM_NAME}.img
-	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2000m
+	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2048M
+	
 
 os-image.bin: build/bootsect.bin build/kernel.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
