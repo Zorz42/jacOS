@@ -17,7 +17,7 @@ struct MemInfo {
     unsigned int type;
 } __attribute__((packed));
 
-void* malloc(u32 size, bool page_align) {
+void* mem::alloc(u32 size, bool page_align) {
     MallocHead* head = (MallocHead*)heap_base;
     
     // find a free block
@@ -52,7 +52,7 @@ static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
     block1->next = block2->next;
 }
 
-void free(void* ptr) {
+void mem::free(void* ptr) {
     MallocHead* head = (MallocHead*)((int)ptr - sizeof(MallocHead));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
         asm("int $22");

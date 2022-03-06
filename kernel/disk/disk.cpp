@@ -11,7 +11,7 @@ void* disk::read(u8 head, u16 cylinder, u8 sector, u8 sector_count) {
     ports::byteOut(0x1f5, (cylinder >> 4) & 0b00001111);
     ports::byteOut(0x1f7, 0x20); // command - read with retry
     
-    void* result = malloc(sector_count * 512);
+    void* result = mem::alloc(sector_count * 512);
 
     asm volatile("mov $0x1f7, %edx");
     asm volatile("mov $0x20, %al");
