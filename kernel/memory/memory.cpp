@@ -64,13 +64,13 @@ void free(void* ptr) {
 }
 
 void mem::init() {
-    heap_base = 0x3d5000;
+    heap_base = 0x100000; //0x3d5000;
     used_memory = 0;
-    total_memory = 0x1000000;
+    total_memory = 0x80000000;
     
     malloc_head* main_head = (malloc_head*)heap_base;
     main_head->free = HEAD_FREE;
-    main_head->size = total_memory - sizeof(malloc_head);
+    main_head->size = total_memory - sizeof(malloc_head) - heap_base;
     main_head->next = 0;
     main_head->prev = 0;
 }

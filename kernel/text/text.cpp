@@ -2,11 +2,11 @@
 #include "graphics/gfx.hpp"
 #include "memory/memory.hpp"
 
-enum printMode {MODE_DEC, MODE_HEX};
+enum class PrintMode {decimal, hexadecimal};
 
 static int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_x, prev_y = cursor_y;
 static char* text_buffer = nullptr;
-static printMode print_mode = MODE_DEC;
+static PrintMode print_mode = PrintMode::decimal;
 
 static void updateChar(int x, int y) {
     gfx::drawChar(x << 3, y << 4, text_buffer[x + y * text_width]);
@@ -85,7 +85,7 @@ text::_out_stream text::_out_stream::operator<<(char character) {
 text::_out_stream text::_out_stream::operator<<(long number) {
     if(text_buffer)
         switch(print_mode) {
-            case MODE_DEC: {
+            case PrintMode::decimal: {
                 if(number < 0) {
                     *this << '-';
                     number *= -1;
@@ -107,7 +107,7 @@ text::_out_stream text::_out_stream::operator<<(long number) {
                 }
                 break;
             }
-            case MODE_HEX: {
+            case PrintMode::hexadecimal: {
                 int end = 7;
                 while(((number >> end * 4) & 0xF) == 0 && end > 0)
                     end--;
@@ -136,12 +136,12 @@ text::_out_stream text::_out_stream::operator<<(unsigned int number) {
 }
 
 text::_out_stream text::_out_stream::operator<<(_hex _) {
-    print_mode = MODE_HEX;
+    print_mode = PrintMode::hexadecimal;
     return *this;
 }
 
 text::_out_stream text::_out_stream::operator<<(_dec _) {
-    print_mode = MODE_DEC;
+    print_mode = PrintMode::decimal;
     return *this;
 }
 
@@ -150,7 +150,7 @@ text::_out_stream text::_out_stream::operator<<(_endl _) {
         newLine();
         flush();
     }
-    print_mode = MODE_DEC;
+    print_mode = PrintMode::decimal;
     return *this;
 }
 

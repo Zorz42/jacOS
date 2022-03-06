@@ -47,7 +47,7 @@ static void onCommand() {
     }
 }
 
-void onKeyEvent(keyboard::Key key, bool up) {
+static void onKeyEvent(keyboard::Key key, bool up) {
     if(!up) {
         char c = keyToAscii(key);
         if(c) {
@@ -55,11 +55,12 @@ void onKeyEvent(keyboard::Key key, bool up) {
             curr_shell_cmd[++cmd_length] = 0;
             text::cout << c;
         } else if(key == keyboard::KEY_BACKSPACE && cmd_length) {
-            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
-            text::cout << " ";
-            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
             cmd_length--;
             curr_shell_cmd[cmd_length] = 0;
+            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
+            text::cout << " ";
+            text::flush();
+            text::moveCursorTo(text::getCursorX() - 1, text::getCursorY());
         } else if(key == keyboard::KEY_ENTER) {
             text::cout << "\n";
             if(curr_shell_cmd[0])
@@ -75,7 +76,7 @@ void kernelMain() {
     
     resetCommand();
     text::flush();
-    
+
     while(true) {
         while(keyboard::hasKeyEvent()) {
             keyboard::KeyEvent event = keyboard::getKeyEvent();
