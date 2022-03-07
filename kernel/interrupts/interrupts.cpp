@@ -151,8 +151,8 @@ static const char *exception_messages[] = {
     "Freeing Freed Memory",
     "Cannot Find Free Region",
 
-    "Reserved",
-    "Reserved",
+    "Ran out of free frames",
+    "Frame not free on identity map",
     "Reserved",
     "Reserved",
     "Reserved",

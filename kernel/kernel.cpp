@@ -5,6 +5,7 @@
 #include "timer/timer.hpp"
 #include "disk/disk.hpp"
 #include "ports/ports.hpp"
+#include "vesa/vesa.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];

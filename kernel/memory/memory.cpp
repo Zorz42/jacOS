@@ -1,7 +1,5 @@
 #include "memory.hpp"
 
-static unsigned int heap_base, total_memory, used_memory;
-
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
 
@@ -16,6 +14,110 @@ struct MemInfo {
     unsigned int length, length_high;
     unsigned int type;
 } __attribute__((packed));
+
+static unsigned int heap_base, total_memory, used_memory;
+static unsigned int *free_frames, free_frames_size;
+static mem::PageDirectory *kernel_page_directory = nullptr, *current_page_directory = nullptr;
+
+static void memset(void* pointer, u8 value, unsigned int length) {
+    u8* iter = (u8*)pointer;
+    while(length--)
+        *iter++ = value;
+}
+
+static void setFrame(unsigned int address, bool allocated) {
+    unsigned int frame = address / 0x1000;
+    unsigned int index = frame / 32;
+    unsigned int offset = frame % 32;
+    if(allocated)
+        free_frames[index] |= 1 << offset;
+    else
+        free_frames[index] &= ~(1 << offset);
+}
+
+static bool getFrame(unsigned int address) {
+    unsigned int frame = address / 0x1000;
+    unsigned int index = frame / 32;
+    unsigned int offset = frame % 32;
+    return (free_frames[index] & (1 << offset)) != 0;
+}
+
+static unsigned int getFirstFreeFrame() {
+    for(unsigned int i = 0; i < free_frames_size / 32; i++)
+        if(free_frames[i] != 0xFFFFFFFF) // nothing free, exit early.
+            // at least one bit is free here.
+            for(unsigned int j = 0; j < 32; j++) {
+                if(!(free_frames[i] & (1 << j)))
+                    return i * 32 + j;
+            }
+    asm("int $25");
+    return 0;
+}
+
+void mem::allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable) {
+    if(page_head->frame == 0) {
+        unsigned int index = getFirstFreeFrame();
+        setFrame(index * 0x1000, true);
+        page_head->present = 1;
+        page_head->rw = is_writable ? 1 : 0;
+        page_head->user = is_kernel ? 0 : 1;
+        page_head->frame = index;
+    }
+}
+
+void mem::freeFrame(PageHead* page_head) {
+    if(page_head->frame != 0) {
+        setFrame(page_head->frame * 0x1000, false);
+        page_head->frame = 0;
+    }
+}
+
+void mem::switchPageDirectory(PageDirectory* page_directory) {
+    current_page_directory = page_directory;
+    asm volatile("mov %0, %%cr3":: "r"(&page_directory->physical_table_addresses));
+    u32 cr0;
+    asm volatile("mov %%cr0, %0": "=r"(cr0));
+    cr0 |= 0x80000000; // Enable paging!
+    asm volatile("mov %0, %%cr0":: "r"(cr0));
+}
+
+mem::PageHead* mem::getPage(unsigned int address, PageDirectory* page_directory) {
+    if(page_directory == nullptr)
+        page_directory = current_page_directory;
+    
+    address /= 0x1000;
+    
+    unsigned int table_index = address / 1024;
+    
+    if(page_directory->tables[table_index] == nullptr) {
+        page_directory->tables[table_index] = (PageTable*)alloc(sizeof(PageTable), /*aligned*/true);
+        unsigned int physical_address = virtualToPhysicalAddress((unsigned int)page_directory->tables[table_index]);
+        memset(page_directory->tables[table_index], 0, 0x1000);
+        page_directory->physical_table_addresses[table_index] = physical_address | 7;
+    }
+    
+    return &page_directory->tables[table_index]->pages[address % 1024];
+}
+
+void mem::indentityMapPage(unsigned int address, bool is_kernel, bool is_writable, PageDirectory* page_directory) {
+    if(page_directory == nullptr)
+        page_directory = current_page_directory;
+    
+    PageHead* page_head = getPage(address, page_directory);
+    
+    if(getFrame(address))
+        asm("int $26");
+    
+    setFrame(address, true);
+    page_head->present = 1;
+    page_head->rw = is_writable ? 1 : 0;
+    page_head->user = is_kernel ? 0 : 1;
+    page_head->frame = address / 0x1000;
+}
+
+unsigned int mem::virtualToPhysicalAddress(unsigned virtual_address) {
+    return virtual_address;
+}
 
 void* mem::alloc(u32 size, bool page_align) {
     MallocHead* head = (MallocHead*)heap_base;
@@ -118,6 +220,22 @@ void mem::init() {
     main_head->size = total_memory - sizeof(MallocHead);
     main_head->next = 0;
     main_head->prev = 0;
+    
+    free_frames_size = (target_info->base + target_info->length) / 0x1000;
+    free_frames = (unsigned int*)alloc((free_frames_size - 1) / 32 + 1);
+    memset(free_frames, 0, (free_frames_size - 1) / 32 + 1);
+    
+    kernel_page_directory = (PageDirectory*)alloc(sizeof(PageDirectory), /*align*/true);
+    memset(kernel_page_directory, 0, sizeof(PageDirectory));
+    
+    for(unsigned int i = 0; i < target_info->base + 0x600000; i += 0x1000)
+        indentityMapPage(i, true, true, kernel_page_directory);
+    
+    for(unsigned int i = 0xFD000000; i < 0xFD000000 + 0x600000; i += 0x1000)
+        indentityMapPage(i, true, true, kernel_page_directory);
+    
+    
+    switchPageDirectory(kernel_page_directory);
 }
 
 unsigned int mem::getUsed() {
