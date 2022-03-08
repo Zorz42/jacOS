@@ -50,7 +50,7 @@ static void onCommand() {
         int exit_code = program();
         mem::free(result);
         text::cout << "Program ended with exit code " << exit_code << "! " << text::endl;
-        text::cout << *(int*)0x1000000 << text::endl;
+        //text::cout << *(int*)0x500000 << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::cout << "Used memory: ";

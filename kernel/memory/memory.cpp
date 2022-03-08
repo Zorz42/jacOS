@@ -15,7 +15,7 @@ struct MemInfo {
     unsigned int type;
 } __attribute__((packed));
 
-static unsigned int heap_base, total_memory, used_memory;
+static unsigned int heap_base, total_memory, allocated_frames;
 static unsigned int *free_frames, free_frames_size;
 static mem::PageDirectory *kernel_page_directory = nullptr, *current_page_directory = nullptr;
 
@@ -29,10 +29,20 @@ static void setFrame(unsigned int address, bool allocated) {
     unsigned int frame = address / 0x1000;
     unsigned int index = frame / 32;
     unsigned int offset = frame % 32;
-    if(allocated)
-        free_frames[index] |= 1 << offset;
-    else
-        free_frames[index] &= ~(1 << offset);
+    if(((free_frames[index] & (1 << offset)) != 0) != allocated) {
+        if(address < total_memory) {
+            if(allocated)
+                allocated_frames++;
+            else
+                allocated_frames--;
+        }
+        
+        if(allocated)
+            free_frames[index] |= 1 << offset;
+        else
+            free_frames[index] &= ~(1 << offset);
+        
+    }
 }
 
 static bool getFrame(unsigned int address) {
@@ -47,8 +57,12 @@ static unsigned int getFirstFreeFrame() {
         if(free_frames[i] != 0xFFFFFFFF) // nothing free, exit early.
             // at least one bit is free here.
             for(unsigned int j = 0; j < 32; j++) {
-                if(!(free_frames[i] & (1 << j)))
-                    return i * 32 + j;
+                if(!(free_frames[i] & (1 << j))) {
+                    int result = i * 32 + j;
+                    if(result * 0x1000 >= heap_base + total_memory)
+                        asm("int $25");
+                    return result;
+                }
             }
     asm("int $25");
     return 0;
@@ -130,17 +144,17 @@ void* mem::alloc(u32 size, bool page_align) {
         if(page_align) {
             if(head->free == HEAD_FREE) {
                 // align address
-                unsigned int address = ((unsigned int)head) + sizeof(MallocHead) - 1;
-                address &= 0xFFFFF000;
-                address += 0x1000;
+                unsigned int address = (((unsigned int)head + sizeof(MallocHead) - 1) & 0xFFFFF000) + 0x1000;
+                
                 // check if the aligned block fits into the free block
                 if((unsigned int)head + sizeof(MallocHead) + head->size >= address + size) {
                     MallocHead* new_head = (MallocHead*)(address - sizeof(MallocHead));
                     new_head->size = (unsigned int)head + sizeof(MallocHead) + head->size - address;
                     new_head->next = head->next;
+                    new_head->next->prev = new_head;
                     new_head->prev = head;
                     head->next = new_head;
-                    head->size = address - (unsigned int)head - sizeof(MallocHead);
+                    head->size = address - (unsigned int)head - 2 * sizeof(MallocHead);
                     new_head->free = HEAD_FREE;
                     
                     head = new_head;
@@ -151,8 +165,25 @@ void* mem::alloc(u32 size, bool page_align) {
             if(head->free == HEAD_FREE && head->size >= size)
                 break;
         }
-        if(head->next == 0)
-            asm("int $21");
+        
+        if(head->next == 0) {
+            unsigned int address = (unsigned int)head + sizeof(MallocHead) + head->size;
+            
+            if(current_page_directory != nullptr)
+                allocateFrame(getPage(address), /*is_kernel*/true, /*is_writable*/true);
+            
+            if(head->free == HEAD_FREE) {
+                head->size += 0x1000;
+            } else {
+                MallocHead* new_head = (MallocHead*)address;
+                new_head->free = HEAD_FREE;
+                new_head->size = 0x1000 - sizeof(MallocHead);
+                new_head->next = nullptr;
+                new_head->prev = head;
+                head->next = new_head;
+            }
+            return alloc(size, page_align);
+        }
         
         head = (MallocHead*)head->next;
     }
@@ -164,14 +195,13 @@ void* mem::alloc(u32 size, bool page_align) {
         next_head->size = head->size - size - sizeof(MallocHead);
         next_head->next = head->next;
         next_head->prev = head;
+        next_head->next->prev = next_head;
         
         head->size = size;
         head->next = next_head;
     }
     
     head->free = HEAD_ALLOCATED;
-    
-    used_memory += head->size + sizeof(MallocHead);
     
     return (void*)((unsigned int)head + sizeof(MallocHead));
 }
@@ -190,7 +220,6 @@ void mem::free(void* ptr) {
         asm("int $23");
     
     head->free = HEAD_FREE;
-    used_memory -= head->size + sizeof(MallocHead);
     
     if(head->next && ((MallocHead*)head->next)->free == HEAD_FREE)
         mergeBlocks(head, (MallocHead*)head->next);
@@ -212,34 +241,35 @@ void mem::init() {
     MemInfo* target_info = getFreeRegion();
     
     heap_base = target_info->base;
-    used_memory = 0;
-    total_memory = target_info->length;
+    allocated_frames = 0;
+    total_memory = target_info->base + target_info->length;
     
     MallocHead* main_head = (MallocHead*)heap_base;
     main_head->free = HEAD_FREE;
-    main_head->size = total_memory - sizeof(MallocHead);
-    main_head->next = 0;
-    main_head->prev = 0;
+    main_head->size = 0x1000 - sizeof(MallocHead);
+    main_head->next = nullptr;
+    main_head->prev = nullptr;
     
-    free_frames_size = (target_info->base + target_info->length) / 0x1000;
+    free_frames_size = 1024 * 1024;
     free_frames = (unsigned int*)alloc((free_frames_size - 1) / 32 + 1);
     memset(free_frames, 0, (free_frames_size - 1) / 32 + 1);
     
     kernel_page_directory = (PageDirectory*)alloc(sizeof(PageDirectory), /*align*/true);
     memset(kernel_page_directory, 0, sizeof(PageDirectory));
     
-    for(unsigned int i = 0; i < target_info->base + 0x600000; i += 0x1000)
-        indentityMapPage(i, true, true, kernel_page_directory);
+    MallocHead* curr_head = main_head;
+    while(curr_head->next != nullptr)
+        curr_head = curr_head->next;
+    unsigned int until = (unsigned int)curr_head + sizeof(MallocHead) + curr_head->size;
     
-    for(unsigned int i = 0xFD000000; i < 0xFD000000 + 0x600000; i += 0x1000)
-        indentityMapPage(i, true, true, kernel_page_directory);
-    
+    for(unsigned int i = 0; i <= until; i += 0x1000)
+        indentityMapPage(i, /*is_kernel*/true, /*is_writable*/true, kernel_page_directory);
     
     switchPageDirectory(kernel_page_directory);
 }
 
 unsigned int mem::getUsed() {
-    return used_memory;
+    return allocated_frames * 0x1000;
 }
 
 unsigned int mem::getTotal() {
@@ -247,5 +277,5 @@ unsigned int mem::getTotal() {
 }
 
 unsigned int mem::getFree() {
-    return total_memory - used_memory;
+    return total_memory - mem::getUsed();
 }

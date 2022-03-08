@@ -146,7 +146,7 @@ static const char *exception_messages[] = {
     "Alignment Check",
     "Machine Check",
     "Heap Corruption",
-    "Out of Heap Memory",
+    "Reserved",
     "Freeing Invalid Memory",
     "Freeing Freed Memory",
     "Cannot Find Free Region",
