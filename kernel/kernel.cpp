@@ -100,6 +100,14 @@ static void onKeyEvent(keyboard::Key key, bool up) {
 void kernelMain() {
     text::cout << "Kernel initialized!" << text::endl;
     
+    /*for(int i = 0; i < 10; i++) {
+        void* test = mem::alloc(16);
+        mem::free(test);
+        text::cout << text::hex << (int)test << text::endl;
+    }*/
+    
+    //mem::alloc(1000000);
+    
     resetCommand();
     text::flush();
     

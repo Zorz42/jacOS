@@ -15,27 +15,27 @@ struct PageHead {
 
 struct PageTable {
     PageHead pages[1024];
-};
+} __attribute__((packed));
 
 struct PageDirectory {
-    PageTable* tables[1024];
+    PageTable tables[1024];
     u32 physical_table_addresses[1024];
-    u32 physical_address;
-};
+    bool tables_allocated[1024];
+} __attribute__((packed));
 
 void init();
 unsigned int getUsed();
 unsigned int getTotal();
 unsigned int getFree();
 
-void* alloc(u32 size, bool page_align=false);
+void* alloc(u32 size);
 void free(void* ptr);
 
 void allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable);
 void freeFrame(PageHead* page_head);
 void switchPageDirectory(PageDirectory* page_directory);
 PageHead* getPage(unsigned int address, PageDirectory* page_directory=nullptr);
-void indentityMapPage(unsigned int address, bool is_kernel, bool is_writable, PageDirectory* page_directory=nullptr);
-unsigned int virtualToPhysicalAddress(unsigned virtual_address);
+void identityMapPage(unsigned int address, bool is_kernel, bool is_writable, PageDirectory* page_directory=nullptr);
+unsigned int virtualToPhysicalAddress(unsigned int virtual_address, PageDirectory* page_directory=nullptr);
 
 }

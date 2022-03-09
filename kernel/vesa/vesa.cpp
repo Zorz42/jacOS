@@ -42,7 +42,7 @@ void vesa::init() {
     
     // map vesa addresses
     for(unsigned int i = (unsigned int)mode_information->buffer; i <= (unsigned int)mode_information->buffer + getTotalPixels() * getBytesPerPixel(); i += 0x1000)
-        mem::indentityMapPage(i, /*is_kernel*/true, /*is_writable*/true);
+        mem::identityMapPage(i, /*is_kernel*/true, /*is_writable*/true);
 }
 
 int vesa::getScreenWidth() {
