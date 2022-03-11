@@ -1,6 +1,7 @@
 #include "memory.hpp"
 #include "text/text.hpp"
 #include "ports/ports.hpp"
+#include "qemuDebug/debug.hpp"
 
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
@@ -79,6 +80,9 @@ unsigned int mem::getUsed() {
 void mem::allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable) {
     if(page_head->frame == 0) {
         unsigned int index = getFirstFreeFrame();
+        debug::log("allocateFrame() called on ");
+        debug::logHex(index * 0x1000);
+        debug::log("\n");
         setFrame(index * 0x1000, true);
         page_head->present = 1;
         page_head->rw = is_writable ? 1 : 0;
@@ -113,10 +117,13 @@ mem::PageHead* mem::getPage(unsigned int address, PageDirectory* page_directory)
     
     if(!page_directory->tables_allocated[table_index]) {
         page_directory->tables_allocated[table_index] = true;
+        debug::log("getPage() ");
+        debug::logInt(table_index);
+        debug::log("\n");
+        //identityMapPage((unsigned int)&page_directory->tables[table_index], true, true, page_directory);
+        allocateFrame(getPage((unsigned int)&page_directory->tables[table_index], page_directory), true, true);
         int physical_address = virtualToPhysicalAddress((unsigned int)&page_directory->tables[table_index], page_directory);
         page_directory->physical_table_addresses[table_index] = physical_address | 7;
-        identityMapPage((unsigned int)&page_directory->tables[table_index], true, true, page_directory);
-        //allocateFrame(getPage((unsigned int)&page_directory->tables[table_index], page_directory), true, true);
     }
     
     return &page_directory->tables[table_index].pages[address % 1024];
@@ -127,8 +134,16 @@ void mem::identityMapPage(unsigned int address, bool is_kernel, bool is_writable
     if(page_directory == nullptr)
         page_directory = current_page_directory;
     
-    if(getFrame(address))
+    debug::log("identityMapPage() called on ");
+    debug::logHex(address);
+    debug::log("\n");
+    
+    if(getFrame(address)) {
+        debug::log("error: identityMapPage() called on already taken address ");
+        debug::logHex(address);
+        debug::log("\n");
         asm("int $26");
+    }
     
     PageHead* page_head = getPage(address, page_directory);
     
@@ -143,10 +158,19 @@ unsigned int mem::virtualToPhysicalAddress(unsigned int virtual_address, PageDir
     if(page_directory == nullptr)
         page_directory = current_page_directory;
     
-    if(page_directory == nullptr || page_directory->tables[virtual_address / 0x1000 / 1024].pages[virtual_address / 0x1000].frame == 0)
+    int page_index = virtual_address / 0x1000;
+    int table_index = page_index / 1024;
+    
+    if(page_directory->tables[table_index].pages[page_index % 1024].frame == 0) {
+        debug::log("virtualToPhysicalAddress() ");
+        debug::logHex(virtual_address);
+        debug::log("\n");
+    }
+    
+    if(page_directory == nullptr)
         return virtual_address;
     else
-        return page_directory->tables[virtual_address / 0x1000 / 1024].pages[virtual_address / 0x1000].frame * 0x1000 + (virtual_address & 0xFFF);
+        return page_directory->tables[table_index].pages[page_index % 1024].frame * 0x1000 + (virtual_address & 0xFFF);
 }
 
 
@@ -289,7 +313,9 @@ void mem::init() {
     
     switchPageDirectory(kernel_page_directory);
     
-    //mem::alloc(0xF000);
+    mem::alloc(0x10000000);
+    
+    debug::log("init() end\n");
 }
 
 unsigned int mem::getTotal() {

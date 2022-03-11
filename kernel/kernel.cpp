@@ -111,6 +111,8 @@ void kernelMain() {
     resetCommand();
     text::flush();
     
+    //return;
+    
     while(true) {
         while(keyboard::hasKeyEvent()) {
             keyboard::KeyEvent event = keyboard::getKeyEvent();
