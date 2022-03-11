@@ -47,5 +47,5 @@ void gfx::init() {
     vesa::init();
     text::init();
     
-    text::cout << "Initializing graphics module..." << text::endl << "VESA buffer is at: " << text::hex << (int)vesa::getVideoBuffer() << text::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << text::endl;
+    text::out << "Initializing graphics module..." << text::endl << "VESA buffer is at: " << text::hex << (int)vesa::getVideoBuffer() << text::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << text::endl;
 }

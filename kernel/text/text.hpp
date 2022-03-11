@@ -23,7 +23,7 @@ public:
 inline _hex hex;
 inline _dec dec;
 inline _endl endl;
-inline _out_stream cout;
+inline _out_stream out;
 
 void init();
 

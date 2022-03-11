@@ -1,6 +1,7 @@
 #include "interrupts.hpp"
 #include "ports/ports.hpp"
 #include "text/text.hpp"
+#include "qemuDebug/debug.hpp"
 
 static interrupts::Handler interrupt_handlers[256];
 
@@ -80,11 +81,13 @@ extern "C" void irq14();
 extern "C" void irq15();
 
 void interrupts::init() {
-    const u32 isr_arr[32] = {(u32)isr0, (u32)isr1, (u32)isr2, (u32)isr3, (u32)isr4, (u32)isr5, (u32)isr6, (u32)isr7, (u32)isr8, (u32)isr9, (u32)isr10, (u32)isr11, (u32)isr12, (u32)isr13, (u32)isr14, (u32)isr15, (u32)isr16, (u32)isr17, (u32)isr18, (u32)isr19, (u32)isr20, (u32)isr21, (u32)isr22, (u32)isr23, (u32)isr24, (u32)isr25, (u32)isr26, (u32)isr27, (u32)isr28, (u32)isr29, (u32)isr30, (u32)isr31};
     
+    debug::out << DEBUG_INFO << "Mapping interrupt service routine functions" << debug::endl;
+    const u32 isr_arr[32] = {(u32)isr0, (u32)isr1, (u32)isr2, (u32)isr3, (u32)isr4, (u32)isr5, (u32)isr6, (u32)isr7, (u32)isr8, (u32)isr9, (u32)isr10, (u32)isr11, (u32)isr12, (u32)isr13, (u32)isr14, (u32)isr15, (u32)isr16, (u32)isr17, (u32)isr18, (u32)isr19, (u32)isr20, (u32)isr21, (u32)isr22, (u32)isr23, (u32)isr24, (u32)isr25, (u32)isr26, (u32)isr27, (u32)isr28, (u32)isr29, (u32)isr30, (u32)isr31};
     for(int i = 0; i < 32; i++)
         setIdtGate(i, isr_arr[i]);
-
+    
+    debug::out << DEBUG_INFO << "Remapping programmable interrupt controllers" << debug::endl;
     ports::byteOut(0x20, 0x11);
     ports::byteOut(0xA0, 0x11);
     ports::byteOut(0x21, 0x20);
@@ -96,15 +99,17 @@ void interrupts::init() {
     ports::byteOut(0x21, 0x0);
     ports::byteOut(0xA1, 0x0); 
     
+    debug::out << DEBUG_INFO << "Mapping interrupt request functions" << debug::endl;
     const u32 irq_arr[16] = {(u32)irq0, (u32)irq1, (u32)irq2, (u32)irq3, (u32)irq4, (u32)irq5, (u32)irq6, (u32)irq7, (u32)irq8, (u32)irq9, (u32)irq10, (u32)irq11, (u32)irq12, (u32)irq13, (u32)irq14, (u32)irq15};
     for(int i = 0; i < 16; i++)
         setIdtGate(i + 32, irq_arr[i]);
     
+    debug::out << DEBUG_INFO << "Setting up interrupt descriptor table" << debug::endl;
     idt_reg.base = (u32) &idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(IdtGate) - 1;
     asm volatile("lidtl (%0)" : : "r" (&idt_reg));
     
-    // enable interruptions
+    debug::out << DEBUG_INFO << "Enabling interruptions" << debug::endl;
     asm volatile("sti");
 }
 
@@ -162,7 +167,7 @@ static const char *exception_messages[] = {
 };
 
 extern "C" void isrHandler(Registers r) {
-    text::cout << text::dec << "received interrupt: " << r.int_no << text::endl << exception_messages[r.int_no] << text::endl;
+    text::out << text::dec << "Received interrupt: " << r.int_no << ": " << exception_messages[r.int_no] << text::endl;
     while(true)
         asm volatile("hlt");
 }

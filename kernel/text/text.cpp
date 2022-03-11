@@ -173,5 +173,5 @@ void text::init() {
     
     text_buffer = (char*)mem::alloc(text_width * (text_height + 1));
     
-    cout << "Text module initialized!" << endl << "Number of characters of screen is: " << text_width << "x" << text_height << endl;
+    out << "Text module initialized!" << endl << "Number of characters of screen is: " << text_width << "x" << text_height << endl;
 }
