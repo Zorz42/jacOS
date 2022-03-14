@@ -5,6 +5,7 @@
 #include "vesa/vesa.hpp"
 #include "kernel.hpp"
 #include "ports/ports.hpp"
+#include "qemuDebug/debug.hpp"
 
 void gfx::setPixel(short x, short y, int color) {
     vesa::lineHasChanged(y);
@@ -48,5 +49,5 @@ void gfx::init() {
     vesa::init();
     text::init();
     
-    text::out << "Initializing graphics module..." << text::endl << "VESA buffer is at: " << text::hex << (int)vesa::getVideoBuffer() << text::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << text::endl;
+    debug::out << "Initializing graphics module..." << debug::endl << "VESA buffer is at: " << debug::hex << (int)vesa::getVideoBuffer() << debug::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << debug::endl;
 }

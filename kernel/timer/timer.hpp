@@ -1,9 +1,8 @@
 #pragma once
-#include "types.hpp"
 
 namespace timer {
 
-void init(u32 freq);
+void init(unsigned int freq);
 unsigned int getTicks();
 void delay(unsigned int ms);
 

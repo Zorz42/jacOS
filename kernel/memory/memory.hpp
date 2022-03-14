@@ -1,16 +1,15 @@
 #pragma once
-#include "types.hpp"
 
 namespace mem {
 
 struct PageHead {
-    u32 present  : 1;   // Page present in memory
-    u32 rw       : 1;   // Read-only if clear, readwrite if set
-    u32 user     : 1;   // Supervisor level only if clear
-    u32 accessed : 1;   // Has the page been accessed since last refresh?
-    u32 dirty    : 1;   // Has the page been written to since last refresh?
-    u32 unused   : 7;   // Amalgamation of unused and reserved bits
-    u32 frame    : 20;  // Frame address (shifted right 12 bits)
+    unsigned int present  : 1;   // Page present in memory
+    unsigned int rw       : 1;   // Read-only if clear, readwrite if set
+    unsigned int user     : 1;   // Supervisor level only if clear
+    unsigned int accessed : 1;   // Has the page been accessed since last refresh?
+    unsigned int dirty    : 1;   // Has the page been written to since last refresh?
+    unsigned int unused   : 7;   // Amalgamation of unused and reserved bits
+    unsigned int frame    : 20;  // Frame address (shifted right 12 bits)
 } __attribute__((packed));
 
 struct PageTable {
@@ -19,7 +18,7 @@ struct PageTable {
 
 struct PageDirectory {
     PageTable tables[1024];
-    u32 physical_table_addresses[1024];
+    unsigned int physical_table_addresses[1024];
     bool tables_allocated[1024];
 } __attribute__((packed));
 
@@ -28,7 +27,7 @@ unsigned int getUsed();
 unsigned int getTotal();
 unsigned int getFree();
 
-void* alloc(u32 size);
+void* alloc(unsigned int size);
 void free(void* ptr);
 
 void allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable);

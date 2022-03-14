@@ -1,8 +1,7 @@
 #pragma once
-#include "types.hpp"
 
 namespace disk {
 
-void* read(u8 head, u16 cylinder, u8 sector, u8 sector_count);
+void* read(unsigned char head, unsigned short cylinder, unsigned char sector, unsigned char sector_count);
 
 }

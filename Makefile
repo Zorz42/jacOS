@@ -16,7 +16,7 @@ PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp')
 PROGRAM_OBJ = build/program/entry.o $(filter-out build/program/entry.o, $(addprefix build/, ${PROGRAM_SOURCES:.cpp=.o}))
 
 # default flags
-CFLAGS = -std=gnu++17 -ffreestanding -O0 -Ikernel/
+CFLAGS = -std=gnu++17 -ffreestanding -O2 -Ikernel/
 
 .PHONY: run clean
 
@@ -24,7 +24,7 @@ run: os-image.bin ${PROGRAM_NAME}.img
 	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes disk geometry
 	
 	
-os-image.bin: build/bootsect.bin build/kernel.bin
+os-image.bin: build/kernel.bin build/bootsect.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
@@ -44,7 +44,7 @@ build/%.o: %.asm
 
 # rule for bootsector
 build/bootsect.bin: $(BOOT_SOURCES)
-	echo %define KERNEL_SECTORS_SIZE $$((($$(stat -f%z build/kernel.bin)) / 512)) > boot/kernel_size.asm
+	echo %define KERNEL_SECTORS_SIZE $$(($$(stat -f%z build/kernel.bin) / 512 + 1)) > boot/kernel_size.asm
 	nasm boot/bootsect.asm -f bin -o $@
 	
 # rule for custom program

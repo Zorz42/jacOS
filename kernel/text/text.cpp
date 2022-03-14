@@ -2,6 +2,7 @@
 #include "graphics/gfx.hpp"
 #include "memory/memory.hpp"
 #include "ports/ports.hpp"
+#include "qemuDebug/debug.hpp"
 
 enum class PrintMode {decimal, hexadecimal};
 
@@ -174,5 +175,5 @@ void text::init() {
     
     text_buffer = (char*)mem::alloc(text_width * (text_height + 1));
     
-    out << "Text module initialized!" << endl << "Number of characters of screen is: " << text_width << "x" << text_height << endl;
+    debug::out << "Text module initialized!" << debug::endl << "Number of characters of screen is: " << text_width << "x" << text_height << debug::endl;
 }

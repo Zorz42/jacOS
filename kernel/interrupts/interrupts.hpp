@@ -1,5 +1,4 @@
 #pragma once
-#include "types.hpp"
 
 enum IRQS {
     IRQ0 = 32,
@@ -21,10 +20,10 @@ enum IRQS {
 };
 
 struct Registers {
-   u32 ds;
-   u32 edi, esi, ebp, esp, ebx, edx, ecx, eax;
-   u32 int_no, err_code;
-   u32 eip, cs, eflags, useresp, ss;
+   unsigned int ds;
+   unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+   unsigned int int_no, err_code;
+   unsigned int eip, cs, eflags, useresp, ss;
 };
 
 namespace interrupts {
@@ -32,6 +31,6 @@ namespace interrupts {
 void init();
 
 typedef void (*Handler)(Registers);
-void registerHandler(u8 n, Handler handler);
+void registerHandler(unsigned char n, Handler handler);
 
 };

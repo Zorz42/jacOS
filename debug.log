@@ -3,4 +3,18 @@
 [INFO] Mapping interrupt request functions
 [INFO] Setting up interrupt descriptor table
 [INFO] Enabling interruptions
+[INFO] Total memory is: 0x7FFE0000
+[INFO] Kernel page directory is at: 0x400000
+[INFO] Heap base is at: 0x822000
+[INFO] Setting up first three page tables
+[INFO] Identity mapping first megabyte of memory
+[INFO] Identity mapping kernel page directory
+[INFO] Identity mapping free frames array
+[INFO] Identity mapping heap
+[INFO] Enabling paging
+[INFO] Text module initialized!
+[INFO] Number of characters of screen is: 128x48
+[INFO] Initializing graphics module...
+[INFO] VESA buffer is at: 0x822010
+[INFO] Screen size is: 1024x768
 [INFO] Kernel initialized

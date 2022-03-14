@@ -16,7 +16,6 @@
 		167A73A22626DF7A00328331 /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		167A73A32626DF7A00328331 /* memory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = memory.hpp; sourceTree = "<group>"; };
 		167A73A52626DF7A00328331 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timer.cpp; sourceTree = "<group>"; };
-		167A73A72626DF7A00328331 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = types.hpp; sourceTree = "<group>"; };
 		167A73A82626DF7A00328331 /* interrupts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interrupts.cpp; sourceTree = "<group>"; };
 		167A73A92626DF7A00328331 /* timer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = timer.hpp; sourceTree = "<group>"; };
 		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; };
@@ -74,7 +73,6 @@
 		167A739A2626DF7A00328331 /* kernel */ = {
 			isa = PBXGroup;
 			children = (
-				167A73A72626DF7A00328331 /* types.hpp */,
 				167FB5B9262C41BA00AA5F51 /* ports */,
 				3687C9C727D388E800F0F62C /* interrupts */,
 				368640FA27DB817000B4B35A /* qemuDebug */,

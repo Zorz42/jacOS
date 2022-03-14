@@ -1,5 +1,8 @@
 #pragma once
 
+#define DEBUG_ENABLED
+#define DEBUG_LEVEL DEBUG_INFO
+
 enum DebugLevel {
     DEBUG_INFO, DEBUG_WARNING, DEBUG_ERROR
 };
@@ -10,6 +13,7 @@ struct _hex {};
 struct _dec {};
 struct _endl {};
 
+#ifdef DEBUG_ENABLED
 class _out_stream {
 public:
     _out_stream operator<<(const char* string);
@@ -24,6 +28,22 @@ public:
     _out_stream operator<<(_endl _);
     _out_stream operator<<(DebugLevel level);
 };
+#else
+class _out_stream {
+public:
+    _out_stream operator<<(const char* string) { return *this; }
+    _out_stream operator<<(char character) { return *this; }
+    _out_stream operator<<(long number) { return *this; }
+    _out_stream operator<<(int number) { return *this; }
+    _out_stream operator<<(float number) { return *this; }
+    _out_stream operator<<(unsigned long number) { return *this; }
+    _out_stream operator<<(unsigned int number) { return *this; }
+    _out_stream operator<<(_hex _) { return *this; }
+    _out_stream operator<<(_dec _) { return *this; }
+    _out_stream operator<<(_endl _) { return *this; }
+    _out_stream operator<<(DebugLevel level) { return *this; }
+};
+#endif
 
 inline _hex hex;
 inline _dec dec;

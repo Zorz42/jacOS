@@ -3,7 +3,7 @@
 #include "text/text.hpp"
 #include "memory/memory.hpp"
 
-void* disk::read(u8 head, u16 cylinder, u8 sector, u8 sector_count) {
+void* disk::read(unsigned char head, unsigned short cylinder, unsigned char sector, unsigned char sector_count) {
     ports::byteOut(0x1f6, (head & 0b00001111) | 0b10100000); // drive & head number
     ports::byteOut(0x1f2, sector_count);
     ports::byteOut(0x1f3, sector);

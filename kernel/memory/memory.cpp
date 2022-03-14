@@ -24,8 +24,8 @@ static unsigned int allocated_frames;
 static unsigned int *free_frames, free_frames_size;
 static mem::PageDirectory *kernel_page_directory = nullptr, *current_page_directory = nullptr;
 
-static void memset(void* pointer, u8 value, unsigned int length) {
-    u8* iter = (u8*)pointer;
+static void memset(void* pointer, unsigned char value, unsigned int length) {
+    unsigned char* iter = (unsigned char*)pointer;
     while(length--)
         *iter++ = value;
 }
@@ -98,7 +98,7 @@ void mem::freeFrame(PageHead* page_head) {
 void mem::switchPageDirectory(PageDirectory* page_directory) {
     current_page_directory = page_directory;
     asm volatile("mov %0, %%cr3":: "r"(&page_directory->physical_table_addresses));
-    u32 cr0;
+    unsigned int cr0;
     asm volatile("mov %%cr0, %0": "=r"(cr0));
     cr0 |= 0x80000000; // Enable paging!
     asm volatile("mov %0, %%cr0":: "r"(cr0));
@@ -163,7 +163,7 @@ unsigned int mem::virtualToPhysicalAddress(unsigned int virtual_address, PageDir
 }
 
 
-void* mem::alloc(u32 size) {
+void* mem::alloc(unsigned int size) {
     MallocHead* head = (MallocHead*)heap_base;
     
     // find a free block
@@ -256,12 +256,12 @@ void mem::init() {
     
     heap_base = 0x400000;
     total_memory = target_info->base + target_info->length;
-    //debug::out << DEBUG_INFO << "Total memory is: " << debug::hex << debug::endl;
+    debug::out << DEBUG_INFO << "Total memory is: " << debug::hex << total_memory << debug::endl;
     
     kernel_page_directory = (PageDirectory*)heap_base;
     memset(kernel_page_directory, 0, sizeof(PageDirectory));
     heap_base += sizeof(PageDirectory);
-    //debug::out << DEBUG_INFO << "Kernel page directory is at: " << debug::hex << (unsigned int)kernel_page_directory << debug::endl;
+    debug::out << DEBUG_INFO << "Kernel page directory is at: " << debug::hex << (unsigned int)kernel_page_directory << debug::endl;
     
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
     
@@ -272,7 +272,7 @@ void mem::init() {
     allocated_frames = 0;
     
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
-    //debug::out << DEBUG_INFO << "Heap base is at: " << debug::hex << heap_base << debug::endl;
+    debug::out << DEBUG_INFO << "Heap base is at: " << debug::hex << heap_base << debug::endl;
     
     MallocHead* main_head = (MallocHead*)heap_base;
     main_head->free = HEAD_FREE;
@@ -280,6 +280,7 @@ void mem::init() {
     main_head->next = nullptr;
     main_head->prev = nullptr;
     
+    debug::out << DEBUG_INFO << "Setting up first three page tables" << debug::endl;
     int to_alloc[] = {1, 2, 0};
     for(int i = 0; i < 3; i++) {
         int table_index = to_alloc[i];
@@ -288,21 +289,26 @@ void mem::init() {
         identityMapPage((unsigned int)kernel_page_directory + i * 0x1000, true, true, kernel_page_directory);
     }
     
+    debug::out << DEBUG_INFO << "Identity mapping first megabyte of memory" << debug::endl;
     for(int i = 0; i < 0x100000; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
+    debug::out << DEBUG_INFO << "Identity mapping kernel page directory" << debug::endl;
     for(int i = (unsigned int)kernel_page_directory + 1024 * 1024 * 4; i < (unsigned int)kernel_page_directory + sizeof(PageDirectory); i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
+    debug::out << DEBUG_INFO << "Identity mapping free frames array" << debug::endl;
     for(int i = (unsigned int)free_frames; i < (unsigned int)free_frames + free_frames_size / 8; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
+    debug::out << DEBUG_INFO << "Identity mapping heap" << debug::endl;
     MallocHead* curr_head = main_head;
     while(curr_head->next != nullptr)
         curr_head = curr_head->next;
     for(int i = heap_base; i <= (unsigned int)curr_head + sizeof(MallocHead) + curr_head->size; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
+    debug::out << DEBUG_INFO << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);
 }
 

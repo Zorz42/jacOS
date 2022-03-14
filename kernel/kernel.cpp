@@ -52,7 +52,6 @@ static void onCommand() {
         int exit_code = program();
         mem::free(result);
         text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
-        //text::cout << *(int*)0x500000 << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::out << "Used memory: ";
@@ -102,28 +101,12 @@ static void onKeyEvent(keyboard::Key key, bool up) {
     }
 }
 
-int getInt(int a) {
-    return a;
-}
-
-//char const data[500*1024] = { 1 };
-
 void kernelMain() {
-    text::out << "Kernel initialized" << text::endl;
+    text::out << "JacOS has started" << text::endl;
     debug::out << DEBUG_INFO << "Kernel initialized" << debug::endl;
-    
-    /*for(int i = 0; i < 10; i++) {
-        void* test = mem::alloc(16);
-        mem::free(test);
-        text::out << text::hex << (int)test << text::endl;
-    }*/
-    
-    //mem::alloc(1000000);
     
     resetCommand();
     text::flush();
-    
-    //return;
     
     while(kernel_running) {
         while(keyboard::hasKeyEvent()) {

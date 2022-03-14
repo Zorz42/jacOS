@@ -4,14 +4,14 @@
 
 #define EVENT_QUEUE_SIZE 100
 
-static keyboard::Key scancodeToKey(u8 scancode);
+static keyboard::Key scancodeToKey(unsigned char scancode);
 static bool keyStates[keyboard::KEY_COUNT];
 static keyboard::KeyEvent key_events_queue[EVENT_QUEUE_SIZE];
 int queue_top = 0, queue_bottom = 0;
 
 static void keyboardCallback(Registers regs) {
     /* The PIC leaves us the scancode in port 0x60 */
-    u8 scancode = ports::byteIn(0x60);
+    unsigned char scancode = ports::byteIn(0x60);
     bool up = false;
     if(scancode >= 0x80) {
         up = true;
@@ -60,7 +60,7 @@ void keyboard::init() {
     interrupts::registerHandler(IRQ1, keyboardCallback);
 }
 
-static keyboard::Key scancodeToKey(u8 scancode) {
+static keyboard::Key scancodeToKey(unsigned char scancode) {
     switch (scancode) {
         case 0x1: return keyboard::KEY_ESCAPE;
         case 0x2: return keyboard::KEY_1;

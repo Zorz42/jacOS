@@ -1,5 +1,6 @@
 #include "debug.hpp"
 #include "ports/ports.hpp"
+#ifdef DEBUG_ENABLED
 
 enum class DebugPrintMode {decimal, hexadecimal};
 
@@ -8,12 +9,18 @@ static DebugLevel curr_debug_level = DEBUG_INFO;
 static bool has_written_in_line = false;
 
 debug::_out_stream debug::_out_stream::operator<<(const char* string) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     while(*string)
         *this << *string++;
     return *this;
 }
 
 debug::_out_stream debug::_out_stream::operator<<(char character) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     if(!has_written_in_line) {
         has_written_in_line = true;
         switch(curr_debug_level) {
@@ -36,6 +43,9 @@ debug::_out_stream debug::_out_stream::operator<<(char character) {
 }
 
 debug::_out_stream debug::_out_stream::operator<<(long number) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     switch(debug_print_mode) {
         case DebugPrintMode::decimal: {
             if(number < 0) {
@@ -78,6 +88,9 @@ debug::_out_stream debug::_out_stream::operator<<(long number) {
 #define FLOAT_COUT_PRECISION 10000
 
 debug::_out_stream debug::_out_stream::operator<<(float number) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     *this << (long)number;
     float floating = number - (int)number;
     long floating_long = floating * FLOAT_COUT_PRECISION;
@@ -89,14 +102,23 @@ debug::_out_stream debug::_out_stream::operator<<(float number) {
 }
 
 debug::_out_stream debug::_out_stream::operator<<(int number) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     return *this << (long)number;
 }
 
 debug::_out_stream debug::_out_stream::operator<<(unsigned long number) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     return *this << (long)number;
 }
 
 debug::_out_stream debug::_out_stream::operator<<(unsigned int number) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
     return *this << (long)number;
 }
 
@@ -120,3 +142,5 @@ debug::_out_stream debug::_out_stream::operator<<(DebugLevel level) {
     curr_debug_level = level;
     return *this;
 }
+
+#endif

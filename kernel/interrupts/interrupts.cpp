@@ -6,28 +6,28 @@
 static interrupts::Handler interrupt_handlers[256];
 
 struct IdtGate {
-    u16 low_offset;
-    u16 sel;
-    u8 always0;
-    u8 flags;
-    u16 high_offset;
+    unsigned short low_offset;
+    unsigned short sel;
+    unsigned char always0;
+    unsigned char flags;
+    unsigned short high_offset;
 } __attribute__((packed));
 
 struct IdtRegister {
-    u16 limit;
-    u32 base;
+    unsigned short limit;
+    unsigned int base;
 } __attribute__((packed));
 
 #define IDT_ENTRIES 256
 static IdtGate idt[IDT_ENTRIES];
 static IdtRegister idt_reg;
 
-static void setIdtGate(int n, u32 handler) {
-    idt[n].low_offset = low_16(handler);
+static void setIdtGate(int n, unsigned int handler) {
+    idt[n].low_offset = handler & 0xFFFF;
     idt[n].sel = 0x08;
     idt[n].always0 = 0;
     idt[n].flags = 0x8E;
-    idt[n].high_offset = high_16(handler);
+    idt[n].high_offset = (handler >> 16) & 0xFFFF;
 }
 
 extern "C" void isr0();
@@ -83,7 +83,7 @@ extern "C" void irq15();
 void interrupts::init() {
     
     debug::out << DEBUG_INFO << "Mapping interrupt service routine functions" << debug::endl;
-    const u32 isr_arr[32] = {(u32)isr0, (u32)isr1, (u32)isr2, (u32)isr3, (u32)isr4, (u32)isr5, (u32)isr6, (u32)isr7, (u32)isr8, (u32)isr9, (u32)isr10, (u32)isr11, (u32)isr12, (u32)isr13, (u32)isr14, (u32)isr15, (u32)isr16, (u32)isr17, (u32)isr18, (u32)isr19, (u32)isr20, (u32)isr21, (u32)isr22, (u32)isr23, (u32)isr24, (u32)isr25, (u32)isr26, (u32)isr27, (u32)isr28, (u32)isr29, (u32)isr30, (u32)isr31};
+    const unsigned int isr_arr[32] = {(unsigned int)isr0, (unsigned int)isr1, (unsigned int)isr2, (unsigned int)isr3, (unsigned int)isr4, (unsigned int)isr5, (unsigned int)isr6, (unsigned int)isr7, (unsigned int)isr8, (unsigned int)isr9, (unsigned int)isr10, (unsigned int)isr11, (unsigned int)isr12, (unsigned int)isr13, (unsigned int)isr14, (unsigned int)isr15, (unsigned int)isr16, (unsigned int)isr17, (unsigned int)isr18, (unsigned int)isr19, (unsigned int)isr20, (unsigned int)isr21, (unsigned int)isr22, (unsigned int)isr23, (unsigned int)isr24, (unsigned int)isr25, (unsigned int)isr26, (unsigned int)isr27, (unsigned int)isr28, (unsigned int)isr29, (unsigned int)isr30, (unsigned int)isr31};
     for(int i = 0; i < 32; i++)
         setIdtGate(i, isr_arr[i]);
     
@@ -100,12 +100,12 @@ void interrupts::init() {
     ports::byteOut(0xA1, 0x0); 
     
     debug::out << DEBUG_INFO << "Mapping interrupt request functions" << debug::endl;
-    const u32 irq_arr[16] = {(u32)irq0, (u32)irq1, (u32)irq2, (u32)irq3, (u32)irq4, (u32)irq5, (u32)irq6, (u32)irq7, (u32)irq8, (u32)irq9, (u32)irq10, (u32)irq11, (u32)irq12, (u32)irq13, (u32)irq14, (u32)irq15};
+    const unsigned int irq_arr[16] = {(unsigned int)irq0, (unsigned int)irq1, (unsigned int)irq2, (unsigned int)irq3, (unsigned int)irq4, (unsigned int)irq5, (unsigned int)irq6, (unsigned int)irq7, (unsigned int)irq8, (unsigned int)irq9, (unsigned int)irq10, (unsigned int)irq11, (unsigned int)irq12, (unsigned int)irq13, (unsigned int)irq14, (unsigned int)irq15};
     for(int i = 0; i < 16; i++)
         setIdtGate(i + 32, irq_arr[i]);
     
     debug::out << DEBUG_INFO << "Setting up interrupt descriptor table" << debug::endl;
-    idt_reg.base = (u32) &idt;
+    idt_reg.base = (unsigned int) &idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(IdtGate) - 1;
     asm volatile("lidtl (%0)" : : "r" (&idt_reg));
     
@@ -113,7 +113,7 @@ void interrupts::init() {
     asm volatile("sti");
 }
 
-void interrupts::registerHandler(u8 n, Handler handler) {
+void interrupts::registerHandler(unsigned char n, Handler handler) {
     interrupt_handlers[n] = handler;
 }
 
