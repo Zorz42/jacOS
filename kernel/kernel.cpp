@@ -106,6 +106,8 @@ int getInt(int a) {
     return a;
 }
 
+//char const data[500*1024] = { 1 };
+
 void kernelMain() {
     text::out << "Kernel initialized" << text::endl;
     debug::out << DEBUG_INFO << "Kernel initialized" << debug::endl;
@@ -113,23 +115,13 @@ void kernelMain() {
     /*for(int i = 0; i < 10; i++) {
         void* test = mem::alloc(16);
         mem::free(test);
-        text::cout << text::hex << (int)test << text::endl;
+        text::out << text::hex << (int)test << text::endl;
     }*/
     
     //mem::alloc(1000000);
     
-    unsigned int stack_base = 0, stack_size = 0;
-    //asm volatile ("mov %%rbp, %0;" : "=r"(stack_base) :: "%rbp");
-    __asm__ volatile ("mov %%ebp, %0" : "=r" (stack_base));
-    __asm__ volatile ("mov %%esp, %0" : "=r" (stack_size));
-    
-    text::out << text::hex << stack_base;// << text::endl;
-    //text::out << " "; //<< text::endl;
-    
     resetCommand();
     text::flush();
-    
-    //debug::out << DEBUG_INFO << DEBUG_INFO << DEBUG_INFO;
     
     //return;
     

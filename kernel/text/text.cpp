@@ -1,6 +1,7 @@
 #include "text.hpp"
 #include "graphics/gfx.hpp"
 #include "memory/memory.hpp"
+#include "ports/ports.hpp"
 
 enum class PrintMode {decimal, hexadecimal};
 

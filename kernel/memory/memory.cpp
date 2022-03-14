@@ -242,7 +242,7 @@ void mem::free(void* ptr) {
 }
 
 static MemInfo* getFreeRegion() {
-    for(int i = 0x7e00; ; i += 24) {
+    for(int i = 0x7f00; ; i += 24) {
         MemInfo* curr_info = (MemInfo*)i;
         if(curr_info->type == 1 && curr_info->base != 0)
             return curr_info;

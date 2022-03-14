@@ -9,20 +9,21 @@ KERNEL_HEADERS = $(shell find kernel -type f -name '*.hpp')
 _KERNEL_OBJ = ${KERNEL_SOURCES:.cpp=.o}
 KERNEL_OBJ = build/kernel/entry/entry.o $(filter-out build/kernel/entry/entry.o, $(addprefix build/, ${_KERNEL_OBJ:.asm=.o}))
 
+BOOT_SOURCES = $(shell find boot -type f -name '*.asm')
+
 PROGRAM_SOURCES = $(shell find ${PROGRAM_NAME} -type f -name '*.cpp')
 PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp')
 PROGRAM_OBJ = build/program/entry.o $(filter-out build/program/entry.o, $(addprefix build/, ${PROGRAM_SOURCES:.cpp=.o}))
 
 # default flags
 CFLAGS = -std=gnu++17 -ffreestanding -O0 -Ikernel/
-KERNEL_OFFSET = 0x1000
 
 .PHONY: run clean
 
 run: os-image.bin ${PROGRAM_NAME}.img
 	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2G -serial file:debug.log
 	
-
+	
 os-image.bin: build/bootsect.bin build/kernel.bin
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
 
@@ -42,8 +43,8 @@ build/%.o: %.asm
 	nasm $< -f elf -o $@
 
 # rule for bootsector
-build/bootsect.bin: boot/bootsect.asm build/kernel.bin
-	echo %define KERNEL_SECTORS_SIZE $$(($$(stat -f%z build/kernel.bin) / 512 + 1)) > boot/kernel_size.asm
+build/bootsect.bin: $(BOOT_SOURCES)
+	echo %define KERNEL_SECTORS_SIZE $$((($$(stat -f%z build/kernel.bin)) / 512 + 1)) > boot/kernel_size.asm
 	nasm boot/bootsect.asm -f bin -o $@
 	
 # rule for custom program

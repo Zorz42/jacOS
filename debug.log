@@ -3,3 +3,4 @@
 [INFO] Mapping interrupt request functions
 [INFO] Setting up interrupt descriptor table
 [INFO] Enabling interruptions
+[INFO] Kernel initialized

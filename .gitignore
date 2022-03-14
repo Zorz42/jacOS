@@ -3,3 +3,5 @@ build
 os-image.bin
 jacOS.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad/UserInterfaceState.xcuserstate
 test-program.img
+debug.log
+dump.mem

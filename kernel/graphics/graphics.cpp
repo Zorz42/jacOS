@@ -4,6 +4,7 @@
 #include "font.hpp"
 #include "vesa/vesa.hpp"
 #include "kernel.hpp"
+#include "ports/ports.hpp"
 
 void gfx::setPixel(short x, short y, int color) {
     vesa::lineHasChanged(y);

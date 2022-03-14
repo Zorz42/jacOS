@@ -6,7 +6,7 @@
 ENTRY(start)
 SECTIONS
 {
-  .text 0x1000 :
+  .text 0x9000 :
   {
     code = .; _code = .; __code = .;
     *(.text)
@@ -27,6 +27,14 @@ SECTIONS
     *(.bss)
     . = ALIGN(4096);
   }
-
+    
+  .extra :
+  {
+    /* Extra sections created by GCC that need to be handled (otherwise binary size might largely increase). */
+    *(.gnu.linkonce.t*)
+    *(.gnu.linkonce.r*)
+    . = ALIGN(4096);
+}
+    
   end = .; _end = .; __end = .;
 }

@@ -6,6 +6,7 @@
 #include "timer/timer.hpp"
 #include "keyboard/keyboard.hpp"
 #include "ports/ports.hpp"
+#include "qemuDebug/debug.hpp"
 
 void kernelMain();
 
