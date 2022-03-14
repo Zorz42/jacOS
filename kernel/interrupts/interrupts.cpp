@@ -82,12 +82,12 @@ extern "C" void irq15();
 
 void interrupts::init() {
     
-    debug::out << DEBUG_INFO << "Mapping interrupt service routine functions" << debug::endl;
+    debug::out << "Mapping interrupt service routine functions" << debug::endl;
     const unsigned int isr_arr[32] = {(unsigned int)isr0, (unsigned int)isr1, (unsigned int)isr2, (unsigned int)isr3, (unsigned int)isr4, (unsigned int)isr5, (unsigned int)isr6, (unsigned int)isr7, (unsigned int)isr8, (unsigned int)isr9, (unsigned int)isr10, (unsigned int)isr11, (unsigned int)isr12, (unsigned int)isr13, (unsigned int)isr14, (unsigned int)isr15, (unsigned int)isr16, (unsigned int)isr17, (unsigned int)isr18, (unsigned int)isr19, (unsigned int)isr20, (unsigned int)isr21, (unsigned int)isr22, (unsigned int)isr23, (unsigned int)isr24, (unsigned int)isr25, (unsigned int)isr26, (unsigned int)isr27, (unsigned int)isr28, (unsigned int)isr29, (unsigned int)isr30, (unsigned int)isr31};
     for(int i = 0; i < 32; i++)
         setIdtGate(i, isr_arr[i]);
     
-    debug::out << DEBUG_INFO << "Remapping programmable interrupt controllers" << debug::endl;
+    debug::out << "Remapping programmable interrupt controllers" << debug::endl;
     ports::byteOut(0x20, 0x11);
     ports::byteOut(0xA0, 0x11);
     ports::byteOut(0x21, 0x20);
@@ -99,17 +99,17 @@ void interrupts::init() {
     ports::byteOut(0x21, 0x0);
     ports::byteOut(0xA1, 0x0); 
     
-    debug::out << DEBUG_INFO << "Mapping interrupt request functions" << debug::endl;
+    debug::out << "Mapping interrupt request functions" << debug::endl;
     const unsigned int irq_arr[16] = {(unsigned int)irq0, (unsigned int)irq1, (unsigned int)irq2, (unsigned int)irq3, (unsigned int)irq4, (unsigned int)irq5, (unsigned int)irq6, (unsigned int)irq7, (unsigned int)irq8, (unsigned int)irq9, (unsigned int)irq10, (unsigned int)irq11, (unsigned int)irq12, (unsigned int)irq13, (unsigned int)irq14, (unsigned int)irq15};
     for(int i = 0; i < 16; i++)
         setIdtGate(i + 32, irq_arr[i]);
     
-    debug::out << DEBUG_INFO << "Setting up interrupt descriptor table" << debug::endl;
+    debug::out << "Setting up interrupt descriptor table" << debug::endl;
     idt_reg.base = (unsigned int) &idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(IdtGate) - 1;
     asm volatile("lidtl (%0)" : : "r" (&idt_reg));
     
-    debug::out << DEBUG_INFO << "Enabling interruptions" << debug::endl;
+    debug::out << "Enabling interruptions" << debug::endl;
     asm volatile("sti");
 }
 
@@ -129,41 +129,41 @@ extern "C" void irqHandler(Registers registers) {
 }
 
 static const char *exception_messages[] = {
-    "Division By Zero",
-    "Debug",
-    "Non Maskable Interrupt",
-    "Breakpoint",
-    "Into Detected Overflow",
-    "Out of Bounds",
-    "Invalid Opcode",
-    "No Coprocessor",
-
-    "Double Fault",
-    "Coprocessor Segment Overrun",
-    "Bad TSS",
-    "Segment Not Present",
-    "Stack Fault",
-    "General Protection Fault",
-    "Page Fault",
-    "Unknown Interrupt",
-
-    "Coprocessor Fault",
-    "Alignment Check",
-    "Machine Check",
-    "Heap Corruption",
-    "Reserved",
-    "Freeing Invalid Memory",
-    "Freeing Freed Memory",
-    "Cannot Find Free Region",
-
-    "Ran out of free frames",
-    "Frame not free on identity map",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
+    "Division By Zero",               // 0x00
+    "Debug",                          // 0x01
+    "Non Maskable Interrupt",         // 0x02
+    "Breakpoint",                     // 0x03
+    "Into Detected Overflow",         // 0x04
+    "Out of Bounds",                  // 0x05
+    "Invalid Opcode",                 // 0x06
+    "No Coprocessor",                 // 0x07
+    
+    "Double Fault",                   // 0x08
+    "Coprocessor Segment Overrun",    // 0x09
+    "Bad TSS",                        // 0x0A
+    "Segment Not Present",            // 0x0B
+    "Stack Fault",                    // 0x0C
+    "General Protection Fault",       // 0x0D
+    "Page Fault",                     // 0x0E
+    "Unknown Interrupt",              // 0x0F
+    
+    "Coprocessor Fault",              // 0x10
+    "Alignment Check",                // 0x11
+    "Machine Check",                  // 0x12
+    "Heap Corruption",                // 0x13
+    "Frame not free on identity map", // 0x14
+    "Freeing Invalid Memory",         // 0x15
+    "Freeing Freed Memory",           // 0x16
+    "Cannot Find Free Region",        // 0x17
+    
+    "Ran out of free frames",         // 0x18
+    "Reserved",                       // 0x19
+    "Reserved",                       // 0x1a
+    "Reserved",                       // 0x1b
+    "Reserved",                       // 0x1c
+    "Reserved",                       // 0x1d
+    "Reserved",                       // 0x1e
+    "Reserved"                        // 0x1f
 };
 
 extern "C" void isrHandler(Registers r) {

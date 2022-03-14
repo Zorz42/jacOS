@@ -64,12 +64,15 @@ static unsigned int getFirstFreeFrame() {
             for(unsigned int j = 0; j < 32; j++) {
                 if(!(free_frames[i] & (1 << j))) {
                     int result = i * 32 + j;
-                    if(result * 0x1000 >= mem::getTotal())
-                        asm("int $25");
+                    if(result * 0x1000 >= mem::getTotal()) {
+                        debug::out << DEBUG_ERROR << "Ran out of free frames" << debug::endl;
+                        asm("int $0x18");
+                    }
                     return result;
                 }
             }
-    asm("int $25");
+    debug::out << DEBUG_ERROR << "Ran out of free frames" << debug::endl;
+    asm("int $0x18");
     return 0;
 }
 
@@ -128,10 +131,8 @@ void mem::identityMapPage(unsigned int address, bool is_kernel, bool is_writable
         page_directory = current_page_directory;
     
     if(getFrame(address)) {
-        //debug::log("error: identityMapPage() called on already taken address ");
-        //debug::logHex(address);
-        //debug::log("\n");
-        asm("int $26");
+        debug::out << DEBUG_ERROR << "identityMapPage() called on already taken address" << debug::hex << address << debug::endl;
+        asm("int $0x14");
     }
     
     PageHead* page_head = getPage(address, page_directory);
@@ -150,12 +151,6 @@ unsigned int mem::virtualToPhysicalAddress(unsigned int virtual_address, PageDir
     int page_index = virtual_address / 0x1000;
     int table_index = page_index / 1024;
     
-    if(page_directory->tables[table_index].pages[page_index % 1024].frame == 0) {
-        //debug::log("virtualToPhysicalAddress() ");
-        //debug::logHex(virtual_address);
-        //debug::log("\n");
-    }
-    
     if(page_directory == nullptr)
         return virtual_address;
     else
@@ -168,8 +163,10 @@ void* mem::alloc(unsigned int size) {
     
     // find a free block
     while(true) {
-        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
-            asm("int $19");
+        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
+            debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
+            asm("int $0x13");
+        }
         
         if(head->free == HEAD_FREE && head->size >= size)
             break;
@@ -191,8 +188,10 @@ void* mem::alloc(unsigned int size) {
                     new_head->prev = head;
                     head->next = new_head;
                     head = new_head;
-                } else
-                    asm("int $19");
+                } else {
+                    debug::out << DEBUG_ERROR << "" << debug::endl;
+                    asm("int $0x13");
+                }
             }
             
             return alloc(size);
@@ -227,11 +226,15 @@ static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
 
 void mem::free(void* ptr) {
     MallocHead* head = (MallocHead*)((unsigned int)ptr - sizeof(MallocHead));
-    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE)
-        asm("int $22");
+    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
+        debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
+        asm("int $0x13");
+    }
     
-    if(head->free == HEAD_FREE)
-        asm("int $23");
+    if(head->free == HEAD_FREE) {
+        debug::out << DEBUG_ERROR << "Freeing freed memory" << debug::endl;
+        asm("int $0x16");
+    }
     
     head->free = HEAD_FREE;
     
@@ -248,7 +251,8 @@ static MemInfo* getFreeRegion() {
             return curr_info;
     }
     
-    asm("int $24");
+    debug::out << DEBUG_ERROR << "Cannot find free region" << debug::endl;
+    asm("int $0x17");
 }
 
 void mem::init() {
@@ -256,12 +260,12 @@ void mem::init() {
     
     heap_base = 0x400000;
     total_memory = target_info->base + target_info->length;
-    debug::out << DEBUG_INFO << "Total memory is: " << debug::hex << total_memory << debug::endl;
+    debug::out << "Total memory is: " << debug::hex << total_memory << debug::endl;
     
     kernel_page_directory = (PageDirectory*)heap_base;
     memset(kernel_page_directory, 0, sizeof(PageDirectory));
     heap_base += sizeof(PageDirectory);
-    debug::out << DEBUG_INFO << "Kernel page directory is at: " << debug::hex << (unsigned int)kernel_page_directory << debug::endl;
+    debug::out << "Kernel page directory is at: " << debug::hex << (unsigned int)kernel_page_directory << debug::endl;
     
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
     
@@ -272,7 +276,7 @@ void mem::init() {
     allocated_frames = 0;
     
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
-    debug::out << DEBUG_INFO << "Heap base is at: " << debug::hex << heap_base << debug::endl;
+    debug::out << "Heap base is at: " << debug::hex << heap_base << debug::endl;
     
     MallocHead* main_head = (MallocHead*)heap_base;
     main_head->free = HEAD_FREE;
@@ -280,7 +284,7 @@ void mem::init() {
     main_head->next = nullptr;
     main_head->prev = nullptr;
     
-    debug::out << DEBUG_INFO << "Setting up first three page tables" << debug::endl;
+    debug::out << "Setting up first three page tables" << debug::endl;
     int to_alloc[] = {1, 2, 0};
     for(int i = 0; i < 3; i++) {
         int table_index = to_alloc[i];
@@ -289,26 +293,26 @@ void mem::init() {
         identityMapPage((unsigned int)kernel_page_directory + i * 0x1000, true, true, kernel_page_directory);
     }
     
-    debug::out << DEBUG_INFO << "Identity mapping first megabyte of memory" << debug::endl;
+    debug::out << "Identity mapping first megabyte of memory" << debug::endl;
     for(int i = 0; i < 0x100000; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
-    debug::out << DEBUG_INFO << "Identity mapping kernel page directory" << debug::endl;
+    debug::out << "Identity mapping kernel page directory" << debug::endl;
     for(int i = (unsigned int)kernel_page_directory + 1024 * 1024 * 4; i < (unsigned int)kernel_page_directory + sizeof(PageDirectory); i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
-    debug::out << DEBUG_INFO << "Identity mapping free frames array" << debug::endl;
+    debug::out << "Identity mapping free frames array" << debug::endl;
     for(int i = (unsigned int)free_frames; i < (unsigned int)free_frames + free_frames_size / 8; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
-    debug::out << DEBUG_INFO << "Identity mapping heap" << debug::endl;
+    debug::out << "Identity mapping heap" << debug::endl;
     MallocHead* curr_head = main_head;
     while(curr_head->next != nullptr)
         curr_head = curr_head->next;
     for(int i = heap_base; i <= (unsigned int)curr_head + sizeof(MallocHead) + curr_head->size; i += 0x1000)
         identityMapPage(i, true, true, kernel_page_directory);
     
-    debug::out << DEBUG_INFO << "Enabling paging" << debug::endl;
+    debug::out << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);
 }
 

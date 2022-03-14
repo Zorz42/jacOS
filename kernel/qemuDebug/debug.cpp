@@ -135,6 +135,7 @@ debug::_out_stream debug::_out_stream::operator<<(_dec _) {
 debug::_out_stream debug::_out_stream::operator<<(_endl _) {
     *this << '\n';
     debug_print_mode = DebugPrintMode::decimal;
+    curr_debug_level = DEBUG_INFO;
     return *this;
 }
 

@@ -45,13 +45,14 @@ void printSize(int bytes) {
 
 static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
-        void* result = disk::read(0, 0, 1, 20);
-        text::out << "Running program!" << text::endl;
-        typedef int (*call_module_t)(void);
-        call_module_t program = (call_module_t)result;
-        int exit_code = program();
+        //void* result = disk::read(0, 0, 1, 20);
+        void* result = mem::alloc(20);
+        //text::out << "Running program!" << text::endl;
+        //typedef int (*call_module_t)(void);
+        //call_module_t program = (call_module_t)result;
+        //int exit_code = program();
         mem::free(result);
-        text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
+        //text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
         
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::out << "Used memory: ";
@@ -103,7 +104,7 @@ static void onKeyEvent(keyboard::Key key, bool up) {
 
 void kernelMain() {
     text::out << "JacOS has started" << text::endl;
-    debug::out << DEBUG_INFO << "Kernel initialized" << debug::endl;
+    debug::out << "Kernel initialized" << debug::endl;
     
     resetCommand();
     text::flush();
