@@ -1,7 +1,10 @@
+#pragma optimize("", off)
 #include "disk.hpp"
 #include "ports/ports.hpp"
 #include "text/text.hpp"
 #include "memory/memory.hpp"
+
+#pragma GCC optimize ("O0")
 
 void* disk::read(unsigned char head, unsigned short cylinder, unsigned char sector, unsigned char sector_count) {
     ports::byteOut(0x1f6, (head & 0b00001111) | 0b10100000); // drive & head number

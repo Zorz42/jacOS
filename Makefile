@@ -20,11 +20,11 @@ CFLAGS = -std=gnu++17 -ffreestanding -O2 -Ikernel/
 
 .PHONY: run clean
 
-run: os-image.bin ${PROGRAM_NAME}.img
+run: os-image.bin ${PROGRAM_NAME}.img Makefile
 	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes disk geometry
 	
 	
-os-image.bin: build/kernel.bin build/bootsect.bin
+os-image.bin: build/kernel.bin build/bootsect.bin Makefile
 	cat build/bootsect.bin build/kernel.bin > os-image.bin
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
