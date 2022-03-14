@@ -27,9 +27,9 @@
 		167A73B42626DF7A00328331 /* graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphics.cpp; sourceTree = "<group>"; };
 		167A73B62626DF7A00328331 /* font.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = font.hpp; sourceTree = "<group>"; };
 		167A73B72626DF7A00328331 /* gfx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gfx.hpp; sourceTree = "<group>"; };
-		167A73BA2626DF7A00328331 /* switch_pm.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = switch_pm.asm; sourceTree = "<group>"; };
-		167A73BC2626DF7A00328331 /* bootsect.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = bootsect.asm; sourceTree = "<group>"; };
-		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; };
+		167A73BA2626DF7A00328331 /* switch_pm.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = switch_pm.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		167A73BC2626DF7A00328331 /* bootsect.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = bootsect.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		167A73BD2626DF7A00328331 /* kernel_size.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = kernel_size.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		167A73D32626E08500328331 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		167FB5BF262C467500AA5F51 /* vesa.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vesa.cpp; sourceTree = "<group>"; };
 		167FB5C0262C467500AA5F51 /* vesa.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vesa.hpp; sourceTree = "<group>"; };
@@ -42,8 +42,9 @@
 		3687C9C227D36BEA00F0F62C /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
 		368BD4E927D26D3600D134DF /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		368BD4EA27D272A800D134DF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		3693A42227DF95A5005CA2CA /* load_kernel.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = load_kernel.asm; sourceTree = "<group>"; };
-		3693A42327DF97CE005CA2CA /* get_ram_info.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = get_ram_info.asm; sourceTree = "<group>"; };
+		3693A42227DF95A5005CA2CA /* load_kernel.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = load_kernel.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		3693A42327DF97CE005CA2CA /* get_ram_info.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = get_ram_info.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		3693A42427DFA508005CA2CA /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -131,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				167A73BD2626DF7A00328331 /* kernel_size.asm */,
+				3693A42427DFA508005CA2CA /* print.asm */,
 				167A73BA2626DF7A00328331 /* switch_pm.asm */,
 				3693A42227DF95A5005CA2CA /* load_kernel.asm */,
 				3693A42327DF97CE005CA2CA /* get_ram_info.asm */,

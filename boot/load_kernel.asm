@@ -1,5 +1,4 @@
 [bits 16]
-
 KERNEL_LOAD_SECTORS_AT_A_TIME equ 50 ; How much kernel should be loaded at a time
 KERNEL_TEMP_LOAD_POS equ 0x1000 ; Where should the temporary kernel buffer be located
 
@@ -32,18 +31,29 @@ disk_load:
     pop dx
     pop ax
 
-    mov dh, ch ; dh <- head number (0x0 .. 0xF)
+    mov dh, ch ; dh <- head number
     and dh, 1
     shr ch, 1
 
     ; [es:bx] <- pointer to buffer where the data will be stored
     ; caller sets it up for us, and it is actually the standard location for int 13h
     int 0x13      ; BIOS interrupt
-
+    jc disk_error ; if error
+ 
     popa
     ret
 
+disk_error:
+    mov bx, DISK_ERROR
+    call print
+    mov dh, ah ; ah = error code, dl = disk drive that dropped the error
+    call print_hex ; check out the code at http://stanislavs.org/helppc/int_13-1.html
+    call print_nl
+    jmp $
+    
 
+DISK_ERROR: db "Disk read error! Code: ", 0
+ 
 ; fs -> from
 ; gs -> to
 ; cs -> length
@@ -66,7 +76,7 @@ mov bx, 0
 
 ; dl -> drive number
 ; ax -> address in memory to load
-; dx -> size of kernel (in sectors)
+; cx -> size of kernel (in sectors)
 
 load_kernel:
     pusha
@@ -79,10 +89,10 @@ load_kernel:
     mov ax, 0
 
 load_loop:
+    mov dh, KERNEL_LOAD_SECTORS_AT_A_TIME
     mov cx, ax
     inc cx
     mov bx, KERNEL_TEMP_LOAD_POS
-    mov dh, KERNEL_LOAD_SECTORS_AT_A_TIME
 
     call disk_load
     

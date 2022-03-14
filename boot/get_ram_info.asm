@@ -1,4 +1,4 @@
-
+[bits 16]
 ; di -> ram info destination
 get_ram_info:
     pusha
