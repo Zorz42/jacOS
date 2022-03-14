@@ -7,6 +7,7 @@
 #include "keyboard/keyboard.hpp"
 #include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
+#include "disk/disk.hpp"
 
 void kernelMain();
 
@@ -18,6 +19,8 @@ extern "C" void kernelEntry() {
     
     timer::init(1000);
     keyboard::init();
+    
+    disk::init();
     
     kernelMain();
     

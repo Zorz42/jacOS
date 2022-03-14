@@ -2,6 +2,8 @@
 
 namespace disk {
 
-void* read(unsigned char head, unsigned short cylinder, unsigned char sector, unsigned char sector_count);
+void init();
+unsigned int getDiskSize();
+void* read(unsigned int sector, unsigned int sector_count);
 
 }

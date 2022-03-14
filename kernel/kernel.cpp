@@ -45,7 +45,8 @@ void printSize(int bytes) {
 
 static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
-        void* result = disk::read(0, 0, 1, 20);
+        void* result = disk::read(0, disk::getDiskSize() + 1);
+        debug::out << "Program loaded into " << debug::hex << mem::virtualToPhysicalAddress((unsigned int)result) << debug::endl;
         text::out << "Running program!" << text::endl;
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;

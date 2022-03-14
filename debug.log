@@ -17,4 +17,6 @@
 [INFO] Initializing graphics module...
 [INFO] VESA buffer is at: 0x822010
 [INFO] Screen size is: 1024x768
+[INFO] Size of disk in sectors is: 0x0
 [INFO] Kernel initialized
+[INFO] Program loaded into 0x3FEBC0
