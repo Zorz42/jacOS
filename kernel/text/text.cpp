@@ -3,6 +3,7 @@
 #include "memory/memory.hpp"
 #include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
+#include "interrupts/interrupts.hpp"
 
 enum class PrintMode {decimal, hexadecimal};
 
@@ -169,7 +170,14 @@ text::_out_stream text::_out_stream::operator<<(_endl _) {
     return *this;
 }
 
+unsigned int syscallTextOut(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << (const char*)arg1 + 0xB23BC0;
+    return 0;
+}
+
 void text::init() {
+    interrupts::registerSyscallHandler(&syscallTextOut, "text::out");
+    
     text_width = gfx::getScreenWidth() / 8;
     text_height = gfx::getScreenHeight() / 16;
     

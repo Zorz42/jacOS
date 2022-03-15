@@ -20,17 +20,19 @@ enum IRQS {
 };
 
 struct Registers {
-   unsigned int ds;
-   unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
-   unsigned int int_no, err_code;
-   unsigned int eip, cs, eflags, useresp, ss;
+    unsigned int ds;
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    unsigned int int_no, err_code;
+    unsigned int eip, cs, eflags, useresp, ss;
 };
 
 namespace interrupts {
 
 void init();
 
-typedef void (*Handler)(Registers);
-void registerHandler(unsigned char n, Handler handler);
+typedef void (*IrqHandler)(Registers);
+typedef unsigned int (*SyscallHandler)(unsigned int, unsigned int, unsigned int);
+void registerIrqHandler(unsigned char n, IrqHandler handler);
+int registerSyscallHandler(SyscallHandler handler, const char* name);
 
 };

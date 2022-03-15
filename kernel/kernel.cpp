@@ -7,6 +7,7 @@
 #include "ports/ports.hpp"
 #include "vesa/vesa.hpp"
 #include "qemuDebug/debug.hpp"
+#include "interrupts/interrupts.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];
@@ -14,7 +15,7 @@ static int cmd_length;
 static bool kernel_running = true;
 
 static bool strcmp(const char* a, const char* b) {
-    for(int i = 0; a[i] != 0; i++)
+    for(int i = 0; a[i] != 0 || b[i] != 0; i++)
         if(a[i] != b[i])
             return false;
     return true;
@@ -45,12 +46,15 @@ void printSize(int bytes) {
 
 static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
-        void* result = disk::read(0, disk::getDiskSize() + 1);
-        debug::out << "Program loaded into " << debug::hex << mem::virtualToPhysicalAddress((unsigned int)result) << debug::endl;
-        text::out << "Running program!" << text::endl;
+        void* result = disk::read(0, disk::getDiskSize());
+        debug::out << "Program loaded into " << debug::hex << mem::virtualToPhysicalAddress((unsigned int)result) << " and virtual address " << (unsigned int)result << debug::endl;
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
+        
+        
         int exit_code = program();
+        
+        
         mem::free(result);
         text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
         

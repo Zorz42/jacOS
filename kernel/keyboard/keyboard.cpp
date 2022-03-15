@@ -57,7 +57,7 @@ bool keyboard::getKeyState(Key key) {
 }
 
 void keyboard::init() {
-    interrupts::registerHandler(IRQ1, keyboardCallback);
+    interrupts::registerIrqHandler(IRQ1, keyboardCallback);
 }
 
 static keyboard::Key scancodeToKey(unsigned char scancode) {

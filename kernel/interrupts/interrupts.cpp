@@ -3,7 +3,9 @@
 #include "text/text.hpp"
 #include "qemuDebug/debug.hpp"
 
-static interrupts::Handler interrupt_handlers[256];
+static interrupts::IrqHandler irq_handlers[256];
+static interrupts::SyscallHandler syscall_handlers[256];
+static int syscall_handlers_size = 0;
 
 struct IdtGate {
     unsigned short low_offset;
@@ -80,8 +82,9 @@ extern "C" void irq13();
 extern "C" void irq14();
 extern "C" void irq15();
 
+extern "C" void systemCall();
+
 void interrupts::init() {
-    
     debug::out << "Mapping interrupt service routine functions" << debug::endl;
     const unsigned int isr_arr[32] = {(unsigned int)isr0, (unsigned int)isr1, (unsigned int)isr2, (unsigned int)isr3, (unsigned int)isr4, (unsigned int)isr5, (unsigned int)isr6, (unsigned int)isr7, (unsigned int)isr8, (unsigned int)isr9, (unsigned int)isr10, (unsigned int)isr11, (unsigned int)isr12, (unsigned int)isr13, (unsigned int)isr14, (unsigned int)isr15, (unsigned int)isr16, (unsigned int)isr17, (unsigned int)isr18, (unsigned int)isr19, (unsigned int)isr20, (unsigned int)isr21, (unsigned int)isr22, (unsigned int)isr23, (unsigned int)isr24, (unsigned int)isr25, (unsigned int)isr26, (unsigned int)isr27, (unsigned int)isr28, (unsigned int)isr29, (unsigned int)isr30, (unsigned int)isr31};
     for(int i = 0; i < 32; i++)
@@ -104,6 +107,8 @@ void interrupts::init() {
     for(int i = 0; i < 16; i++)
         setIdtGate(i + 32, irq_arr[i]);
     
+    setIdtGate(0x40, (unsigned int)systemCall);
+    
     debug::out << "Setting up interrupt descriptor table" << debug::endl;
     idt_reg.base = (unsigned int) &idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(IdtGate) - 1;
@@ -113,19 +118,8 @@ void interrupts::init() {
     asm volatile("sti");
 }
 
-void interrupts::registerHandler(unsigned char n, Handler handler) {
-    interrupt_handlers[n] = handler;
-}
-
-extern "C" void irqHandler(Registers registers) {
-    if(registers.int_no >= 40)
-        ports::byteOut(0xA0, 0x20);
-    ports::byteOut(0x20, 0x20);
-
-    if (interrupt_handlers[registers.int_no] != 0) {
-        interrupts::Handler handler = interrupt_handlers[registers.int_no];
-        handler(registers);
-    }
+void interrupts::registerIrqHandler(unsigned char n, IrqHandler handler) {
+    irq_handlers[n] = handler;
 }
 
 static const char *exception_messages[] = {
@@ -157,7 +151,7 @@ static const char *exception_messages[] = {
     "Cannot Find Free Region",        // 0x17
     
     "Ran out of free frames",         // 0x18
-    "Reserved",                       // 0x19
+    "Ran out of syscall handlers",    // 0x19
     "Reserved",                       // 0x1a
     "Reserved",                       // 0x1b
     "Reserved",                       // 0x1c
@@ -166,8 +160,50 @@ static const char *exception_messages[] = {
     "Reserved"                        // 0x1f
 };
 
-extern "C" void isrHandler(Registers r) {
-    text::out << text::dec << "Received interrupt: " << r.int_no << ": " << exception_messages[r.int_no] << text::endl;
+extern "C" void irqHandler(Registers registers) {
+    if(registers.int_no >= 40)
+        ports::byteOut(0xA0, 0x20);
+    ports::byteOut(0x20, 0x20);
+
+    if (irq_handlers[registers.int_no] != 0) {
+        interrupts::IrqHandler handler = irq_handlers[registers.int_no];
+        handler(registers);
+    }
+}
+
+extern "C" void isrHandler(Registers registers) {
+    text::out << "Received interrupt: " << text::hex << registers.int_no << ": " << exception_messages[registers.int_no] << text::endl;
     while(true)
         asm volatile("hlt");
+}
+
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+
+extern "C" int systemCallHandler(Registers registers) {
+    unsigned int func = registers.eax;
+    unsigned int arg1 = registers.ebx;
+    unsigned int arg2 = registers.ecx;
+    unsigned int arg3 = registers.edx;
+    
+    //text::out << "Syscall " << func << ", " << arg1 << ", " << arg2 << ", " << arg3 << text::endl;
+    
+    if(func >= syscall_handlers_size) {
+        debug::out << "Ignoring unknown system call with code: " << debug::hex << func << debug::endl;
+        return 0;
+    }
+    
+    interrupts::SyscallHandler handler = syscall_handlers[func];
+    return handler(arg1, arg2, arg3);
+}
+
+#pragma GCC pop_options
+
+int interrupts::registerSyscallHandler(SyscallHandler handler, const char* name) {
+    if(syscall_handlers_size == 256)
+        asm volatile("int $0x19");
+    debug::out << "Mapping syscall '" << name << "' on code " << syscall_handlers_size << debug::endl;
+    syscall_handlers[syscall_handlers_size] = handler;
+    syscall_handlers_size++;
+    return syscall_handlers_size - 1;
 }

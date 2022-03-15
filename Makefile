@@ -16,12 +16,12 @@ PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp')
 PROGRAM_OBJ = build/program/entry.o $(filter-out build/program/entry.o, $(addprefix build/, ${PROGRAM_SOURCES:.cpp=.o}))
 
 # default flags
-CFLAGS = -std=gnu++17 -ffreestanding -O0 -Ikernel/
+CFLAGS = -std=gnu++17 -ffreestanding -O2 -Ikernel/
 
 .PHONY: run clean
 
 run: os-image.bin ${PROGRAM_NAME}.img Makefile
-	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes disk geometry
+	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes floppy disk geometry
 	
 	
 os-image.bin: build/kernel.bin build/bootsect.bin Makefile
@@ -48,8 +48,8 @@ build/bootsect.bin: $(BOOT_SOURCES)
 	nasm boot/bootsect.asm -f bin -o $@
 	
 # rule for custom program
-${PROGRAM_NAME}.img: ${PROGRAM_OBJ}
-	${LD} -o $@ ${PROGRAM_OBJ} --oformat binary
+${PROGRAM_NAME}.img: ${PROGRAM_OBJ} link-program.ld
+	${LD} -Tlink-program.ld -o $@ ${PROGRAM_OBJ} --oformat binary
 
 clean:
 	rm -rf build

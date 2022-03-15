@@ -1,6 +1,7 @@
 ; Defined in isr.c
 [extern isrHandler]
 [extern irqHandler]
+[extern systemCallHandler]
 
 ; Common ISR code
 isr_common_stub:
@@ -109,6 +110,8 @@ global irq12
 global irq13
 global irq14
 global irq15
+
+global systemCall
 
 ; 0: Divide By Zero Exception
 isr0:
@@ -425,3 +428,31 @@ irq15:
 	push byte 47
 	jmp irq_common_stub
 
+return_value: dd 0
+
+systemCall:
+    cli
+    
+    pusha
+    mov ax, ds
+    push eax
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    
+    call systemCallHandler
+    mov [return_value], eax
+    
+    pop eax
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    popa
+    
+    mov eax, [return_value]
+    
+    sti
+    iret

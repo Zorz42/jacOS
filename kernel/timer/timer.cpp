@@ -21,7 +21,7 @@ static void timerCallback(Registers regs) {
 }
 
 void timer::init(unsigned int freq) {
-    interrupts::registerHandler(IRQ0, timerCallback);
+    interrupts::registerIrqHandler(IRQ0, timerCallback);
 
     /* Get the PIT value: hardware clock at 1193180 Hz */
     unsigned int divisor = 1193180 / freq;
