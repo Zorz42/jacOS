@@ -177,10 +177,7 @@ extern "C" void isrHandler(Registers registers) {
         asm volatile("hlt");
 }
 
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-
-extern "C" int systemCallHandler(Registers registers) {
+extern "C" int __attribute__((optimize("O0"))) systemCallHandler(Registers registers) {
     unsigned int func = registers.eax;
     unsigned int arg1 = registers.ebx;
     unsigned int arg2 = registers.ecx;
@@ -196,8 +193,6 @@ extern "C" int systemCallHandler(Registers registers) {
     interrupts::SyscallHandler handler = syscall_handlers[func];
     return handler(arg1, arg2, arg3);
 }
-
-#pragma GCC pop_options
 
 int interrupts::registerSyscallHandler(SyscallHandler handler, const char* name) {
     if(syscall_handlers_size == 256)

@@ -44,7 +44,7 @@ void disk::init() {
     sectors_count = (unsigned int)ports::byteIn(d + 3);
     sectors_count += (unsigned int)ports::byteIn(d + 4) << 8;
     sectors_count += (unsigned int)ports::byteIn(d + 5) << 16;
-    sectors_count += ((unsigned int)ports::byteIn(d + 6) & 0xF) << 24;r
+    sectors_count += ((unsigned int)ports::byteIn(d + 6) & 0xF) << 24;
     sectors_count++;
     
     debug::out << "Size of disk in sectors is: " << sectors_count << debug::endl;
