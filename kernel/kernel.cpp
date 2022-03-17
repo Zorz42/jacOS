@@ -55,15 +55,16 @@ static void switchToUserMode() {
     asm volatile("mov %esp, %eax");
     asm volatile("pushl $0x23");
     asm volatile("pushl %eax");
+    asm volatile("pushf");
+    
     asm volatile("pop %eax");
     asm volatile("or $0x200, %eax");
     asm volatile("push %eax");
-    asm volatile("pushf");
+    
     asm volatile("pushl $0x1B");
     asm volatile("push $1f");
     asm volatile("iret");
     asm volatile("1:");
-    asm volatile("sti");
 }
 
 static void onCommand() {
@@ -73,13 +74,15 @@ static void onCommand() {
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
         
-        //switchToUserMode();
-        
-        int exit_code = program();
+        switchToUserMode();
+        //int exit_code = program();
+        int exit_code = 0;
         
         mem::free(result);
-        text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
-        
+        //while(true);
+        text::out << "Program ended with exit code " << exit_code << "! ";
+        asm volatile("int $0x10");
+        text::out << text::endl;
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::out << "Used memory: ";
         printSize(mem::getUsed());

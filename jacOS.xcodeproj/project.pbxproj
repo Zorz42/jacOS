@@ -42,6 +42,9 @@
 		3687C9C227D36BEA00F0F62C /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
 		368BD4E927D26D3600D134DF /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		368BD4EA27D272A800D134DF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		368BE99527E3A54A004B8573 /* gdt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gdt.cpp; sourceTree = "<group>"; };
+		368BE99627E3A54A004B8573 /* gdt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gdt.hpp; sourceTree = "<group>"; };
+		368BE99727E3BB88004B8573 /* gdt_flush.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = gdt_flush.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42227DF95A5005CA2CA /* load_kernel.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = load_kernel.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42327DF97CE005CA2CA /* get_ram_info.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = get_ram_info.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42427DFA508005CA2CA /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
@@ -75,6 +78,7 @@
 		167A739A2626DF7A00328331 /* kernel */ = {
 			isa = PBXGroup;
 			children = (
+				368BE99427E3A535004B8573 /* gdt */,
 				167FB5B9262C41BA00AA5F51 /* ports */,
 				3687C9C727D388E800F0F62C /* interrupts */,
 				368640FA27DB817000B4B35A /* qemuDebug */,
@@ -210,6 +214,16 @@
 				368BD4E927D26D3600D134DF /* entry.cpp */,
 			);
 			path = program;
+			sourceTree = "<group>";
+		};
+		368BE99427E3A535004B8573 /* gdt */ = {
+			isa = PBXGroup;
+			children = (
+				368BE99627E3A54A004B8573 /* gdt.hpp */,
+				368BE99527E3A54A004B8573 /* gdt.cpp */,
+				368BE99727E3BB88004B8573 /* gdt_flush.asm */,
+			);
+			path = gdt;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

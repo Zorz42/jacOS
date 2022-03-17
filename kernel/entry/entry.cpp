@@ -8,10 +8,12 @@
 #include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
 #include "disk/disk.hpp"
+#include "gdt/gdt.hpp"
 
 void kernelMain();
 
 extern "C" void kernelEntry() {
+    gdt::init();
     interrupts::init();
     
     mem::init();
