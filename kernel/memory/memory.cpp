@@ -117,7 +117,7 @@ mem::PageHead* mem::getPage(unsigned int address, PageDirectory* page_directory)
     
     if(!page_directory->tables_allocated[table_index]) {
         page_directory->tables_allocated[table_index] = true;
-        allocateFrame(getPage((unsigned int)&page_directory->tables[table_index], page_directory), true, true);
+        allocateFrame(getPage((unsigned int)&page_directory->tables[table_index], page_directory), false, true);
         int physical_address = virtualToPhysicalAddress((unsigned int)&page_directory->tables[table_index], page_directory);
         page_directory->physical_table_addresses[table_index] = physical_address | 7;
     }
@@ -176,7 +176,7 @@ void* mem::alloc(unsigned int size) {
                 unsigned int address = (unsigned int)head + sizeof(MallocHead) + head->size;
                 
                 if(current_page_directory != nullptr)
-                    allocateFrame(getPage(address), true, true);
+                    allocateFrame(getPage(address), false, true);
                 
                 if(head->free == HEAD_FREE)
                     head->size += 0x1000;
@@ -290,27 +290,27 @@ void mem::init() {
         int table_index = to_alloc[i];
         kernel_page_directory->tables_allocated[table_index] = true;
         kernel_page_directory->physical_table_addresses[table_index] = (unsigned int)&kernel_page_directory->tables[table_index] | 7;
-        identityMapPage((unsigned int)kernel_page_directory + i * 0x1000, true, true, kernel_page_directory);
+        identityMapPage((unsigned int)kernel_page_directory + i * 0x1000, false, true, kernel_page_directory);
     }
     
     debug::out << "Identity mapping first megabyte of memory" << debug::endl;
     for(int i = 0; i < 0x100000; i += 0x1000)
-        identityMapPage(i, true, true, kernel_page_directory);
+        identityMapPage(i, false, true, kernel_page_directory);
     
     debug::out << "Identity mapping kernel page directory" << debug::endl;
     for(int i = (unsigned int)kernel_page_directory + 1024 * 1024 * 4; i < (unsigned int)kernel_page_directory + sizeof(PageDirectory); i += 0x1000)
-        identityMapPage(i, true, true, kernel_page_directory);
+        identityMapPage(i, false, true, kernel_page_directory);
     
     debug::out << "Identity mapping free frames array" << debug::endl;
     for(int i = (unsigned int)free_frames; i < (unsigned int)free_frames + free_frames_size / 8; i += 0x1000)
-        identityMapPage(i, true, true, kernel_page_directory);
+        identityMapPage(i, false, true, kernel_page_directory);
     
     debug::out << "Identity mapping heap" << debug::endl;
     MallocHead* curr_head = main_head;
     while(curr_head->next != nullptr)
         curr_head = curr_head->next;
     for(int i = heap_base; i <= (unsigned int)curr_head + sizeof(MallocHead) + curr_head->size; i += 0x1000)
-        identityMapPage(i, true, true, kernel_page_directory);
+        identityMapPage(i, false, true, kernel_page_directory);
     
     debug::out << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);

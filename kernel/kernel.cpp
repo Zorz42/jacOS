@@ -44,6 +44,28 @@ void printSize(int bytes) {
     }
 }
 
+static void switchToUserMode() {
+    asm volatile("cli");
+    asm volatile("mov $0x23, %ax");
+    asm volatile("mov %ax, %ds");
+    asm volatile("mov %ax, %es");
+    asm volatile("mov %ax, %fs");
+    asm volatile("mov %ax, %gs");
+    
+    asm volatile("mov %esp, %eax");
+    asm volatile("pushl $0x23");
+    asm volatile("pushl %eax");
+    asm volatile("pop %eax");
+    asm volatile("or $0x200, %eax");
+    asm volatile("push %eax");
+    asm volatile("pushf");
+    asm volatile("pushl $0x1B");
+    asm volatile("push $1f");
+    asm volatile("iret");
+    asm volatile("1:");
+    asm volatile("sti");
+}
+
 static void onCommand() {
     if(strcmp(&curr_shell_cmd[0], "run")) {
         void* result = disk::read(0, disk::getDiskSize());
@@ -51,9 +73,9 @@ static void onCommand() {
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
         
+        //switchToUserMode();
         
         int exit_code = program();
-        
         
         mem::free(result);
         text::out << "Program ended with exit code " << exit_code << "! " << text::endl;

@@ -48,6 +48,7 @@ main:
 
 [bits 32]
 begin_pm:
+
     call KERNEL_OFFSET ; give control to the kernel
 
     jmp $
