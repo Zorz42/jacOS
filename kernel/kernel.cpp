@@ -1,4 +1,3 @@
-#include "kernel.hpp"
 #include "graphics/gfx.hpp"
 #include "text/text.hpp"
 #include "memory/memory.hpp"
@@ -8,6 +7,7 @@
 #include "vesa/vesa.hpp"
 #include "qemuDebug/debug.hpp"
 #include "interrupts/interrupts.hpp"
+#include "keyboard/keyboard.hpp"
 
 #define MAX_CMD_LENGTH 100
 static char curr_shell_cmd[MAX_CMD_LENGTH];

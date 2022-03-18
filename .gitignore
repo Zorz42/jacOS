@@ -5,3 +5,4 @@ jacOS.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad/UserInterfaceState.
 test-program.img
 debug.log
 dump.mem
+debug.log

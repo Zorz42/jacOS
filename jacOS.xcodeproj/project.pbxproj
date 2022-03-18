@@ -9,7 +9,6 @@
 /* Begin PBXFileReference section */
 		1620BB16262AFCF300BBB6D8 /* keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = keyboard.hpp; sourceTree = "<group>"; };
 		1620BB17262AFCF300BBB6D8 /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
-		1620BB1C262AFEBE00BBB6D8 /* kernel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kernel.hpp; sourceTree = "<group>"; };
 		167A739D2626DF7A00328331 /* ports.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ports.hpp; sourceTree = "<group>"; };
 		167A739F2626DF7A00328331 /* ports.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ports.cpp; sourceTree = "<group>"; };
 		167A73A02626DF7A00328331 /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kernel.cpp; sourceTree = "<group>"; };
@@ -90,7 +89,6 @@
 				167A73B32626DF7A00328331 /* graphics */,
 				167A73B02626DF7A00328331 /* text */,
 				167A73AD2626DF7A00328331 /* entry */,
-				1620BB1C262AFEBE00BBB6D8 /* kernel.hpp */,
 				167A73A02626DF7A00328331 /* kernel.cpp */,
 			);
 			path = kernel;

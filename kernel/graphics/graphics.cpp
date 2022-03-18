@@ -3,7 +3,6 @@
 #include "memory/memory.hpp"
 #include "font.hpp"
 #include "vesa/vesa.hpp"
-#include "kernel.hpp"
 #include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
 
