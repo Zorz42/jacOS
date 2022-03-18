@@ -100,8 +100,12 @@ void gdt::init() {
     gdt_entries[2] = createGdtEntry(0, 0xFFFFFFFF, 0b10010010, 0xCF); // Data segment
     gdt_entries[3] = createGdtEntry(0, 0xFFFFFFFF, 0b11111010, 0xCF); // User code segment
     gdt_entries[4] = createGdtEntry(0, 0xFFFFFFFF, 0b11110010, 0xCF); // User data segment
-    writeTss(5, 0x10, 0x7c00);
+    writeTss(5, 0x10, 0x3000);
     
     gdt_flush((unsigned int)&gdt_descriptor);
     tss_flush();
+}
+
+void setTssStack(unsigned int stack) {
+    tss_entry.esp0 = stack;
 }

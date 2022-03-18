@@ -119,7 +119,7 @@ mem::PageHead* mem::getPage(unsigned int address, PageDirectory* page_directory)
         page_directory->tables_allocated[table_index] = true;
         allocateFrame(getPage((unsigned int)&page_directory->tables[table_index], page_directory), false, true);
         int physical_address = virtualToPhysicalAddress((unsigned int)&page_directory->tables[table_index], page_directory);
-        page_directory->physical_table_addresses[table_index] = physical_address | 7;
+        page_directory->physical_table_addresses[table_index] = physical_address | 0b111;
     }
     
     return &page_directory->tables[table_index].pages[address % 1024];

@@ -27,7 +27,7 @@ static void resetCommand() {
     text::out << "> ";
 }
 
-void printSize(int bytes) {
+static void printSize(int bytes) {
     if(bytes < 1024)
         text::out << bytes << "B";
     else if(bytes / 1024 < 1024)
@@ -74,15 +74,11 @@ static void onCommand() {
         typedef int (*call_module_t)(void);
         call_module_t program = (call_module_t)result;
         
-        switchToUserMode();
-        //int exit_code = program();
-        int exit_code = 0;
+        int exit_code = program();
         
         mem::free(result);
-        //while(true);
-        text::out << "Program ended with exit code " << exit_code << "! ";
-        asm volatile("int $0x10");
-        text::out << text::endl;
+        text::out << "Program ended with exit code " << exit_code << "! " << text::endl;
+        
     } else if(strcmp(&curr_shell_cmd[0], "memstat")) {
         text::out << "Used memory: ";
         printSize(mem::getUsed());
@@ -132,6 +128,8 @@ static void onKeyEvent(keyboard::Key key, bool up) {
 }
 
 void kernelMain() {
+    switchToUserMode();
+    
     text::out << "JacOS has started" << text::endl;
     debug::out << "Kernel initialized" << debug::endl;
     
@@ -139,7 +137,7 @@ void kernelMain() {
     text::flush();
     
     while(kernel_running) {
-        while(keyboard::hasKeyEvent()) {
+        while(keyboard::hasKeyEvent() && kernel_running) {
             keyboard::KeyEvent event = keyboard::getKeyEvent();
             onKeyEvent(event.key, event.up);
         }

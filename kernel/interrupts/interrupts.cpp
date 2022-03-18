@@ -24,11 +24,13 @@ struct IdtRegister {
 static IdtGate idt[IDT_ENTRIES];
 static IdtRegister idt_reg;
 
-static void setIdtGate(int n, unsigned int handler) {
+static void setIdtGate(int n, unsigned int handler, bool user=false) {
     idt[n].low_offset = handler & 0xFFFF;
     idt[n].sel = 0x08;
     idt[n].always0 = 0;
-    idt[n].flags = 0x8E;
+    idt[n].flags = 0b10001110;
+    if(user)
+        idt[n].flags |= 0b01100000;
     idt[n].high_offset = (handler >> 16) & 0xFFFF;
 }
 
@@ -107,7 +109,7 @@ void interrupts::init() {
     for(int i = 0; i < 16; i++)
         setIdtGate(i + 32, irq_arr[i]);
     
-    setIdtGate(0x40, (unsigned int)systemCall);
+    setIdtGate(0x40, (unsigned int)systemCall, /*user*/true);
     
     debug::out << "Setting up interrupt descriptor table" << debug::endl;
     idt_reg.base = (unsigned int) &idt;
@@ -173,6 +175,11 @@ extern "C" void irqHandler(Registers registers) {
 
 extern "C" void isrHandler(Registers registers) {
     text::out << "Received interrupt: " << text::hex << registers.int_no << ": " << exception_messages[registers.int_no] << text::endl;
+    if(registers.int_no == 0xE) { // Paging fault
+        unsigned int faulty_address;
+        asm volatile("mov %%cr2, %0" : "=r"(faulty_address));
+        text::out << "Faulty address: " << text::hex << faulty_address << text::endl;
+    }
     while(true)
         asm volatile("hlt");
 }

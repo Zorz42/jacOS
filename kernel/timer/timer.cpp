@@ -13,7 +13,8 @@ void timer::delay(unsigned int ms) {
     unsigned int start = getTicks();
     while(getTicks() < start + ms)
         // waits for next interrupt and does not rapidly loop and use cycles
-        asm("hlt");
+        //asm("hlt");
+        ;
 }
 
 static void timerCallback(Registers regs) {
