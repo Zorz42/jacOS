@@ -1,11 +1,14 @@
 #include <lib.hpp>
 
-#define SYSCALL_OUT_TEXT 1
-#define SYSCALL_OUT_ENDL 2
-#define SYSCALL_OUT_NUM 3
-#define SYSCALL_OUT_DEC 4
-#define SYSCALL_OUT_HEX 5
-#define SYSCALL_OUT_FLUSH 6
+#define SYSCALL_OUT_TEXT 3
+#define SYSCALL_OUT_ENDL 4
+#define SYSCALL_OUT_NUM 5
+#define SYSCALL_OUT_DEC 6
+#define SYSCALL_OUT_HEX 7
+#define SYSCALL_OUT_FLUSH 8
+#define SYSCALL_GET_CURSOR_X 9
+#define SYSCALL_GET_CURSOR_Y 10
+#define SYSCALL_SET_CURSOR_POS 11
 
 lib::__out lib::__out::operator<<(const char* text) {
     lib::__systemCall(SYSCALL_OUT_TEXT, (unsigned int)text);
@@ -48,4 +51,16 @@ lib::__out lib::__out::operator<<(__endl _) {
 lib::__out lib::__out::operator<<(__flush _) {
     lib::__systemCall(SYSCALL_OUT_FLUSH);
     return *this;
+}
+
+unsigned int lib::getCursorX() {
+    return __systemCall(SYSCALL_GET_CURSOR_X);
+}
+
+unsigned int lib::getCursorY() {
+    return __systemCall(SYSCALL_GET_CURSOR_Y);
+}
+
+void lib::moveCursorTo(unsigned int x, unsigned int y) {
+    __systemCall(SYSCALL_SET_CURSOR_POS, x, y);
 }

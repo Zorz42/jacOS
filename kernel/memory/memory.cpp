@@ -1,6 +1,7 @@
 #include "memory.hpp"
 #include "text/text.hpp"
 #include "qemuDebug/debug.hpp"
+#include "interrupts/interrupts.hpp"
 
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
@@ -34,7 +35,7 @@ static void setFrame(unsigned int address, bool allocated) {
     unsigned int index = frame / 32;
     unsigned int offset = frame % 32;
     if(((free_frames[index] & (1 << offset)) != 0) != allocated) {
-        if(address < mem::getTotal()) {
+        if(address < total_memory) {
             if(allocated)
                 allocated_frames++;
             else
@@ -63,7 +64,7 @@ static unsigned int getFirstFreeFrame() {
             for(unsigned int j = 0; j < 32; j++) {
                 if(!(free_frames[i] & (1 << j))) {
                     int result = i * 32 + j;
-                    if(result * 0x1000 >= mem::getTotal()) {
+                    if(result * 0x1000 >= total_memory) {
                         debug::out << DEBUG_ERROR << "Ran out of free frames" << debug::endl;
                         asm("int $0x18");
                     }
@@ -73,10 +74,6 @@ static unsigned int getFirstFreeFrame() {
     debug::out << DEBUG_ERROR << "Ran out of free frames" << debug::endl;
     asm("int $0x18");
     return 0;
-}
-
-unsigned int mem::getUsed() {
-    return allocated_frames * 0x1000;
 }
 
 void mem::allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable) {
@@ -254,6 +251,14 @@ static MemInfo* getFreeRegion() {
     asm("int $0x17");
 }
 
+unsigned int syscallGetTotal(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    return total_memory;
+}
+
+unsigned int syscallGetUsed(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    return allocated_frames * 0x1000;
+}
+
 void mem::init() {
     MemInfo* target_info = getFreeRegion();
     
@@ -313,12 +318,7 @@ void mem::init() {
     
     debug::out << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);
-}
-
-unsigned int mem::getTotal() {
-    return total_memory;
-}
-
-unsigned int mem::getFree() {
-    return total_memory - mem::getUsed();
+    
+    interrupts::registerSyscallHandler(syscallGetTotal, "getTotalMemory");
+    interrupts::registerSyscallHandler(syscallGetUsed, "getUsedMemory");
 }

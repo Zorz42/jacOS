@@ -34,6 +34,8 @@ static void newLine() {
             updateChar(x, text_height - 1);
             iter++;
         }
+        
+        prev_x = -1; // force cursor update
     }
 }
 
@@ -199,6 +201,19 @@ unsigned int syscallTextFlush(unsigned int arg1, unsigned int arg2, unsigned int
     return 0;
 }
 
+unsigned int syscallTextGetCursorX(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    return text::getCursorX();
+}
+
+unsigned int syscallTextGetCursorY(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    return text::getCursorY();
+}
+
+unsigned int syscallTextSetCursorPos(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::moveCursorTo(arg1, arg2);
+    return 0;
+}
+
 void text::init() {
     interrupts::registerSyscallHandler(&syscallTextOut, "text::out");
     interrupts::registerSyscallHandler(&syscallTextEndl, "text::endl");
@@ -206,6 +221,9 @@ void text::init() {
     interrupts::registerSyscallHandler(&syscallTextDec, "text::dec");
     interrupts::registerSyscallHandler(&syscallTextHex, "text::hex");
     interrupts::registerSyscallHandler(&syscallTextFlush, "text::flush");
+    interrupts::registerSyscallHandler(&syscallTextGetCursorX, "text::getCursorX");
+    interrupts::registerSyscallHandler(&syscallTextGetCursorY, "text::getCursorY");
+    interrupts::registerSyscallHandler(&syscallTextSetCursorPos, "text::setCursorPos");
     
     text_width = gfx::getScreenWidth() / 8;
     text_height = gfx::getScreenHeight() / 16;

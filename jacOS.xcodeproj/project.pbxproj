@@ -39,6 +39,7 @@
 		365DFD1527E54BB9009EC3DB /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
 		365DFD1627E54C54009EC3DB /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
 		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
+		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		368640FB27DB818C00B4B35A /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
 		368640FC27DB818C00B4B35A /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 		3687C9C027D36BD000F0F62C /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,6 +192,7 @@
 				365DFD1527E54BB9009EC3DB /* out.cpp */,
 				365DFD1627E54C54009EC3DB /* keyboard.cpp */,
 				365DFD1827E556FC009EC3DB /* time.cpp */,
+				365DFD1927E5F38F009EC3DB /* memory.cpp */,
 			);
 			path = lib;
 			sourceTree = "<group>";

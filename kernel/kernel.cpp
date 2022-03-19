@@ -1,6 +1,5 @@
 #include "graphics/gfx.hpp"
 #include "memory/memory.hpp"
-#include "ports/ports.hpp"
 #include "vesa/vesa.hpp"
 #include "qemuDebug/debug.hpp"
 #include "interrupts/interrupts.hpp"
@@ -49,17 +48,6 @@ void kernelMain() {
     switchToUserMode();
     
     debug::out << "Kernel initialized" << debug::endl;
-    
-    /*resetCommand();
-    text::flush();
-    
-    while(kernel_running) {
-        while(keyboard::hasKeyEvent() && kernel_running) {
-            keyboard::KeyEvent event = keyboard::getKeyEvent();
-            onKeyEvent(event.key, event.up);
-        }
-        timer::delay(20);
-    }*/
     
     void* program_ptr = disk::read(0, disk::getDiskSize());
     

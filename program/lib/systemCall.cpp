@@ -1,6 +1,5 @@
 #include <lib.hpp>
 
-
 __attribute__((optimize("O0"))) unsigned int lib::__systemCall(unsigned int func, unsigned int arg1, unsigned int arg2, unsigned int arg3) {
     unsigned int return_value = 0;
     asm volatile("pusha");

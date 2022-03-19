@@ -23,9 +23,6 @@ struct PageDirectory {
 } __attribute__((packed));
 
 void init();
-unsigned int getUsed();
-unsigned int getTotal();
-unsigned int getFree();
 
 void* alloc(unsigned int size);
 void free(void* ptr);
