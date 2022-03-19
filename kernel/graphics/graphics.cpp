@@ -1,6 +1,6 @@
 #include "gfx.hpp"
 #include "text/text.hpp"
-#include "memory/memory.hpp"
+//#include "memory/memory.hpp"
 #include "font.hpp"
 #include "vesa/vesa.hpp"
 #include "ports/ports.hpp"
@@ -42,11 +42,4 @@ void gfx::drawChar(int x, int y, char c) {
             *temp_buffer++ = (font[((int)c << 3) + (y_ >> 1)] >> 8 - x_) & 1 ? COLOR(255, 255, 255) : 0;
         temp_buffer += vesa::getScreenWidth() - 8;
     }
-}
-
-void gfx::init() {
-    vesa::init();
-    text::init();
-    
-    debug::out << "Initializing graphics module..." << debug::endl << "VESA buffer is at: " << debug::hex << (int)vesa::getVideoBuffer() << debug::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << debug::endl;
 }

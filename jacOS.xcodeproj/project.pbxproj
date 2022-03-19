@@ -34,6 +34,11 @@
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disk.hpp; sourceTree = "<group>"; };
 		365DFD0F27E102D1009EC3DB /* link-program.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = "link-program.ld"; sourceTree = "<group>"; };
+		365DFD1327E5497A009EC3DB /* lib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lib.hpp; sourceTree = "<group>"; };
+		365DFD1427E549A1009EC3DB /* systemCall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = systemCall.cpp; sourceTree = "<group>"; };
+		365DFD1527E54BB9009EC3DB /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
+		365DFD1627E54C54009EC3DB /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
+		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
 		368640FB27DB818C00B4B35A /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
 		368640FC27DB818C00B4B35A /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 		3687C9C027D36BD000F0F62C /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +183,18 @@
 			path = disk;
 			sourceTree = "<group>";
 		};
+		365DFD1227E5496B009EC3DB /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				365DFD1327E5497A009EC3DB /* lib.hpp */,
+				365DFD1427E549A1009EC3DB /* systemCall.cpp */,
+				365DFD1527E54BB9009EC3DB /* out.cpp */,
+				365DFD1627E54C54009EC3DB /* keyboard.cpp */,
+				365DFD1827E556FC009EC3DB /* time.cpp */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		368640FA27DB817000B4B35A /* qemuDebug */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,6 +226,7 @@
 		368BD4E727D2698400D134DF /* program */ = {
 			isa = PBXGroup;
 			children = (
+				365DFD1227E5496B009EC3DB /* lib */,
 				368BD4E927D26D3600D134DF /* entry.cpp */,
 			);
 			path = program;

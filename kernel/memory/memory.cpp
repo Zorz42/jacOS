@@ -1,6 +1,5 @@
 #include "memory.hpp"
 #include "text/text.hpp"
-#include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
 
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
@@ -265,7 +264,7 @@ void mem::init() {
     kernel_page_directory = (PageDirectory*)heap_base;
     memset(kernel_page_directory, 0, sizeof(PageDirectory));
     heap_base += sizeof(PageDirectory);
-    debug::out << "Kernel page directory is at: " << debug::hex << (unsigned int)kernel_page_directory << debug::endl;
+    debug::out << "Kernel page directory is from: " << debug::hex << (unsigned int)kernel_page_directory << " to: " << (unsigned int)kernel_page_directory + sizeof(PageDirectory) << debug::endl;
     
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
     

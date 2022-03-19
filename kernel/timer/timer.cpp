@@ -1,7 +1,6 @@
-#include "timer/timer.hpp"
+#include "timer.hpp"
 #include "interrupts/interrupts.hpp"
 #include "ports/ports.hpp"
-#include "text/text.hpp"
 
 static unsigned int tick = 0;
 
@@ -13,7 +12,7 @@ void timer::delay(unsigned int ms) {
     unsigned int start = getTicks();
     while(getTicks() < start + ms)
         // waits for next interrupt and does not rapidly loop and use cycles
-        //asm("hlt");
+        asm("hlt");
         ;
 }
 
@@ -32,5 +31,7 @@ void timer::init(unsigned int freq) {
     ports::byteOut(0x43, 0x36);
     ports::byteOut(0x40, low);
     ports::byteOut(0x40, high);
+    
+    
 }
 

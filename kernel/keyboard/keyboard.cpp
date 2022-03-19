@@ -4,45 +4,58 @@
 
 #define EVENT_QUEUE_SIZE 100
 
-static keyboard::Key scancodeToKey(unsigned char scancode);
-static bool keyStates[keyboard::KEY_COUNT];
-static keyboard::KeyEvent key_events_queue[EVENT_QUEUE_SIZE];
+//static keyboard::Key scancodeToKey(unsigned char scancode);
+//static bool keyStates[keyboard::KEY_COUNT];
+
+static unsigned char key_events_queue[EVENT_QUEUE_SIZE];
 int queue_top = 0, queue_bottom = 0;
 
 static void keyboardCallback(Registers regs) {
     /* The PIC leaves us the scancode in port 0x60 */
     unsigned char scancode = ports::byteIn(0x60);
-    bool up = false;
+    /*bool up = false;
     if(scancode >= 0x80) {
         up = true;
         scancode -= 0x80;
-    }
-    keyboard::Key key = scancodeToKey(scancode);
-    if(key != keyboard::KEY_UNKNOWN)
-        keyStates[key] = !up;
+    }*/
     
-    key_events_queue[queue_top].active = true;
-    key_events_queue[queue_top].up = up;
-    key_events_queue[queue_top].key = key;
+    //keyboard::Key key = scancodeToKey(scancode);
+    //if(key != keyboard::KEY_UNKNOWN)
+        //keyStates[key] = !up;
+    
+    //key_events_queue[queue_top].active = true;
+    //key_events_queue[queue_top].up = up;
+    //key_events_queue[queue_top].key = key;
+    key_events_queue[queue_top] = scancode;
     queue_top++;
     if(queue_top == EVENT_QUEUE_SIZE)
         queue_top = 0;
 }
 
-bool keyboard::hasKeyEvent() {
+bool hasKeyEvent() {
     return queue_top != queue_bottom;
 }
 
-keyboard::KeyEvent keyboard::getKeyEvent() {
-    KeyEvent result = key_events_queue[queue_bottom];
-    key_events_queue[queue_bottom].active = false;
+unsigned int syscallGetKeyEvent(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    if(!hasKeyEvent())
+        return 0;
+    unsigned char result = key_events_queue[queue_bottom];
+    key_events_queue[queue_bottom] = 0;
     queue_bottom++;
     if(queue_bottom == EVENT_QUEUE_SIZE)
         queue_bottom = 0;
     return result;
+    
+    
+    /*KeyEvent result = key_events_queue[queue_bottom];
+    key_events_queue[queue_bottom].active = false;
+    queue_bottom++;
+    if(queue_bottom == EVENT_QUEUE_SIZE)
+        queue_bottom = 0;
+    return result;*/
 }
 
-char keyboard::keyToAscii(Key key) {
+/*char keyboard::keyToAscii(Key key) {
     if(key >= KEY_A && key <= KEY_Z)
         return (getKeyState(KEY_LSHIFT) || getKeyState(KEY_RSHIFT) ? 'A' : 'a') + key - KEY_A;
     if(key == KEY_SPACE)
@@ -50,17 +63,18 @@ char keyboard::keyToAscii(Key key) {
     if(key >= KEY_0 && key <= KEY_9)
         return '0' + key - KEY_0;
     return 0;
-}
+}*/
 
-bool keyboard::getKeyState(Key key) {
+/*bool keyboard::getKeyState(Key key) {
     return keyStates[key];
-}
+}*/
 
 void keyboard::init() {
     interrupts::registerIrqHandler(IRQ1, keyboardCallback);
+    interrupts::registerSyscallHandler(&syscallGetKeyEvent, "getKeyEvent");
 }
 
-static keyboard::Key scancodeToKey(unsigned char scancode) {
+/*static keyboard::Key scancodeToKey(unsigned char scancode) {
     switch (scancode) {
         case 0x1: return keyboard::KEY_ESCAPE;
         case 0x2: return keyboard::KEY_1;
@@ -122,4 +136,4 @@ static keyboard::Key scancodeToKey(unsigned char scancode) {
         case 0x39: return keyboard::KEY_SPACE;
         default: return keyboard::KEY_UNKNOWN;
     }
-}
+}*/

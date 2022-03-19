@@ -1,7 +1,6 @@
 #include "text.hpp"
 #include "graphics/gfx.hpp"
 #include "memory/memory.hpp"
-#include "ports/ports.hpp"
 #include "qemuDebug/debug.hpp"
 #include "interrupts/interrupts.hpp"
 
@@ -171,12 +170,42 @@ text::_out_stream text::_out_stream::operator<<(_endl _) {
 }
 
 unsigned int syscallTextOut(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
-    text::out << (const char*)arg1 + 0xB23BC0;
+    text::out << (const char*)arg1;
+    return 0;
+}
+
+unsigned int syscallTextEndl(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << text::endl;
+    return 0;
+}
+
+unsigned int syscallTextInt(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << arg1;
+    return 0;
+}
+
+unsigned int syscallTextDec(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << text::dec;
+    return 0;
+}
+
+unsigned int syscallTextHex(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << text::hex;
+    return 0;
+}
+
+unsigned int syscallTextFlush(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::flush();
     return 0;
 }
 
 void text::init() {
     interrupts::registerSyscallHandler(&syscallTextOut, "text::out");
+    interrupts::registerSyscallHandler(&syscallTextEndl, "text::endl");
+    interrupts::registerSyscallHandler(&syscallTextInt, "text << int");
+    interrupts::registerSyscallHandler(&syscallTextDec, "text::dec");
+    interrupts::registerSyscallHandler(&syscallTextHex, "text::hex");
+    interrupts::registerSyscallHandler(&syscallTextFlush, "text::flush");
     
     text_width = gfx::getScreenWidth() / 8;
     text_height = gfx::getScreenHeight() / 16;

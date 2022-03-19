@@ -1,6 +1,6 @@
 #include "vesa.hpp"
-#include "text/text.hpp"
 #include "memory/memory.hpp"
+#include "qemuDebug/debug.hpp"
 
 struct mode_info {
     unsigned short attributes;
@@ -43,6 +43,8 @@ void vesa::init() {
     // map vesa addresses
     for(unsigned int i = (unsigned int)mode_information->buffer; i <= (unsigned int)mode_information->buffer + getTotalPixels() * getBytesPerPixel(); i += 0x1000)
         mem::identityMapPage(i, /*is_kernel*/false, /*is_writable*/true);
+    
+    debug::out << "VESA buffer is at: " << debug::hex << (int)mode_information->buffer << debug::endl << "Screen size is: " << vesa::getScreenWidth() << "x" << vesa::getScreenHeight() << debug::endl;
 }
 
 int vesa::getScreenWidth() {

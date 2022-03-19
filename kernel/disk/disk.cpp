@@ -1,6 +1,5 @@
 #include "disk.hpp"
 #include "ports/ports.hpp"
-#include "text/text.hpp"
 #include "memory/memory.hpp"
 #include "qemuDebug/debug.hpp"
 
