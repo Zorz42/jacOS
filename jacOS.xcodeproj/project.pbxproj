@@ -17,7 +17,7 @@
 		167A73A52626DF7A00328331 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timer.cpp; sourceTree = "<group>"; };
 		167A73A82626DF7A00328331 /* interrupts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interrupts.cpp; sourceTree = "<group>"; };
 		167A73A92626DF7A00328331 /* timer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = timer.hpp; sourceTree = "<group>"; };
-		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; };
+		167A73AB2626DF7A00328331 /* interrupt.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interrupt.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		167A73AC2626DF7A00328331 /* interrupts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = interrupts.hpp; sourceTree = "<group>"; };
 		167A73AF2626DF7A00328331 /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		167A73B12626DF7A00328331 /* text.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = text.hpp; sourceTree = "<group>"; };
@@ -40,6 +40,7 @@
 		365DFD1627E54C54009EC3DB /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
 		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
 		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
+		365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _lib_keys.hpp; sourceTree = "<group>"; };
 		368640FB27DB818C00B4B35A /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
 		368640FC27DB818C00B4B35A /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 		3687C9C027D36BD000F0F62C /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				365DFD1327E5497A009EC3DB /* lib.hpp */,
+				365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */,
 				365DFD1427E549A1009EC3DB /* systemCall.cpp */,
 				365DFD1527E54BB9009EC3DB /* out.cpp */,
 				365DFD1627E54C54009EC3DB /* keyboard.cpp */,

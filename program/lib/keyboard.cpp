@@ -1,7 +1,7 @@
 #include <lib.hpp>
 
-#define SYSCALL_GET_KEY_EVENT 12
-#define SYSCALL_GET_KEY_STATE 13
+#define SYSCALL_GET_KEY_EVENT 13
+#define SYSCALL_GET_KEY_STATE 14
 
 static lib::Key scancodeToKey(unsigned char scancode);
 

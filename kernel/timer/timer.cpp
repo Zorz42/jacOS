@@ -13,11 +13,15 @@ void timer::delay(unsigned int ms) {
     while(getTicks() < start + ms)
         // waits for next interrupt and does not rapidly loop and use cycles
         asm("hlt");
-        ;
 }
 
 static void timerCallback(Registers regs) {
     tick++;
+}
+
+unsigned int syscallSleep(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    //timer::delay(arg1);
+    return 0;
 }
 
 void timer::init(unsigned int freq) {
@@ -32,6 +36,6 @@ void timer::init(unsigned int freq) {
     ports::byteOut(0x40, low);
     ports::byteOut(0x40, high);
     
-    
+    interrupts::registerSyscallHandler(syscallSleep, "sleep");
 }
 

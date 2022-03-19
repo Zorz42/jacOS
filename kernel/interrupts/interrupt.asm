@@ -431,7 +431,7 @@ irq15:
 return_value: dd 0
 
 systemCall:
-    cli
+    ;cli ; is it safe to be interrupted while doing system call? (seems to be safe, left this message in case something goes wrong)
     
     pusha
     mov ax, ds
@@ -454,5 +454,5 @@ systemCall:
     
     mov eax, [return_value]
     
-    sti
+    ;;sti
     iret
