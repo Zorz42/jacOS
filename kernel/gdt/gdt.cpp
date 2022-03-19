@@ -69,7 +69,7 @@ static TssEntry tss_entry;
 
 static void writeTss(unsigned int num, unsigned short ss0, unsigned int esp0) {
     // Firstly, let's compute the base and limit of our entry into the GDT.
-    unsigned int base = (unsigned int) &tss_entry;
+    unsigned int base = (unsigned int)&tss_entry;
     unsigned int limit = base + sizeof(tss_entry);
     
     // Now, add our TSS descriptor's address to the GDT.

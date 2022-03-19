@@ -92,7 +92,7 @@ int main() {
             else
                 break;
         }
-        lib::sleep(20);
+        //lib::sleep(20);
     }
     
     return 0;

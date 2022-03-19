@@ -1,9 +1,15 @@
 #pragma once
 
-namespace disk {
+namespace disks {
+
+class Disk {
+public:
+    unsigned int port_base, h, size;
+    void* read(unsigned int sector, unsigned int sector_count);
+};
 
 void init();
-unsigned int getDiskSize();
-void* read(unsigned int sector, unsigned int sector_count);
+unsigned int getNumDisks();
+Disk getDisk(unsigned int n);
 
 }

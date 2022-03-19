@@ -41,7 +41,7 @@ unsigned int getCursorX();
 unsigned int getCursorY();
 void moveCursorTo(unsigned int x, unsigned int y);
 
-void sleep(unsigned int ms);
+//void sleep(unsigned int ms);
 
 unsigned int getTotalMemory();
 unsigned int getUsedMemory();
