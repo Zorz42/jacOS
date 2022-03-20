@@ -8,6 +8,7 @@
 #include "keyboard/keyboard.hpp"
 #include "disk/disk.hpp"
 #include "gdt/gdt.hpp"
+#include "filesystem/filesystem.hpp"
 
 static void switchToUserMode() {
     asm volatile("cli");
@@ -44,6 +45,7 @@ void kernelMain() {
     keyboard::init();
     
     disks::init();
+    fs::init();
     
     switchToUserMode();
     

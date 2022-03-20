@@ -29,8 +29,8 @@ os-image.bin: build/kernel.bin build/bootsect.bin Makefile
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-build/kernel.bin: ${KERNEL_OBJ} link.ld ${KERNEL_HEADERS}
-	${LD} -o $@ -Tlink.ld ${KERNEL_OBJ} --oformat binary
+build/kernel.bin: ${KERNEL_OBJ} kernel/link.ld ${KERNEL_HEADERS}
+	${LD} -o $@ -Tkernel/link.ld ${KERNEL_OBJ} --oformat binary
 
 # Generic rules for wildcards
 # To make an object, always compile from its .cpp
@@ -48,8 +48,8 @@ build/bootsect.bin: $(BOOT_SOURCES)
 	nasm boot/bootsect.asm -f bin -o $@
 	
 # rule for custom program
-${PROGRAM_NAME}.img: ${PROGRAM_OBJ} link-program.ld
-	${LD} -Tlink-program.ld -o $@ ${PROGRAM_OBJ} --oformat binary
+${PROGRAM_NAME}.img: ${PROGRAM_OBJ} program/link.ld
+	${LD} -Tprogram/link.ld -o $@ ${PROGRAM_OBJ} --oformat binary
 
 clean:
 	rm -rf build

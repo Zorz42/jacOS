@@ -33,7 +33,6 @@
 		167FB5C0262C467500AA5F51 /* vesa.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vesa.hpp; sourceTree = "<group>"; };
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disk.hpp; sourceTree = "<group>"; };
-		365DFD0F27E102D1009EC3DB /* link-program.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = "link-program.ld"; sourceTree = "<group>"; };
 		365DFD1327E5497A009EC3DB /* lib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lib.hpp; sourceTree = "<group>"; };
 		365DFD1427E549A1009EC3DB /* systemCall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = systemCall.cpp; sourceTree = "<group>"; };
 		365DFD1527E54BB9009EC3DB /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
@@ -41,11 +40,14 @@
 		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
 		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _lib_keys.hpp; sourceTree = "<group>"; };
+		36858F2127E7363F00D4B360 /* filesystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filesystem.cpp; sourceTree = "<group>"; };
+		36858F2227E7363F00D4B360 /* filesystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filesystem.hpp; sourceTree = "<group>"; };
+		36858F2327E7378D00D4B360 /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
+		36858F2427E7379300D4B360 /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
 		368640FB27DB818C00B4B35A /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
 		368640FC27DB818C00B4B35A /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 		3687C9C027D36BD000F0F62C /* jacOS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jacOS; sourceTree = BUILT_PRODUCTS_DIR; };
 		3687C9C127D36BD000F0F62C /* jacOS-build-only */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jacOS-build-only"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3687C9C227D36BEA00F0F62C /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
 		368BD4E927D26D3600D134DF /* entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry.cpp; sourceTree = "<group>"; };
 		368BD4EA27D272A800D134DF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		368BE99527E3A54A004B8573 /* gdt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gdt.cpp; sourceTree = "<group>"; };
@@ -69,8 +71,6 @@
 		167A73852626DF4E00328331 = {
 			isa = PBXGroup;
 			children = (
-				3687C9C227D36BEA00F0F62C /* link.ld */,
-				365DFD0F27E102D1009EC3DB /* link-program.ld */,
 				167A73D32626E08500328331 /* Makefile */,
 				167A73B82626DF7A00328331 /* boot */,
 				167A739A2626DF7A00328331 /* kernel */,
@@ -84,12 +84,14 @@
 		167A739A2626DF7A00328331 /* kernel */ = {
 			isa = PBXGroup;
 			children = (
+				36858F2327E7378D00D4B360 /* link.ld */,
 				368BE99427E3A535004B8573 /* gdt */,
 				167FB5B9262C41BA00AA5F51 /* ports */,
 				3687C9C727D388E800F0F62C /* interrupts */,
 				368640FA27DB817000B4B35A /* qemuDebug */,
 				167A73A12626DF7A00328331 /* memory */,
 				168CF16D2631E79400C0C0F2 /* disk */,
+				36858F2027E7362900D4B360 /* filesystem */,
 				167FB5BE262C45C100AA5F51 /* vesa */,
 				3687C9C427D36E9800F0F62C /* timer */,
 				1620BB15262AFCE600BBB6D8 /* keyboard */,
@@ -199,6 +201,15 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		36858F2027E7362900D4B360 /* filesystem */ = {
+			isa = PBXGroup;
+			children = (
+				36858F2227E7363F00D4B360 /* filesystem.hpp */,
+				36858F2127E7363F00D4B360 /* filesystem.cpp */,
+			);
+			path = filesystem;
+			sourceTree = "<group>";
+		};
 		368640FA27DB817000B4B35A /* qemuDebug */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +241,7 @@
 		368BD4E727D2698400D134DF /* program */ = {
 			isa = PBXGroup;
 			children = (
+				36858F2427E7379300D4B360 /* link.ld */,
 				365DFD1227E5496B009EC3DB /* lib */,
 				368BD4E927D26D3600D134DF /* entry.cpp */,
 			);
