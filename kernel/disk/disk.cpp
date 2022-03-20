@@ -26,9 +26,7 @@ disks::Disk disks::getDisk(unsigned int n) {
     return disks_arr[n];
 }
 
-void* disks::Disk::read(unsigned int sector, unsigned int sector_count) {
-    void* result = mem::alloc(sector_count * 512);
-    
+void disks::Disk::read(unsigned int sector, unsigned int sector_count, void* ptr) {
     // set parameters to ports
     ports::byteOut(port_base + ATA_SECTORCOUNT, sector_count);
     ports::byteOut(port_base + ATA_SECTORNUMBER1, sector);
@@ -43,10 +41,8 @@ void* disks::Disk::read(unsigned int sector, unsigned int sector_count) {
             // wait until it finishes reading
             while((ports::byteIn(port_base + ATA_STATUS) & 8) == 0);
         
-        *(unsigned short*)((unsigned int)result + i) = ports::wordIn(port_base + ATA_DATA);
+        *(unsigned short*)((unsigned int)ptr + i) = ports::wordIn(port_base + ATA_DATA);
     }
-    
-    return result;
 }
 
 void disks::init() {

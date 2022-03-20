@@ -51,14 +51,31 @@ void kernelMain() {
     
     debug::out << "Kernel initialized" << debug::endl;
     
+    
+    for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
+        fs::File file = fs::getFileSystem()->getFile(i);
+        text::out << "File name: " << file.getName() << ", size: " << file.getSize() << ", type: " << file.getType() << text::endl;
+        char* file_data = (char*)mem::alloc(file.getSize());
+        
+        file.load(file_data);
+        
+        for(int i = 0; i < file.getSize() && i < 200; i++) {
+            text::out << file_data[i];
+            text::flush();
+        }
+        
+        text::out << text::endl;
+        
+        mem::free(file_data);
+    }
+    
+    
     disks::Disk program_disk = disks::getDisk(0);
-    void* program_ptr = program_disk.read(0, program_disk.size);
     
     for(int i = 0; i < program_disk.size / 8 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
     
-    for(int i = 0; i < program_disk.size * 512; i++)
-        *(char*)(0x100000 + i) = *(char*)((unsigned int)program_ptr + i);
+    program_disk.read(0, program_disk.size, (void*)0x100000);
     
     typedef int (*call_module_t)(void);
     call_module_t program = (call_module_t)0x100000;
@@ -67,8 +84,6 @@ void kernelMain() {
     
     for(int i = 0; i < program_disk.size / 8 + 1; i++)
         mem::freeFrame(mem::getPage(0x100000 + i * 0x1000));
-    
-    mem::free(program_ptr);
     
     asm volatile("mov $0, %eax");
     asm volatile("int $0x40");
