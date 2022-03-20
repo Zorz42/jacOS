@@ -35,6 +35,7 @@ public:
     unsigned int getSize();
     
     void load(void* ptr);
+    void save(void* ptr);
 };
 
 void init();

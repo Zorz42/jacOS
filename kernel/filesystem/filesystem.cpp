@@ -2,6 +2,9 @@
 #include "memory/memory.hpp"
 #include "disk/disk.hpp"
 #include "text/text.hpp"
+#include "qemuDebug/debug.hpp"
+#include "ports/ports.hpp"
+#include "timer/timer.hpp"
 
 fs::FileSystem file_system;
 
@@ -43,6 +46,32 @@ void fs::File::load(void *ptr) {
             iter[bytes_read] = temp[i];
             bytes_read++;
         }
+    }
+    
+    mem::free(temp);
+}
+
+void fs::File::save(void *ptr) {
+    unsigned char* temp = (unsigned char*)mem::alloc(512);
+    unsigned char* iter = (unsigned char*)ptr;
+    
+    disks::Disk disk = disks::getDisk(filesystem->getDiskId());
+    
+    unsigned int next_sector = head->data_sector;
+    unsigned int bytes_written = 0;
+    
+    while(bytes_written < getSize()) {
+        int time = timer::getTicks();
+        while(timer::getTicks() == time); // wait 1 ms
+        
+        disk.read(next_sector, 1, temp);
+        for(int i = 0; i < 508 && bytes_written < getSize(); i++) {
+            temp[i] = iter[bytes_written];
+            bytes_written++;
+        }
+        disk.write(next_sector, 1, temp);
+        
+        next_sector = *(unsigned int*)(temp + 508);
     }
     
     mem::free(temp);

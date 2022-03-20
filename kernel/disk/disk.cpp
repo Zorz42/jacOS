@@ -45,6 +45,25 @@ void disks::Disk::read(unsigned int sector, unsigned int sector_count, void* ptr
     }
 }
 
+void disks::Disk::write(unsigned int sector, unsigned int sector_count, void* ptr) {
+    // set parameters to ports
+    ports::byteOut(port_base + ATA_SECTORCOUNT, sector_count);
+    ports::byteOut(port_base + ATA_SECTORNUMBER1, sector);
+    ports::byteOut(port_base + ATA_SECTORNUMBER2, sector >> 8);
+    ports::byteOut(port_base + ATA_SECTORNUMBER3, sector >> 16);
+    ports::byteOut(port_base + ATA_DRIVEHEAD, ((sector >> 24) & 0b1111) | 0b11100000 | (h << 4)); // bit 24 - 27 of sector index
+    ports::byteOut(port_base + ATA_STATUS, 0x30); // command - write
+    
+    // copy data to buffer
+    for(int i = 0; i < 512 * sector_count; i += 2) {
+        if(i % 512 == 0)
+            // wait until it finishes writing
+            while((ports::byteIn(port_base + ATA_STATUS) & 8) == 0);
+        
+        ports::wordOut(port_base + ATA_DATA, *(unsigned short*)((unsigned int)ptr + i));
+    }
+}
+
 void disks::init() {
     static unsigned int bases[8] = {0x1f0, 0x3f0, 0x170, 0x370, 0x1e8, 0x3e0, 0x168, 0x360};
     

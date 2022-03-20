@@ -6,6 +6,7 @@ class Disk {
 public:
     unsigned int port_base, h, size;
     void read(unsigned int sector, unsigned int sector_count, void* ptr);
+    void write(unsigned int sector, unsigned int sector_count, void* ptr);
 };
 
 void init();
