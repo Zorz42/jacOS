@@ -18,6 +18,7 @@ class FileSystem {
     unsigned char* sector_bits;
     unsigned int* file_pointers;
     unsigned int num_sector_bits;
+    unsigned int sectors_taken;
     __FileHead *file_heads;
     unsigned int file_count;
 public:
@@ -30,6 +31,8 @@ public:
     bool getSectorBit(unsigned int sector_index);
     unsigned int getFreeSector();
     void flushSectorBits();
+    
+    unsigned int getSectorsTaken();
 };
 
 class File {

@@ -69,7 +69,13 @@ void kernelMain() {
     
     mem::free(file_data);*/
     
-    fs::getFileSystem()->getFile(0).resize(100000);
+    /*for(int i = 0; i < 20; i++) {
+        fs::getFileSystem()->getFile(0).resize(10);
+        fs::getFileSystem()->getFile(0).resize(10000);
+    }
+    fs::getFileSystem()->getFile(0).resize(10);*/
+    
+    text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
     
     for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {

@@ -138,6 +138,10 @@ unsigned int fs::FileSystem::getDiskId() {
     return disk_id;
 }
 
+unsigned int fs::FileSystem::getSectorsTaken() {
+    return sectors_taken;
+}
+
 bool fs::FileSystem::mount(unsigned int disk_id_) {
     disk_id = disk_id_;
     disks::Disk disk = disks::getDisk(disk_id);
@@ -156,6 +160,11 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     disk.read(1, num_sector_bits, sector_bits_);
     
     sector_bits = sector_bits_;
+    sectors_taken = 0;
+    for(int i = 0; i < disk.size; i++)
+        if(getSectorBit(i))
+            sectors_taken++;
+    
     
     file_pointers = (unsigned int*)mem::alloc(512);
     disk.read(1 + num_sector_bits, 1, file_pointers);
@@ -176,10 +185,15 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
 
 void fs::FileSystem::setSectorBit(unsigned int sector_index, bool value) {
     int byte = sector_index / 8;
-    if(value)
-        sector_bits[byte] |= 1 << (sector_index % 8);
-    else
-        sector_bits[byte] &= ~(1 << (sector_index % 8));
+    if(value != getSectorBit(sector_index)) {
+        if(value) {
+            sectors_taken++;
+            sector_bits[byte] |= 1 << (sector_index % 8);
+        } else {
+            sectors_taken--;
+            sector_bits[byte] &= ~(1 << (sector_index % 8));
+        }
+    }
 }
 
 bool fs::FileSystem::getSectorBit(unsigned int sector_index) {
