@@ -29,6 +29,7 @@ class File {
     __FileHead* head;
 public:
     File(FileSystem* filesystem, __FileHead* head) : filesystem(filesystem), head(head) {}
+    File() : filesystem(nullptr), head(nullptr) {}
     
     const char* getType();
     const char* getName();

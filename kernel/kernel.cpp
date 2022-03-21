@@ -33,6 +33,13 @@ static void switchToUserMode() {
     asm volatile("1:");
 }
 
+static bool strcmp(const char* a, const char* b) {
+    for(int i = 0; a[i] != 0 || b[i] != 0; i++)
+        if(a[i] != b[i])
+            return false;
+    return true;
+}
+
 void kernelMain() {
     gdt::init();
     interrupts::init();
@@ -61,28 +68,33 @@ void kernelMain() {
         
         for(int i = 0; i < file.getSize() && i < 200; i++) {
             text::out << file_data[i];
-            text::flush();
         }
         
-        text::out << text::endl;
+        text::out << text::endl << text::endl;
         
         mem::free(file_data);
     }
     
     
-    disks::Disk program_disk = disks::getDisk(0);
+    fs::File program_file;
+    for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
+        fs::File file = fs::getFileSystem()->getFile(i);
+        if(strcmp(file.getName(), "program")) {
+            program_file = file;
+            break;
+        }
+    }
     
-    for(int i = 0; i < program_disk.size / 8 + 1; i++)
+    for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
     
-    program_disk.read(0, program_disk.size, (void*)0x100000);
+    program_file.load((void*)0x100000);
+    typedef int (*CallModule)(void);
+    CallModule program = (CallModule)0x100000;
     
-    typedef int (*call_module_t)(void);
-    call_module_t program = (call_module_t)0x100000;
+    program();
     
-    int exit_code = program();
-    
-    for(int i = 0; i < program_disk.size / 8 + 1; i++)
+    for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::freeFrame(mem::getPage(0x100000 + i * 0x1000));
     
     asm volatile("mov $0, %eax");

@@ -17,7 +17,7 @@ with open("filesystem.img", mode='wb') as fs_file:
 	file_pointers = []
 	data = [file_pointers]
 	for filename in os.listdir("filesystem"):
-		with open("filesystem/" + filename) as file:
+		with open("filesystem/" + filename, "rb") as file:
 			pointer = len(data)
 			file_pointers.append(pointer & 0xFF)
 			file_pointers.append((pointer >> 8) & 0xFF)
@@ -47,8 +47,8 @@ with open("filesystem.img", mode='wb') as fs_file:
 			data.append(file_head)
 
 			file_data = []
-			for char in file.read():
-				file_data.append(ord(char))
+			for byte in file.read():
+				file_data.append(byte)
 				if len(file_data) == 508:
 					next_sector = len(data) + 1
 					file_data.append(next_sector & 0xFF)

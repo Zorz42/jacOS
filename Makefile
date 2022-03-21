@@ -21,7 +21,7 @@ CFLAGS = -std=gnu++17 -ffreestanding -O2 -Ikernel/ -isystem program/lib/
 .PHONY: run clean
 
 run: os-image.bin ${PROGRAM_NAME}.img filesystem.img Makefile
-	qemu-system-x86_64 -fda os-image.bin -drive file=test-program.img,format=raw -drive file=filesystem.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes floppy disk geometry
+	qemu-system-x86_64 -fda os-image.bin -drive file=filesystem.img,format=raw -m 2G -serial file:debug.log # for now it doesnt work without floppy boot drive, since it assumes floppy disk geometry
 	
 	
 os-image.bin: build/kernel.bin build/bootsect.bin Makefile
@@ -47,7 +47,7 @@ build/bootsect.bin: $(BOOT_SOURCES)
 	echo %define KERNEL_SECTORS_SIZE $$(($$(stat -f%z build/kernel.bin) / 512 + 1)) > boot/kernel_size.asm
 	nasm boot/bootsect.asm -f bin -o $@
 	
-filesystem.img: filesystem/*
+filesystem.img:
 	python3 filesystem-builder.py
 
 # rule for custom program
