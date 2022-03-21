@@ -61,9 +61,6 @@ void fs::File::save(void *ptr) {
     unsigned int bytes_written = 0;
     
     while(bytes_written < getSize()) {
-        int time = timer::getTicks();
-        while(timer::getTicks() == time); // wait 1 ms
-        
         disk.read(next_sector, 1, temp);
         for(int i = 0; i < 508 && bytes_written < getSize(); i++) {
             temp[i] = iter[bytes_written];

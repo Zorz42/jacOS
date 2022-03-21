@@ -37,9 +37,14 @@ void disks::Disk::read(unsigned int sector, unsigned int sector_count, void* ptr
     
     // copy data to buffer
     for(int i = 0; i < 512 * sector_count; i += 2) {
-        if(i % 512 == 0)
+        if(i % 512 == 0) {
             // wait until it finishes reading
-            while((ports::byteIn(port_base + ATA_STATUS) & 8) == 0);
+            while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 3)) == 0)
+                if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
+                    text::out << "Drive read error on byte " << i << " sector " << sector << " sector count " << sector_count << text::endl;
+                    while(true);
+                }
+        }
         
         *(unsigned short*)((unsigned int)ptr + i) = ports::wordIn(port_base + ATA_DATA);
     }
@@ -54,14 +59,29 @@ void disks::Disk::write(unsigned int sector, unsigned int sector_count, void* pt
     ports::byteOut(port_base + ATA_DRIVEHEAD, ((sector >> 24) & 0b1111) | 0b11100000 | (h << 4)); // bit 24 - 27 of sector index
     ports::byteOut(port_base + ATA_STATUS, 0x30); // command - write
     
+    //while((ports::byteIn(port_base + ATA_STATUS) & 8) == 0);
+    
     // copy data to buffer
     for(int i = 0; i < 512 * sector_count; i += 2) {
-        if(i % 512 == 0)
+        if(i % 512 == 0) {
             // wait until it finishes writing
-            while((ports::byteIn(port_base + ATA_STATUS) & 8) == 0);
+            while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 3)) == 0)
+                if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
+                    text::out << "Drive write error on byte " << i << " sector " << sector << " sector count " << sector_count << text::endl;
+                    while(true);
+                }
+        }
         
         ports::wordOut(port_base + ATA_DATA, *(unsigned short*)((unsigned int)ptr + i));
     }
+    
+    ports::byteOut(port_base + ATA_STATUS, 0xE7); // command - flush write cache
+    
+    while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0)
+        if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
+            text::out << "Drive cache flush error" << text::endl;
+            while(true);
+        }
 }
 
 void disks::init() {

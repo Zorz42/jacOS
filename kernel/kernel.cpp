@@ -58,6 +58,17 @@ void kernelMain() {
     
     debug::out << "Kernel initialized" << debug::endl;
     
+    /*fs::File test_file = fs::getFileSystem()->getFile(0);
+    char* file_data = (char*)mem::alloc(test_file.getSize());
+    
+    test_file.load(file_data);
+    
+    file_data[0] = 'X';
+    
+    test_file.save(file_data);
+    
+    mem::free(file_data);*/
+    
     
     for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
         fs::File file = fs::getFileSystem()->getFile(i);
