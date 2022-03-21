@@ -62,7 +62,7 @@ with open("filesystem.img", mode='wb') as fs_file:
 			data.append(file_data.copy())
 
 	num_sectors = len(data)
-	num_desc_sectors = math.ceil(num_sectors / 8 / 508)
+	num_desc_sectors = math.ceil(num_sectors / 8 / 512)
 
 	for i in range(0, len(data[1]), 4):
 		index = 0

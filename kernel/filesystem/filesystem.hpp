@@ -38,6 +38,7 @@ public:
     const char* getType();
     const char* getName();
     unsigned int getSize();
+    void resize(unsigned int new_size);
     
     void load(void* ptr);
     void save(void* ptr);
