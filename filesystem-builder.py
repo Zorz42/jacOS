@@ -14,8 +14,10 @@ data sector:
 """
 
 with open("filesystem.img", mode='wb') as fs_file:
+	first_sector = [0] * 508 + [0xDD, 0xCC, 0xBB, 0xAA]
+
 	file_pointers = []
-	data = [file_pointers]
+	data = [first_sector, file_pointers]
 	for filename in os.listdir("filesystem"):
 		with open("filesystem/" + filename, "rb") as file:
 			pointer = len(data)
@@ -62,19 +64,19 @@ with open("filesystem.img", mode='wb') as fs_file:
 	num_sectors = len(data)
 	num_desc_sectors = math.ceil(num_sectors / 8 / 508)
 
-	for i in range(0, len(data[0]), 4):
+	for i in range(0, len(data[1]), 4):
 		index = 0
-		index += data[0][i]
-		index += data[0][i + 1] << 8
-		index += data[0][i + 2] << 16
-		index += data[0][i + 3] << 24
+		index += data[1][i]
+		index += data[1][i + 1] << 8
+		index += data[1][i + 2] << 16
+		index += data[1][i + 3] << 24
 		index += num_desc_sectors
-		data[0][i] = index & 0xFF
-		data[0][i + 1] = (index >> 8) & 0xFF
-		data[0][i + 2] = (index >> 16) & 0xFF
-		data[0][i + 3] = (index >> 24) & 0xFF
+		data[1][i] = index & 0xFF
+		data[1][i + 1] = (index >> 8) & 0xFF
+		data[1][i + 2] = (index >> 16) & 0xFF
+		data[1][i + 3] = (index >> 24) & 0xFF
 
-	for sector in data[1:-1]:
+	for sector in data[2:-1]:
 		if len(sector) == 512:
 			index = 0
 			index += sector[508]
@@ -88,16 +90,11 @@ with open("filesystem.img", mode='wb') as fs_file:
 			sector[511] = (index >> 24) & 0xFF
 
 	for _ in range(num_desc_sectors):
-		data.insert(0, [0] * 512)
-		magic_number = 0xAABBCCDD
-		data[0][511] = (magic_number >> 24) & 0xFF
-		data[0][510] = (magic_number >> 16) & 0xFF
-		data[0][509] = (magic_number >> 8) & 0xFF
-		data[0][508] = magic_number & 0xFF
+		data.insert(1, [0] * 512)
 
 	for i in range(num_sectors):
-		sector = i // 8 // 508
-		byte_index = i // 8 % 508
+		sector = i // 8 // 512 + 1
+		byte_index = i // 8 % 512
 		offset = i % 8
 		data[sector][byte_index] |= 1 << offset
 

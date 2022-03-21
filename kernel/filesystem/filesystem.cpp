@@ -89,20 +89,24 @@ unsigned int fs::FileSystem::getDiskId() {
 bool fs::FileSystem::mount(unsigned int disk_id_) {
     disk_id = disk_id_;
     disks::Disk disk = disks::getDisk(disk_id);
-    int num_sector_bits = (disk.size - 1) / 8 / 508 + 1;
     
-    void* sector_bits_ = mem::alloc(512 * num_sector_bits);
-    disk.read(0, num_sector_bits, sector_bits_);
+    unsigned char* first_sector = (unsigned char*)mem::alloc(512);
+    disk.read(0, 1, first_sector);
+    bool is_mountable = *(unsigned int*)(first_sector + 508) == 0xAABBCCDD;
+    mem::free(first_sector);
     
-    if(*(unsigned int*)((unsigned char*)sector_bits_ + 508) != 0xAABBCCDD) {
-        mem::free(sector_bits_);
+    if(!is_mountable)
         return false;
-    }
     
-    sector_bits = sector_bits;
+    int num_sector_bits = (disk.size - 1) / 8 / 512 + 1;
+    
+    unsigned char* sector_bits_ = (unsigned char*)mem::alloc(512 * num_sector_bits);
+    disk.read(1, num_sector_bits, sector_bits_);
+    
+    sector_bits = sector_bits_;
     
     file_pointers = (unsigned int*)mem::alloc(512);
-    disk.read(num_sector_bits, 1, file_pointers);
+    disk.read(1 + num_sector_bits, 1, file_pointers);
     
     file_count = 0;
     while(file_pointers[file_count] != 0)
@@ -110,9 +114,24 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     
     file_heads = (__FileHead*)mem::alloc(file_count * sizeof(__FileHead));
     
-    for(int file_index = 0; file_index < file_count; file_index++)
+    for(int file_index = 0; file_index < file_count; file_index++) {
+        text::out << file_pointers[file_index] << text::endl;
         disk.read(file_pointers[file_index], 1, &file_heads[file_index]);
-    
+    }
     
     return true;
+}
+
+void fs::FileSystem::setSectorBit(unsigned int sector_index, bool value) {
+    int byte = sector_index / 8;
+    
+    unsigned char *byte_addr = sector_bits + byte;
+}
+
+bool fs::FileSystem::getSectorBit(unsigned int sector_index) {
+    
+}
+
+unsigned int fs::FileSystem::getFreeSector() {
+    
 }

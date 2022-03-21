@@ -17,6 +17,10 @@ class FileSystem {
     unsigned int* file_pointers;
     __FileHead *file_heads;
     unsigned int file_count;
+    
+    void setSectorBit(unsigned int sector_index, bool value);
+    bool getSectorBit(unsigned int sector_index);
+    unsigned int getFreeSector();
 public:
     bool mount(unsigned int disk_id_);
     File getFile(unsigned int index);
