@@ -61,8 +61,16 @@ with open("filesystem.img", mode='wb') as fs_file:
 					file_data.clear()
 			data.append(file_data.copy())
 
+	num_used_sectors = len(data)
+
+	for i in range(1000):
+		data.append([])
+
 	num_sectors = len(data)
 	num_desc_sectors = math.ceil(num_sectors / 8 / 512)
+
+	num_sectors += num_desc_sectors
+	num_used_sectors += num_desc_sectors
 
 	for i in range(0, len(data[1]), 4):
 		index = 0
@@ -92,7 +100,7 @@ with open("filesystem.img", mode='wb') as fs_file:
 	for _ in range(num_desc_sectors):
 		data.insert(1, [0] * 512)
 
-	for i in range(num_sectors):
+	for i in range(num_used_sectors):
 		sector = i // 8 // 512 + 1
 		byte_index = i // 8 % 512
 		offset = i % 8

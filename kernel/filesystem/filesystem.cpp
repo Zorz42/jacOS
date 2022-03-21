@@ -76,10 +76,54 @@ void fs::File::save(void *ptr) {
 
 void fs::File::resize(unsigned int new_size) {
     unsigned int old_size = getSize();
-    unsigned int new_sector_count = new_size / 508, old_sector_count = old_size / 508;
+    unsigned int new_sector_count = (new_size - 1) / 508 + 1, old_sector_count = (old_size - 1) / 508 + 1;
     head->size = new_size;
     
+    disks::Disk disk = disks::getDisk(filesystem->getDiskId());
+    
     unsigned char* temp = (unsigned char*)mem::alloc(512);
+    
+    if(new_sector_count < old_sector_count) {
+        unsigned int curr_sector = head->data_sector;
+        for(int i = 0; i < old_sector_count; i++) {
+            if(i >= new_sector_count)
+                filesystem->setSectorBit(curr_sector, false);
+            
+            disk.read(curr_sector, 1, temp);
+            curr_sector = *(unsigned int*)(temp + 508);
+        }
+    } else if(new_sector_count > old_sector_count) {
+        unsigned int curr_sector = head->data_sector;
+        for(int i = 0; i < old_sector_count - 1; i++) {
+            disk.read(curr_sector, 1, temp);
+            curr_sector = *(unsigned int*)(temp + 508);
+        }
+        
+        disk.read(curr_sector, 1, temp);
+        unsigned int next_sector = filesystem->getFreeSector();
+        filesystem->setSectorBit(next_sector, true);
+        *(unsigned int*)(temp + 508) = next_sector;
+        disk.write(curr_sector, 1, temp);
+        curr_sector = next_sector;
+        
+        for(int i = 0; i < 512; i++)
+            temp[i] = 0;
+            
+        for(int i = old_sector_count; i < new_sector_count - 1; i++) {
+            unsigned int next_sector = filesystem->getFreeSector();
+            filesystem->setSectorBit(next_sector, true);
+            *(unsigned int*)(temp + 508) = next_sector;
+            disk.write(curr_sector, 1, temp);
+            curr_sector = next_sector;
+        }
+        
+        disk.write(curr_sector, 1, temp);
+    }
+    
+    disk.write(head->sector, 1, head);
+    filesystem->flushSectorBits();
+    
+    mem::free(temp);
 }
 
 fs::File fs::FileSystem::getFile(unsigned int index) {
@@ -106,7 +150,7 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     if(!is_mountable)
         return false;
     
-    int num_sector_bits = (disk.size - 1) / 8 / 512 + 1;
+    num_sector_bits = (disk.size - 1) / 8 / 512 + 1;
     
     unsigned char* sector_bits_ = (unsigned char*)mem::alloc(512 * num_sector_bits);
     disk.read(1, num_sector_bits, sector_bits_);
@@ -122,8 +166,10 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     
     file_heads = (__FileHead*)mem::alloc(file_count * sizeof(__FileHead));
     
-    for(int file_index = 0; file_index < file_count; file_index++)
+    for(int file_index = 0; file_index < file_count; file_index++) {
         disk.read(file_pointers[file_index], 1, &file_heads[file_index]);
+        file_heads[file_index].sector = file_pointers[file_index];
+    }
     
     return true;
 }
@@ -146,7 +192,12 @@ unsigned int fs::FileSystem::getFreeSector() {
     for(int i = 0; i < disk.size / 8; i++)
         if(sector_bits[i] != 0xFF)
             for(int j = 0; j < 8; j++)
-                if((sector_bits[i] >> j) & 1 == 0)
+                if(((sector_bits[i] >> j) & 1) == 0)
                     return i * 8 + j;
     return -1;
+}
+
+void fs::FileSystem::flushSectorBits() {
+    disks::Disk disk = disks::getDisk(disk_id);
+    disk.write(1, num_sector_bits, sector_bits);
 }

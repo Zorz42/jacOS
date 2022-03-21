@@ -69,7 +69,7 @@ void kernelMain() {
     
     mem::free(file_data);*/
     
-    //fs::getFileSystem()->getFile(0).resize(1000);
+    fs::getFileSystem()->getFile(0).resize(100000);
     
     
     for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
