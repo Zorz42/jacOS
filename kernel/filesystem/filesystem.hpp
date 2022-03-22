@@ -1,4 +1,5 @@
 #pragma once
+#include "array/array.hpp"
 
 namespace fs {
 
@@ -19,8 +20,7 @@ class FileSystem {
     unsigned int* file_pointers;
     unsigned int num_sector_bits;
     unsigned int sectors_taken;
-    __FileHead *file_heads;
-    unsigned int file_count;
+    Array<__FileHead> file_heads;
 public:
     bool mount(unsigned int disk_id_);
     File getFile(unsigned int index);

@@ -56,6 +56,7 @@
 		3693A42227DF95A5005CA2CA /* load_kernel.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = load_kernel.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42327DF97CE005CA2CA /* get_ram_info.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = get_ram_info.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42427DFA508005CA2CA /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		36A2FB3E27EA0F8200F60DB5 /* array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = array.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -90,6 +91,7 @@
 				3687C9C727D388E800F0F62C /* interrupts */,
 				368640FA27DB817000B4B35A /* qemuDebug */,
 				167A73A12626DF7A00328331 /* memory */,
+				36A2FB3C27EA0F7400F60DB5 /* array */,
 				168CF16D2631E79400C0C0F2 /* disk */,
 				36858F2027E7362900D4B360 /* filesystem */,
 				167FB5BE262C45C100AA5F51 /* vesa */,
@@ -256,6 +258,14 @@
 				368BE99727E3BB88004B8573 /* gdt_flush.asm */,
 			);
 			path = gdt;
+			sourceTree = "<group>";
+		};
+		36A2FB3C27EA0F7400F60DB5 /* array */ = {
+			isa = PBXGroup;
+			children = (
+				36A2FB3E27EA0F8200F60DB5 /* array.hpp */,
+			);
+			path = array;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

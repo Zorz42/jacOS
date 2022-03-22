@@ -16,7 +16,7 @@ PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp') $(shell fi
 PROGRAM_OBJ = build/program/entry.o $(filter-out build/program/entry.o, $(addprefix build/, ${PROGRAM_SOURCES:.cpp=.o}))
 
 # default flags
-CFLAGS = -std=gnu++17 -ffreestanding -O2 -Ikernel/ -isystem program/lib/
+CFLAGS = -std=gnu++17 -fno-exceptions -ffreestanding -O2 -Ikernel/ -isystem program/lib/
 
 .PHONY: run clean
 

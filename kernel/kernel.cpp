@@ -9,6 +9,7 @@
 #include "disk/disk.hpp"
 #include "gdt/gdt.hpp"
 #include "filesystem/filesystem.hpp"
+#include "array/array.hpp"
 
 static void switchToUserMode() {
     asm volatile("cli");
@@ -74,6 +75,20 @@ void kernelMain() {
         fs::getFileSystem()->getFile(0).resize(10000);
     }
     fs::getFileSystem()->getFile(0).resize(10);*/
+    
+    /*fs::getFileSystem()->getFile(1).resize(1016);
+    
+    fs::File test_file = fs::getFileSystem()->getFile(1);
+    char* file_data = (char*)mem::alloc(test_file.getSize());
+    
+    test_file.load(file_data);
+    
+    for(int i = 0; i < test_file.getSize(); i++)
+        file_data[i] = 'H';
+    
+    test_file.save(file_data);
+    
+    mem::free(file_data);*/
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     

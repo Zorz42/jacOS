@@ -6,16 +6,18 @@
 #include "ports/ports.hpp"
 #include "timer/timer.hpp"
 
-fs::FileSystem file_system;
+fs::FileSystem *file_system;
 
 void fs::init() {
+    file_system = (fs::FileSystem*)mem::alloc(sizeof(fs::FileSystem));
+    
     for(int disk_id = 0; disk_id < disks::getNumDisks(); disk_id++)
-        if(file_system.mount(disk_id))
+        if(file_system->mount(disk_id))
             break;
 }
 
 fs::FileSystem* fs::getFileSystem() {
-    return &file_system;
+    return file_system;
 }
 
 const char* fs::File::getType() {
@@ -131,7 +133,7 @@ fs::File fs::FileSystem::getFile(unsigned int index) {
 }
 
 unsigned int fs::FileSystem::getFileCount() {
-    return file_count;
+    return file_heads.getSize();
 }
 
 unsigned int fs::FileSystem::getDiskId() {
@@ -169,15 +171,11 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     file_pointers = (unsigned int*)mem::alloc(512);
     disk.read(1 + num_sector_bits, 1, file_pointers);
     
-    file_count = 0;
-    while(file_pointers[file_count] != 0)
-        file_count++;
-    
-    file_heads = (__FileHead*)mem::alloc(file_count * sizeof(__FileHead));
-    
-    for(int file_index = 0; file_index < file_count; file_index++) {
-        disk.read(file_pointers[file_index], 1, &file_heads[file_index]);
-        file_heads[file_index].sector = file_pointers[file_index];
+    for(int file_index = 0; file_pointers[file_index] != 0; file_index++) {
+        __FileHead file_head;
+        disk.read(file_pointers[file_index], 1, &file_head);
+        file_head.sector = file_pointers[file_index];
+        file_heads.push(file_head);
     }
     
     return true;
