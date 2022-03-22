@@ -37,8 +37,8 @@ static int total_pixels = -1;
 void vesa::init() {
     mode_information = (mode_info*)0x7e00;
     total_pixels = vesa::getScreenWidth() * vesa::getScreenHeight();
-    buffer = (unsigned int*)mem::alloc(getTotalPixels() * getBytesPerPixel());
-    changed_lines = (bool*)mem::alloc(getScreenHeight());
+    buffer = new unsigned int[getTotalPixels() * getBytesPerPixel() / sizeof(unsigned int)];
+    changed_lines = new bool[getScreenHeight()];
     
     // map vesa addresses
     for(unsigned int i = (unsigned int)mode_information->buffer; i <= (unsigned int)mode_information->buffer + getTotalPixels() * getBytesPerPixel(); i += 0x1000)

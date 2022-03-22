@@ -322,3 +322,15 @@ void mem::init() {
     interrupts::registerSyscallHandler(syscallGetTotal, "getTotalMemory");
     interrupts::registerSyscallHandler(syscallGetUsed, "getUsedMemory");
 }
+
+void *operator new(unsigned long size) {
+    return mem::alloc(size);
+}
+
+void *operator new[](unsigned long size) {
+    return mem::alloc(size);
+}
+
+void operator delete(void* ptr, unsigned long _) {
+    mem::free(ptr);
+}

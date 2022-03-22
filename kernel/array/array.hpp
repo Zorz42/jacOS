@@ -1,5 +1,6 @@
 #pragma once
 #include "memory/memory.hpp"
+#include "text/text.hpp"
 
 #define _BLOCK_SIZE 16
 
@@ -12,10 +13,10 @@ class Array {
         if(new_size > physical_size) {
             unsigned int num_new_blocks = (new_size - physical_size - 1) / _BLOCK_SIZE + 1;
             physical_size += num_new_blocks * _BLOCK_SIZE;
-            Type* new_data = (Type*)mem::alloc(physical_size * sizeof(Type));
+            Type* new_data = new Type[physical_size];
             for(int i = 0; i < size; i++)
                 new_data[i] = data[i];
-            mem::free(data);
+            delete data;
             data = new_data;
         }
         
@@ -32,7 +33,7 @@ public:
     Array() {
         size = 0;
         physical_size = 0;
-        data = (Type*)mem::alloc(0);
+        data = new Type[0];
     }
     
     Type& operator[](int index) {
@@ -42,7 +43,7 @@ public:
     Array(Array<Type>& array) {
         size = array.size;
         physical_size = array.physical_size;
-        data = (Type*)mem::alloc(physical_size * sizeof(Type));
+        data = new Type[physical_size];
         for(int i = 0; i < size; i++)
             data[i] = array[i];
     }
@@ -80,7 +81,7 @@ public:
     }
     
     void push(const Type& item) {
-        insert(item, size - 1);
+        insert(item, size);
     }
     
     void push() {
@@ -107,6 +108,6 @@ public:
     }
     
     ~Array() {
-        mem::free(data);
+        delete data;
     }
 };

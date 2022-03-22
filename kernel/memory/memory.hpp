@@ -35,3 +35,7 @@ void identityMapPage(unsigned int address, bool is_kernel, bool is_writable, Pag
 unsigned int virtualToPhysicalAddress(unsigned int virtual_address, PageDirectory* page_directory=nullptr);
 
 }
+
+void *operator new(unsigned long size);
+void *operator new[](unsigned long size);
+void operator delete(void* ptr, unsigned long _);

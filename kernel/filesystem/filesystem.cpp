@@ -9,7 +9,7 @@
 fs::FileSystem *file_system;
 
 void fs::init() {
-    file_system = (fs::FileSystem*)mem::alloc(sizeof(fs::FileSystem));
+    file_system = new fs::FileSystem;
     
     for(int disk_id = 0; disk_id < disks::getNumDisks(); disk_id++)
         if(file_system->mount(disk_id))
@@ -33,7 +33,7 @@ unsigned int fs::File::getSize() {
 }
 
 void fs::File::load(void *ptr) {
-    unsigned char* temp = (unsigned char*)mem::alloc(512);
+    __Sector* temp = new __Sector;
     unsigned char* iter = (unsigned char*)ptr;
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
@@ -42,19 +42,19 @@ void fs::File::load(void *ptr) {
     unsigned int bytes_read = 0;
     
     while(bytes_read < getSize()) {
-        disk.read(next_sector, 1, temp);
-        next_sector = *(unsigned int*)(temp + 508);
+        disk.read(next_sector, 1, temp->bytes);
+        next_sector = *(unsigned int*)(temp->bytes + 508);
         for(int i = 0; i < 508 && bytes_read < getSize(); i++) {
-            iter[bytes_read] = temp[i];
+            iter[bytes_read] = temp->bytes[i];
             bytes_read++;
         }
     }
     
-    mem::free(temp);
+    delete temp;
 }
 
 void fs::File::save(void *ptr) {
-    unsigned char* temp = (unsigned char*)mem::alloc(512);
+    __Sector* temp = new __Sector;
     unsigned char* iter = (unsigned char*)ptr;
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
@@ -63,27 +63,27 @@ void fs::File::save(void *ptr) {
     unsigned int bytes_written = 0;
     
     while(bytes_written < getSize()) {
-        disk.read(next_sector, 1, temp);
+        disk.read(next_sector, 1, temp->bytes);
         for(int i = 0; i < 508 && bytes_written < getSize(); i++) {
-            temp[i] = iter[bytes_written];
+            temp->bytes[i] = iter[bytes_written];
             bytes_written++;
         }
-        disk.write(next_sector, 1, temp);
+        disk.write(next_sector, 1, temp->bytes);
         
-        next_sector = *(unsigned int*)(temp + 508);
+        next_sector = *(unsigned int*)(temp->bytes + 508);
     }
     
-    mem::free(temp);
+    delete temp;
 }
 
 void fs::File::resize(unsigned int new_size) {
     unsigned int old_size = getSize();
-    unsigned int new_sector_count = (new_size - 1) / 508 + 1, old_sector_count = (old_size - 1) / 508 + 1;
+    unsigned int new_sector_count = (new_size + 507) / 508, old_sector_count = (old_size + 507) / 508;
     head->size = new_size;
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
-    unsigned char* temp = (unsigned char*)mem::alloc(512);
+    __Sector* temp = new __Sector;
     
     if(new_sector_count < old_sector_count) {
         unsigned int curr_sector = head->data_sector;
@@ -91,14 +91,14 @@ void fs::File::resize(unsigned int new_size) {
             if(i >= new_sector_count)
                 filesystem->setSectorBit(curr_sector, false);
             
-            disk.read(curr_sector, 1, temp);
-            curr_sector = *(unsigned int*)(temp + 508);
+            disk.read(curr_sector, 1, temp->bytes);
+            curr_sector = *(unsigned int*)(temp->bytes + 508);
         }
     } else if(new_sector_count > old_sector_count) {
         unsigned int curr_sector = head->data_sector;
         for(int i = 0; i < old_sector_count - 1; i++) {
-            disk.read(curr_sector, 1, temp);
-            curr_sector = *(unsigned int*)(temp + 508);
+            disk.read(curr_sector, 1, temp->bytes);
+            curr_sector = *(unsigned int*)(temp->bytes + 508);
         }
         
         disk.read(curr_sector, 1, temp);
@@ -109,7 +109,7 @@ void fs::File::resize(unsigned int new_size) {
         curr_sector = next_sector;
         
         for(int i = 0; i < 512; i++)
-            temp[i] = 0;
+            temp->bytes[i] = 0;
             
         for(int i = old_sector_count; i < new_sector_count - 1; i++) {
             unsigned int next_sector = filesystem->getFreeSector();
@@ -125,11 +125,11 @@ void fs::File::resize(unsigned int new_size) {
     disk.write(head->sector, 1, head);
     filesystem->flushSectorBits();
     
-    mem::free(temp);
+    delete temp;
 }
 
 fs::File fs::FileSystem::getFile(unsigned int index) {
-    return File(this, &file_heads[index]);
+    return File(this, file_heads[index]);
 }
 
 unsigned int fs::FileSystem::getFileCount() {
@@ -148,17 +148,17 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     disk_id = disk_id_;
     disks::Disk disk = disks::getDisk(disk_id);
     
-    unsigned char* first_sector = (unsigned char*)mem::alloc(512);
-    disk.read(0, 1, first_sector);
-    bool is_mountable = *(unsigned int*)(first_sector + 508) == 0xAABBCCDD;
-    mem::free(first_sector);
+    __Sector* first_sector = new __Sector;
+    disk.read(0, 1, first_sector->bytes);
+    bool is_mountable = *(unsigned int*)(first_sector->bytes + 508) == 0xAABBCCDD;
+    delete first_sector;
     
     if(!is_mountable)
         return false;
     
     num_sector_bits = (disk.size - 1) / 8 / 512 + 1;
     
-    unsigned char* sector_bits_ = (unsigned char*)mem::alloc(512 * num_sector_bits);
+    unsigned char* sector_bits_ = new unsigned char[512 * num_sector_bits];
     disk.read(1, num_sector_bits, sector_bits_);
     
     sector_bits = sector_bits_;
@@ -167,14 +167,13 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
         if(getSectorBit(i))
             sectors_taken++;
     
-    
-    file_pointers = (unsigned int*)mem::alloc(512);
+    unsigned int* file_pointers = new unsigned int[512 / 4];
     disk.read(1 + num_sector_bits, 1, file_pointers);
     
     for(int file_index = 0; file_pointers[file_index] != 0; file_index++) {
-        __FileHead file_head;
-        disk.read(file_pointers[file_index], 1, &file_head);
-        file_head.sector = file_pointers[file_index];
+        __FileHead* file_head = new __FileHead;
+        disk.read(file_pointers[file_index], 1, file_head);
+        file_head->sector = file_pointers[file_index];
         file_heads.push(file_head);
     }
     

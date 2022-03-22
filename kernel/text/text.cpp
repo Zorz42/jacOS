@@ -228,7 +228,7 @@ void text::init() {
     text_width = gfx::getScreenWidth() / 8;
     text_height = gfx::getScreenHeight() / 16;
     
-    text_buffer = (char*)mem::alloc(text_width * (text_height + 1));
+    text_buffer = new char[text_width * (text_height + 1)];
     
     debug::out << "Text module initialized!" << debug::endl << "Number of characters of screen is: " << text_width << "x" << text_height << debug::endl;
 }

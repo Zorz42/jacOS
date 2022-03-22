@@ -12,15 +12,19 @@ struct __FileHead {
     unsigned int sector;
 } __attribute__((packed));
 
+struct __Sector {
+    char bytes[512];
+};
+
 class File;
 
 class FileSystem {
     unsigned int disk_id;
     unsigned char* sector_bits;
-    unsigned int* file_pointers;
     unsigned int num_sector_bits;
     unsigned int sectors_taken;
-    Array<__FileHead> file_heads;
+    Array<__FileHead*> file_heads;
+    Array<int> test;
 public:
     bool mount(unsigned int disk_id_);
     File getFile(unsigned int index);

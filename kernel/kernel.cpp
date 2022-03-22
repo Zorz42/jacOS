@@ -60,7 +60,7 @@ void kernelMain() {
     debug::out << "Kernel initialized" << debug::endl;
     
     /*fs::File test_file = fs::getFileSystem()->getFile(0);
-    char* file_data = (char*)mem::alloc(test_file.getSize());
+    char* file_data = new char[test_file.getSize()];
     
     test_file.load(file_data);
     
@@ -68,7 +68,7 @@ void kernelMain() {
     
     test_file.save(file_data);
     
-    mem::free(file_data);*/
+     delete file_data;*/
     
     /*for(int i = 0; i < 20; i++) {
         fs::getFileSystem()->getFile(0).resize(10);
@@ -79,7 +79,7 @@ void kernelMain() {
     /*fs::getFileSystem()->getFile(1).resize(1016);
     
     fs::File test_file = fs::getFileSystem()->getFile(1);
-    char* file_data = (char*)mem::alloc(test_file.getSize());
+    char* file_data = new char[test_file.getSize()];
     
     test_file.load(file_data);
     
@@ -88,7 +88,7 @@ void kernelMain() {
     
     test_file.save(file_data);
     
-    mem::free(file_data);*/
+    delete file_data;*/
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
@@ -96,7 +96,7 @@ void kernelMain() {
     for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
         fs::File file = fs::getFileSystem()->getFile(i);
         text::out << "File name: " << file.getName() << ", size: " << file.getSize() << ", type: " << file.getType() << text::endl;
-        char* file_data = (char*)mem::alloc(file.getSize());
+        char* file_data = new char[file.getSize()];
         
         file.load(file_data);
         
@@ -106,7 +106,7 @@ void kernelMain() {
         
         text::out << text::endl << text::endl;
         
-        mem::free(file_data);
+        delete file_data;
     }
     
     
