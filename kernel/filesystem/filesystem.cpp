@@ -8,6 +8,10 @@
 
 fs::FileSystem *file_system;
 
+bool fs::__FileDescriptor::getFlag(int flag) {
+    return ((flags << flag) & 1) != 0;
+}
+
 void fs::init() {
     file_system = new fs::FileSystem;
     
@@ -21,15 +25,19 @@ fs::FileSystem* fs::getFileSystem() {
 }
 
 const char* fs::File::getType() {
-    return head->type;
+    return descriptor->type;
 }
 
 const char* fs::File::getName() {
-    return head->name;
+    return descriptor->name;
 }
 
 unsigned int fs::File::getSize() {
-    return head->size;
+    return descriptor->size;
+}
+
+bool fs::File::isDirectory() {
+    return descriptor->getFlag(DIRECTORY_FLAG);
 }
 
 void fs::File::load(void *ptr) {
@@ -38,7 +46,7 @@ void fs::File::load(void *ptr) {
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
-    unsigned int next_sector = head->data_sector;
+    unsigned int next_sector = descriptor->sector;
     unsigned int bytes_read = 0;
     
     while(bytes_read < getSize()) {
@@ -59,7 +67,7 @@ void fs::File::save(void *ptr) {
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
-    unsigned int next_sector = head->data_sector;
+    unsigned int next_sector = descriptor->sector;
     unsigned int bytes_written = 0;
     
     while(bytes_written < getSize()) {
@@ -79,14 +87,14 @@ void fs::File::save(void *ptr) {
 void fs::File::resize(unsigned int new_size) {
     unsigned int old_size = getSize();
     unsigned int new_sector_count = (new_size + 507) / 508, old_sector_count = (old_size + 507) / 508;
-    head->size = new_size;
+    descriptor->size = new_size;
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
     __Sector* temp = new __Sector;
     
     if(new_sector_count < old_sector_count) {
-        unsigned int curr_sector = head->data_sector;
+        unsigned int curr_sector = descriptor->sector;
         for(int i = 0; i < old_sector_count; i++) {
             if(i >= new_sector_count)
                 filesystem->setSectorBit(curr_sector, false);
@@ -95,7 +103,7 @@ void fs::File::resize(unsigned int new_size) {
             curr_sector = *(unsigned int*)(temp->bytes + 508);
         }
     } else if(new_sector_count > old_sector_count) {
-        unsigned int curr_sector = head->data_sector;
+        unsigned int curr_sector = descriptor->sector;
         for(int i = 0; i < old_sector_count - 1; i++) {
             disk.read(curr_sector, 1, temp->bytes);
             curr_sector = *(unsigned int*)(temp->bytes + 508);
@@ -122,18 +130,27 @@ void fs::File::resize(unsigned int new_size) {
         disk.write(curr_sector, 1, temp);
     }
     
-    disk.write(head->sector, 1, head);
+    //disk.write(descriptor->sector, 1, descriptor);
     filesystem->flushSectorBits();
     
     delete temp;
 }
 
-fs::File fs::FileSystem::getFile(unsigned int index) {
-    return File(this, file_heads[index]);
+fs::__Directory* fs::Directory::getDirectory() {
+    return (fs::__Directory*)descriptor;
 }
 
-unsigned int fs::FileSystem::getFileCount() {
-    return file_heads.getSize();
+unsigned int fs::Directory::getFileCount() {
+    return getDirectory()->files.getSize();
+}
+
+fs::File fs::Directory::getFile(unsigned int index) {
+    return File(filesystem, getDirectory()->files[index]);
+}
+
+
+fs::Directory fs::FileSystem::getRootDirectory() {
+    return Directory(this, &root);
 }
 
 unsigned int fs::FileSystem::getDiskId() {
@@ -144,6 +161,47 @@ unsigned int fs::FileSystem::getSectorsTaken() {
     return sectors_taken;
 }
 
+void fs::FileSystem::loadDirectory(fs::__Directory* directory) {
+    File dir_file = File(this, directory);
+    unsigned char* dir_data = new unsigned char[dir_file.getSize()];
+    dir_file.load(dir_data);
+    
+    for(int i = 0; i < dir_file.getSize();) {
+        __FileDescriptor* file_descriptor = new __FileDescriptor;
+        
+        int name_len = 0;
+        while(dir_data[i + name_len] != 0)
+            name_len++;
+        file_descriptor->name = new char[name_len + 1];
+        for(int j = 0; j <= name_len; j++)
+            file_descriptor->name[j] = dir_data[i + j];
+        i += name_len + 1;
+        
+        int type_len = 0;
+        while(dir_data[i + type_len] != 0)
+            type_len++;
+        file_descriptor->type = new char[type_len + 1];
+        for(int j = 0; j <= type_len; j++)
+            file_descriptor->type[j] = dir_data[i + j];
+        i += type_len + 1;
+        
+        file_descriptor->size = *(unsigned int*)&dir_data[i];
+        i += 4;
+        file_descriptor->sector = *(unsigned int*)&dir_data[i];
+        i += 4;
+        file_descriptor->flags = *(unsigned short*)&dir_data[i];
+        i += 2;
+        
+        if(file_descriptor->getFlag(DIRECTORY_FLAG)) {
+            __Directory* directory_desc = new __Directory(*file_descriptor);
+            delete file_descriptor;
+            loadDirectory(directory_desc);
+            directory->files.push(directory_desc);
+        } else
+            directory->files.push(file_descriptor);
+    }
+}
+
 bool fs::FileSystem::mount(unsigned int disk_id_) {
     disk_id = disk_id_;
     disks::Disk disk = disks::getDisk(disk_id);
@@ -151,6 +209,7 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     __Sector* first_sector = new __Sector;
     disk.read(0, 1, first_sector->bytes);
     bool is_mountable = *(unsigned int*)(first_sector->bytes + 508) == 0xAABBCCDD;
+    unsigned int root_sector = *(unsigned int*)&first_sector->bytes[0], root_size = *(unsigned int*)&first_sector->bytes[4];
     delete first_sector;
     
     if(!is_mountable)
@@ -167,15 +226,28 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
         if(getSectorBit(i))
             sectors_taken++;
     
-    unsigned int* file_pointers = new unsigned int[512 / 4];
-    disk.read(1 + num_sector_bits, 1, file_pointers);
+    root.name = new char[1];
+    root.name[0] = 0;
     
-    for(int file_index = 0; file_pointers[file_index] != 0; file_index++) {
+    root.type = new char[1];
+    root.type[0] = 0;
+    
+    root.sector = root_sector;
+    root.size = root_size;
+    
+    root.flags = 0;
+    
+    loadDirectory(&root);
+    
+    //unsigned int* file_pointers = new unsigned int[512 / sizeof(unsigned int)];
+    //disk.read(1 + num_sector_bits, 1, file_pointers);
+    
+    /*for(int file_index = 0; file_pointers[file_index] != 0; file_index++) {
         __FileHead* file_head = new __FileHead;
         disk.read(file_pointers[file_index], 1, file_head);
         file_head->sector = file_pointers[file_index];
         file_heads.push(file_head);
-    }
+    }*/
     
     return true;
 }

@@ -27,7 +27,7 @@ struct mode_info {
     unsigned int offScreenMemOff;
     unsigned short offScreenMemSize;
     //unsigned char  reserved1 [206];
-};
+} __attribute__((packed));
 
 static mode_info* mode_information = nullptr;
 static unsigned int* buffer = nullptr;

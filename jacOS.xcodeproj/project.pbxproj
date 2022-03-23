@@ -40,6 +40,8 @@
 		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
 		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _lib_keys.hpp; sourceTree = "<group>"; };
+		366D22D327EB5AD100A1024E /* file.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
+		366D22D427EB5ADA00A1024E /* directory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = directory.cpp; sourceTree = "<group>"; };
 		36858F2127E7363F00D4B360 /* filesystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filesystem.cpp; sourceTree = "<group>"; };
 		36858F2227E7363F00D4B360 /* filesystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filesystem.hpp; sourceTree = "<group>"; };
 		36858F2327E7378D00D4B360 /* link.ld */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.ld; sourceTree = "<group>"; };
@@ -208,6 +210,8 @@
 			children = (
 				36858F2227E7363F00D4B360 /* filesystem.hpp */,
 				36858F2127E7363F00D4B360 /* filesystem.cpp */,
+				366D22D327EB5AD100A1024E /* file.cpp */,
+				366D22D427EB5ADA00A1024E /* directory.cpp */,
 			);
 			path = filesystem;
 			sourceTree = "<group>";
@@ -437,10 +441,12 @@
 		167A73962626DF4E00328331 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4CKFJDZL4P;
 				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = kernel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

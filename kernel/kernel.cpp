@@ -41,6 +41,38 @@ static bool strcmp(const char* a, const char* b) {
     return true;
 }
 
+void printDirectory(fs::Directory directory, int offset) {
+    text::out << text::endl;
+    const char* name = directory.getName();
+    for(int j = 0; j < offset; j++)
+        text::out << "    ";
+    text::out << "directory " << directory.getName() << "/" << text::endl;
+    for(int i = 0; i < directory.getFileCount(); i++) {
+        fs::File file = directory.getFile(i);
+        if(!file.isDirectory()) {
+            for(int j = 0; j < offset + 1; j++)
+                text::out << "    ";
+            text::out << file.getName() << " " << file.getType() << text::endl;
+            
+            /*char* file_data = new char[file.getSize()];
+            
+            file.load(file_data);
+            
+            for(int i = 0; i < file.getSize() && i < 200; i++) {
+                text::out << file_data[i];
+            }
+            
+            text::out << text::endl << text::endl;
+            
+            delete file_data;*/
+        } else {
+            fs::Directory dir = file;
+            printDirectory(dir, offset + 1);
+        }
+    }
+    text::out << text::endl;
+}
+
 void kernelMain() {
     gdt::init();
     interrupts::init();
@@ -92,27 +124,13 @@ void kernelMain() {
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
-    
-    for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
-        fs::File file = fs::getFileSystem()->getFile(i);
-        text::out << "File name: " << file.getName() << ", size: " << file.getSize() << ", type: " << file.getType() << text::endl;
-        char* file_data = new char[file.getSize()];
-        
-        file.load(file_data);
-        
-        for(int i = 0; i < file.getSize() && i < 200; i++) {
-            text::out << file_data[i];
-        }
-        
-        text::out << text::endl << text::endl;
-        
-        delete file_data;
-    }
+    fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
+    printDirectory(root_directory, 0);
     
     
     fs::File program_file;
-    for(int i = 0; i < fs::getFileSystem()->getFileCount(); i++) {
-        fs::File file = fs::getFileSystem()->getFile(i);
+    for(int i = 0; i < root_directory.getFileCount(); i++) {
+        fs::File file = root_directory.getFile(i);
         if(strcmp(file.getName(), "program")) {
             program_file = file;
             break;
