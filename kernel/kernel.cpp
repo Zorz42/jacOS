@@ -34,13 +34,6 @@ static void switchToUserMode() {
     asm volatile("1:");
 }
 
-static bool strcmp(const char* a, const char* b) {
-    for(int i = 0; a[i] != 0 || b[i] != 0; i++)
-        if(a[i] != b[i])
-            return false;
-    return true;
-}
-
 void printDirectory(fs::Directory directory, int offset) {
     text::out << text::endl;
     const char* name = directory.getName();
@@ -128,14 +121,7 @@ void kernelMain() {
     printDirectory(root_directory, 0);
     
     
-    fs::File program_file;
-    for(int i = 0; i < root_directory.getFileCount(); i++) {
-        fs::File file = root_directory.getFile(i);
-        if(strcmp(file.getName(), "program")) {
-            program_file = file;
-            break;
-        }
-    }
+    fs::File program_file = root_directory.getFileByName("program");
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);

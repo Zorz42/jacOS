@@ -5,6 +5,8 @@
 
 namespace fs {
 
+class FileSystem;
+
 struct __FileDescriptor {
     char *name, *type;
     unsigned int sector, size;
@@ -16,6 +18,7 @@ struct __Directory : __FileDescriptor {
     __Directory(__FileDescriptor& file_descriptor) : __FileDescriptor(file_descriptor) {}
     __Directory() = default;
     Array<__FileDescriptor*> files;
+    void load(FileSystem* filesystem);
 };
 
 struct __Sector {
@@ -31,8 +34,6 @@ class FileSystem {
     unsigned int num_sector_bits;
     unsigned int sectors_taken;
     __Directory root;
-    
-    void loadDirectory(__Directory* directory);
 public:
     bool mount(unsigned int disk_id_);
     unsigned int getDiskId();
@@ -73,6 +74,7 @@ public:
     
     unsigned int getFileCount();
     File getFile(unsigned int index);
+    File getFileByName(const char* name);
 };
 
 void init();
