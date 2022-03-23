@@ -19,7 +19,7 @@ fs::File fs::Directory::getFile(unsigned int index) {
     return File(filesystem, getDirectory()->files[index]);
 }
 
-fs::File fs::Directory::getFileByName(const char* name) {
+fs::File fs::Directory::getFile(const char* name) {
     for(int i = 0; i < getFileCount(); i++) {
         File file = getFile(i);
         if(strcmp(file.getName(), name))
@@ -59,6 +59,8 @@ void fs::__Directory::load(fs::FileSystem* filesystem) {
         file_descriptor->flags = *(unsigned short*)&dir_data[i];
         i += 2;
         
+        file_descriptor->parent_directory = this;
+        
         if(file_descriptor->getFlag(DIRECTORY_FLAG)) {
             __Directory* directory_desc = new __Directory(*file_descriptor);
             delete file_descriptor;
@@ -66,5 +68,35 @@ void fs::__Directory::load(fs::FileSystem* filesystem) {
             files.push(directory_desc);
         } else
             files.push(file_descriptor);
+    }
+}
+
+void fs::Directory::flushMetadata() {
+    Array<unsigned char> metadata;
+    for(int i = 0; i < getFileCount(); i++)
+        metadata.insert(getDirectory()->files[i]->serializeMetadata(), metadata.getSize());
+    resize(metadata.getSize());
+    save(&metadata[0]);
+}
+
+void fs::Directory::removeFile(unsigned int index) {
+    delete getDirectory()->files[index];
+    getDirectory()->files.erase(index);
+    flushMetadata();
+}
+
+void fs::Directory::removeFile(const char* name) {
+    for(int i = 0; i < getFileCount(); i++) {
+        File file = getFile(i);
+        if(strcmp(file.getName(), name))
+            removeFile(i);
+    }
+}
+
+void fs::Directory::removeFile(fs::File file) {
+    for(int i = 0; i < getFileCount(); i++) {
+        File file_ = getFile(i);
+        if(file_ == file)
+            removeFile(i);
     }
 }

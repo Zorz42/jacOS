@@ -6,12 +6,15 @@
 namespace fs {
 
 class FileSystem;
+struct __Directory;
 
 struct __FileDescriptor {
+    __Directory* parent_directory;
     char *name, *type;
     unsigned int sector, size;
     unsigned int flags: 16;
     bool getFlag(int flag);
+    Array<unsigned char> serializeMetadata();
 };
 
 struct __Directory : __FileDescriptor {
@@ -29,11 +32,14 @@ class File;
 class Directory;
 
 class FileSystem {
+    friend File;
     unsigned int disk_id;
     unsigned char* sector_bits;
     unsigned int num_sector_bits;
     unsigned int sectors_taken;
     __Directory root;
+    
+    void flushRootMetadata();
 public:
     bool mount(unsigned int disk_id_);
     unsigned int getDiskId();
@@ -55,26 +61,35 @@ public:
     File(FileSystem* filesystem, __FileDescriptor* descriptor) : filesystem(filesystem), descriptor(descriptor) {}
     File() : filesystem(nullptr), descriptor(nullptr) {}
     
+    bool operator==(const File& file);
+    
     const char* getType();
     const char* getName();
     unsigned int getSize();
     void resize(unsigned int new_size);
+    Directory getParentDirectory();
     
     void load(void* ptr);
     void save(void* ptr);
     
     bool isDirectory();
+    bool exists();
 };
 
 class Directory : public File {
+    friend File;
     __Directory* getDirectory();
+    void flushMetadata();
 public:
     Directory(FileSystem* filesystem, __Directory* descriptor) : File(filesystem, descriptor) {}
     Directory(File& file) : File(file) {}
     
     unsigned int getFileCount();
     File getFile(unsigned int index);
-    File getFileByName(const char* name);
+    File getFile(const char* name);
+    void removeFile(unsigned int index);
+    void removeFile(const char* name);
+    void removeFile(fs::File file);
 };
 
 void init();

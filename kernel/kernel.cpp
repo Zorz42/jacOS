@@ -39,13 +39,13 @@ void printDirectory(fs::Directory directory, int offset) {
     const char* name = directory.getName();
     for(int j = 0; j < offset; j++)
         text::out << "    ";
-    text::out << "directory " << directory.getName() << "/" << text::endl;
+    text::out << directory.getName() << "/" << text::endl;
     for(int i = 0; i < directory.getFileCount(); i++) {
         fs::File file = directory.getFile(i);
         if(!file.isDirectory()) {
             for(int j = 0; j < offset + 1; j++)
                 text::out << "    ";
-            text::out << file.getName() << " " << file.getType() << text::endl;
+            text::out << file.getSize() << " " << file.getName() << " " << file.getType() << text::endl;
             
             /*char* file_data = new char[file.getSize()];
             
@@ -84,44 +84,15 @@ void kernelMain() {
     
     debug::out << "Kernel initialized" << debug::endl;
     
-    /*fs::File test_file = fs::getFileSystem()->getFile(0);
-    char* file_data = new char[test_file.getSize()];
+    fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
     
-    test_file.load(file_data);
-    
-    file_data[0] = 'X';
-    
-    test_file.save(file_data);
-    
-     delete file_data;*/
-    
-    /*for(int i = 0; i < 20; i++) {
-        fs::getFileSystem()->getFile(0).resize(10);
-        fs::getFileSystem()->getFile(0).resize(10000);
-    }
-    fs::getFileSystem()->getFile(0).resize(10);*/
-    
-    /*fs::getFileSystem()->getFile(1).resize(1016);
-    
-    fs::File test_file = fs::getFileSystem()->getFile(1);
-    char* file_data = new char[test_file.getSize()];
-    
-    test_file.load(file_data);
-    
-    for(int i = 0; i < test_file.getSize(); i++)
-        file_data[i] = 'H';
-    
-    test_file.save(file_data);
-    
-    delete file_data;*/
+    root_directory.removeFile("file1");
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
-    fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
     printDirectory(root_directory, 0);
     
-    
-    fs::File program_file = root_directory.getFileByName("program");
+    fs::File program_file = root_directory.getFile("program");
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);

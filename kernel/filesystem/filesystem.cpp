@@ -59,6 +59,7 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     
     root.sector = root_sector;
     root.size = root_size;
+    root.parent_directory = &root;
     
     root.flags = 0;
     
@@ -98,4 +99,17 @@ unsigned int fs::FileSystem::getFreeSector() {
 void fs::FileSystem::flushSectorBits() {
     disks::Disk disk = disks::getDisk(disk_id);
     disk.write(1, num_sector_bits, sector_bits);
+}
+
+void fs::FileSystem::flushRootMetadata() {
+    __Sector* first_sector = new __Sector;
+    disks::Disk disk = disks::getDisk(disk_id);
+    disk.read(0, 1, first_sector->bytes);
+    
+    *(unsigned int*)first_sector->bytes = root.sector;
+    *(unsigned int*)(first_sector->bytes + 4) = root.size;
+    
+    disk.write(0, 1, first_sector->bytes);
+    
+    delete first_sector;
 }
