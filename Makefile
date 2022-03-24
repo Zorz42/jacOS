@@ -4,8 +4,8 @@ LD = i386-elf-ld
 
 PROGRAM_NAME = test-program
 
-KERNEL_SOURCES = $(shell find kernel -type f -name '*.cpp') $(shell find kernel -type f -name '*.asm')
-KERNEL_HEADERS = $(shell find kernel -type f -name '*.hpp')
+KERNEL_SOURCES = $(shell find kernel -type f -name '*.cpp') $(shell find library -type f -name '*.cpp') $(shell find kernel -type f -name '*.asm')
+KERNEL_HEADERS = $(shell find kernel -type f -name '*.hpp') $(shell find library -type f -name '*.hpp')
 _KERNEL_OBJ = ${KERNEL_SOURCES:.cpp=.o}
 KERNEL_OBJ = build/kernel/entry/entry.o $(filter-out build/kernel/entry/entry.o, $(addprefix build/, ${_KERNEL_OBJ:.asm=.o}))
 

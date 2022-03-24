@@ -8,15 +8,8 @@ class Array {
     unsigned int size, physical_size;
     
     void resize(unsigned int new_size) {
-        if(new_size > physical_size) {
-            unsigned int num_new_blocks = (new_size - physical_size - 1) / _BLOCK_SIZE + 1;
-            physical_size += num_new_blocks * _BLOCK_SIZE;
-            Type* new_data = new Type[physical_size];
-            for(int i = 0; i < size; i++)
-                new_data[i] = data[i];
-            delete data;
-            data = new_data;
-        }
+        if(new_size > physical_size)
+            reserve((new_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE);
         
         if(new_size > size)
             for(int i = size; i < new_size; i++)
@@ -44,6 +37,19 @@ public:
         data = new Type[physical_size];
         for(int i = 0; i < size; i++)
             data[i] = array[i];
+    }
+    
+    void reserve(unsigned int reserved_size) {
+        reserved_size = (reserved_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE;
+        if(reserved_size > physical_size) {
+            unsigned int num_new_blocks = (reserved_size - physical_size - 1) / _BLOCK_SIZE + 1;
+            physical_size += num_new_blocks * _BLOCK_SIZE;
+            Type* new_data = new Type[physical_size];
+            for(int i = 0; i < size; i++)
+                new_data[i] = data[i];
+            delete data;
+            data = new_data;
+        }
     }
     
     unsigned int getSize() {
