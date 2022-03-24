@@ -76,7 +76,9 @@ void fs::File::load(void *ptr) {
     delete temp;
 }
 
-void fs::File::save(void *ptr) {
+void fs::File::save(void *ptr, unsigned int size) {
+    resize(size);
+    
     __Sector* temp = new __Sector;
     unsigned char* iter = (unsigned char*)ptr;
     

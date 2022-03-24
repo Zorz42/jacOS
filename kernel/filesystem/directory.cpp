@@ -75,11 +75,12 @@ void fs::Directory::flushMetadata() {
     Array<unsigned char> metadata;
     for(int i = 0; i < getFileCount(); i++)
         metadata.insert(getDirectory()->files[i]->serializeMetadata(), metadata.getSize());
-    resize(metadata.getSize());
-    save(&metadata[0]);
+    save(&metadata[0], metadata.getSize());
 }
 
 void fs::Directory::removeFile(unsigned int index) {
+    fs::File file = getFile(index);
+    file.resize(0);
     delete getDirectory()->files[index];
     getDirectory()->files.erase(index);
     flushMetadata();

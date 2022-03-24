@@ -1,5 +1,5 @@
 #pragma once
-#include "array/array.hpp"
+#include <library.hpp>
 
 #define DIRECTORY_FLAG 0
 
@@ -57,6 +57,8 @@ class File {
     friend Directory;
     FileSystem* filesystem;
     __FileDescriptor* descriptor;
+    
+    void resize(unsigned int new_size);
 public:
     File(FileSystem* filesystem, __FileDescriptor* descriptor) : filesystem(filesystem), descriptor(descriptor) {}
     File() : filesystem(nullptr), descriptor(nullptr) {}
@@ -66,11 +68,10 @@ public:
     const char* getType();
     const char* getName();
     unsigned int getSize();
-    void resize(unsigned int new_size);
     Directory getParentDirectory();
     
     void load(void* ptr);
-    void save(void* ptr);
+    void save(void* ptr, unsigned int size);
     
     bool isDirectory();
     bool exists();

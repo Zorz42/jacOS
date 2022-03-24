@@ -1,6 +1,4 @@
 #pragma once
-#include "memory/memory.hpp"
-#include "text/text.hpp"
 
 #define _BLOCK_SIZE 16
 

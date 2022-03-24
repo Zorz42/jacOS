@@ -9,7 +9,7 @@
 #include "disk/disk.hpp"
 #include "gdt/gdt.hpp"
 #include "filesystem/filesystem.hpp"
-#include "array/array.hpp"
+#include <library.hpp>
 
 static void switchToUserMode() {
     asm volatile("cli");
