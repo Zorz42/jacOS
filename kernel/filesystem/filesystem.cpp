@@ -1,5 +1,6 @@
 #include "filesystem.hpp"
 #include "disk/disk.hpp"
+#include "text/text.hpp"
 
 fs::FileSystem *file_system;
 
@@ -50,12 +51,6 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     for(int i = 0; i < disk.size; i++)
         if(getSectorBit(i))
             sectors_taken++;
-    
-    root.name = new char[1];
-    root.name[0] = 0;
-    
-    root.type = new char[1];
-    root.type[0] = 0;
     
     root.sector = root_sector;
     root.size = root_size;

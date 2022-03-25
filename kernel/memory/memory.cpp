@@ -185,7 +185,7 @@ void* mem::alloc(unsigned int size) {
                     head->next = new_head;
                     head = new_head;
                 } else {
-                    debug::out << DEBUG_ERROR << "" << debug::endl;
+                    debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
                     asm("int $0x13");
                 }
             }
@@ -203,6 +203,7 @@ void* mem::alloc(unsigned int size) {
         next_head->size = head->size - size - sizeof(MallocHead);
         next_head->next = head->next;
         next_head->prev = head;
+        
         if(next_head->next)
             next_head->next->prev = next_head;
         
@@ -234,9 +235,10 @@ void mem::free(void* ptr) {
     
     head->free = HEAD_FREE;
     
-    if(head->next && head->next->free == HEAD_FREE)
+    if(head->next != nullptr && head->next->free == HEAD_FREE)
         mergeBlocks(head, (MallocHead*)head->next);
-    if(head->prev && head->prev->free == HEAD_FREE)
+    
+    if(head->prev != nullptr && head->prev->free == HEAD_FREE)
         mergeBlocks((MallocHead*)head->prev, head);
 }
 

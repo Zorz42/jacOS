@@ -1,11 +1,5 @@
 #include "filesystem.hpp"
-
-static bool strcmp(const char* a, const char* b) {
-    for(int i = 0; a[i] != 0 || b[i] != 0; i++)
-        if(a[i] != b[i])
-            return false;
-    return true;
-}
+#include "text/text.hpp"
 
 fs::__Directory* fs::Directory::getDirectory() {
     return (fs::__Directory*)descriptor;
@@ -19,10 +13,10 @@ fs::File fs::Directory::getFile(unsigned int index) {
     return File(filesystem, getDirectory()->files[index]);
 }
 
-fs::File fs::Directory::getFile(const char* name) {
+fs::File fs::Directory::getFile(const String& name) {
     for(int i = 0; i < getFileCount(); i++) {
         File file = getFile(i);
-        if(strcmp(file.getName(), name))
+        if(file.getName() == name)
             return file;
     }
     return File();
@@ -36,21 +30,14 @@ void fs::__Directory::load(fs::FileSystem* filesystem) {
     for(int i = 0; i < dir_file.getSize();) {
         __FileDescriptor* file_descriptor = new __FileDescriptor;
         
-        int name_len = 0;
-        while(dir_data[i + name_len] != 0)
-            name_len++;
-        file_descriptor->name = new char[name_len + 1];
-        for(int j = 0; j <= name_len; j++)
-            file_descriptor->name[j] = dir_data[i + j];
-        i += name_len + 1;
+        file_descriptor->name = (char*)&dir_data[i];
+        i += file_descriptor->name.getSize() + 1;
         
-        int type_len = 0;
-        while(dir_data[i + type_len] != 0)
-            type_len++;
-        file_descriptor->type = new char[type_len + 1];
-        for(int j = 0; j <= type_len; j++)
-            file_descriptor->type[j] = dir_data[i + j];
-        i += type_len + 1;
+        __Directory* directory_desc = new __Directory(*file_descriptor);
+        delete directory_desc;
+        
+        file_descriptor->type = (char*)&dir_data[i];
+        i += file_descriptor->type.getSize() + 1;
         
         file_descriptor->size = *(unsigned int*)&dir_data[i];
         i += 4;
@@ -73,8 +60,9 @@ void fs::__Directory::load(fs::FileSystem* filesystem) {
 
 void fs::Directory::flushMetadata() {
     Array<unsigned char> metadata;
-    for(int i = 0; i < getFileCount(); i++)
+    for(int i = 0; i < getFileCount(); i++) {
         metadata.insert(getDirectory()->files[i]->serializeMetadata(), metadata.getSize());
+    }
     save(&metadata[0], metadata.getSize());
 }
 
@@ -86,10 +74,10 @@ void fs::Directory::removeFile(unsigned int index) {
     flushMetadata();
 }
 
-void fs::Directory::removeFile(const char* name) {
+void fs::Directory::removeFile(const String& name) {
     for(int i = 0; i < getFileCount(); i++) {
         File file = getFile(i);
-        if(strcmp(file.getName(), name))
+        if(file.getName() == name)
             removeFile(i);
     }
 }
@@ -100,4 +88,23 @@ void fs::Directory::removeFile(fs::File file) {
         if(file_ == file)
             removeFile(i);
     }
+}
+
+void fs::Directory::createFile(const String& name, const String& type) {
+    File file = getFile(name);
+    if(file.exists())
+        return;
+    
+    __FileDescriptor* new_file = new __FileDescriptor();
+    getDirectory()->files.push(new_file);
+    
+    new_file->parent_directory = getDirectory();
+    new_file->name = name;
+    new_file->type = type;
+    new_file->flags = 0;
+    
+    fs::File new_file_obj(filesystem, new_file);
+    new_file_obj.resize(0);
+    
+    flushMetadata();
 }

@@ -1,5 +1,6 @@
 #include "filesystem.hpp"
 #include "disk/disk.hpp"
+#include "text/text.hpp"
 
 bool fs::__FileDescriptor::getFlag(int flag) {
     return ((flags << flag) & 1) != 0;
@@ -7,10 +8,10 @@ bool fs::__FileDescriptor::getFlag(int flag) {
 
 Array<unsigned char> fs::__FileDescriptor::serializeMetadata() {
     Array<unsigned char> metadata;
-    for(int i = 0; name[i] != 0; i++)
+    for(int i = 0; i < name.getSize(); i++)
         metadata.push(name[i]);
     metadata.push(0);
-    for(int i = 0; type[i] != 0; i++)
+    for(int i = 0; i < type.getSize(); i++)
         metadata.push(type[i]);
     metadata.push(0);
     
@@ -30,11 +31,11 @@ Array<unsigned char> fs::__FileDescriptor::serializeMetadata() {
     return metadata;
 }
 
-const char* fs::File::getType() {
+const String& fs::File::getType() {
     return descriptor->type;
 }
 
-const char* fs::File::getName() {
+const String& fs::File::getName() {
     return descriptor->name;
 }
 
@@ -152,10 +153,9 @@ void fs::File::resize(unsigned int new_size) {
     
     if(getParentDirectory().descriptor == descriptor)
         filesystem->flushRootMetadata();
-    else
+    else;
         getParentDirectory().flushMetadata();
     filesystem->flushSectorBits();
-    
     delete temp;
 }
 

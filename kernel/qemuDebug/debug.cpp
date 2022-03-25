@@ -17,6 +17,16 @@ debug::_out_stream debug::_out_stream::operator<<(const char* string) {
     return *this;
 }
 
+debug::_out_stream debug::_out_stream::operator<<(const String& string) {
+    if(curr_debug_level < DEBUG_LEVEL)
+        return *this;
+    
+    for(int i = 0; i < string.getSize(); i++)
+        *this << string[i];
+    
+    return *this;
+}
+
 debug::_out_stream debug::_out_stream::operator<<(char character) {
     if(curr_debug_level < DEBUG_LEVEL)
         return *this;

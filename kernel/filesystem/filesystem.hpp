@@ -10,7 +10,7 @@ struct __Directory;
 
 struct __FileDescriptor {
     __Directory* parent_directory;
-    char *name, *type;
+    String name, type;
     unsigned int sector, size;
     unsigned int flags: 16;
     bool getFlag(int flag);
@@ -65,8 +65,8 @@ public:
     
     bool operator==(const File& file);
     
-    const char* getType();
-    const char* getName();
+    const String& getType();
+    const String& getName();
     unsigned int getSize();
     Directory getParentDirectory();
     
@@ -87,10 +87,12 @@ public:
     
     unsigned int getFileCount();
     File getFile(unsigned int index);
-    File getFile(const char* name);
+    File getFile(const String& name);
     void removeFile(unsigned int index);
-    void removeFile(const char* name);
+    void removeFile(const String& name);
     void removeFile(fs::File file);
+    
+    void createFile(const String& name, const String& type);
 };
 
 void init();

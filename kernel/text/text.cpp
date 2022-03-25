@@ -72,6 +72,13 @@ text::_out_stream text::_out_stream::operator<<(const char* string) {
     return *this;
 }
 
+text::_out_stream text::_out_stream::operator<<(const String& string) {
+    if(text_buffer)
+        for(int i = 0; i < string.getSize(); i++)
+            *this << string[i];
+    return *this;
+}
+
 text::_out_stream text::_out_stream::operator<<(char character) {
     if(text_buffer) {
         if(character == '\n')

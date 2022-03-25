@@ -6,10 +6,47 @@ template<class Type>
 class Array {
     Type *data;
     unsigned int size, physical_size;
+public:
+    Array() {
+        size = 0;
+        physical_size = 0;
+        data = nullptr;
+    }
     
+    Type& operator[](int index) const {
+        return data[index];
+    }
+    
+    void operator=(const Array<Type>& array) {
+        size = array.size;
+        physical_size = array.physical_size;
+        data = new Type[physical_size];
+        for(int i = 0; i < size; i++)
+            data[i] = array[i];
+    }
+    
+    Array(const Array<Type>& array) {
+        *this = array;
+    }
+    
+    void reserve(unsigned int reserved_size) {
+        reserved_size = (reserved_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE * _BLOCK_SIZE;
+        
+        if(reserved_size > physical_size) {
+            unsigned int num_new_blocks = reserved_size - physical_size;
+            physical_size += num_new_blocks;
+            Type* new_data = new Type[physical_size];
+            for(int i = 0; i < size; i++)
+                new_data[i] = data[i];
+            delete data;
+            data = new_data;
+        }
+    }
+    
+private:
     void resize(unsigned int new_size) {
         if(new_size > physical_size)
-            reserve((new_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE);
+            reserve((new_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE * _BLOCK_SIZE);
         
         if(new_size > size)
             for(int i = size; i < new_size; i++)
@@ -20,45 +57,15 @@ class Array {
         
         size = new_size;
     }
+    
 public:
-    Array() {
-        size = 0;
-        physical_size = 0;
-        data = new Type[0];
-    }
-    
-    Type& operator[](int index) {
-        return data[index];
-    }
-    
-    Array(Array<Type>& array) {
-        size = array.size;
-        physical_size = array.physical_size;
-        data = new Type[physical_size];
-        for(int i = 0; i < size; i++)
-            data[i] = array[i];
-    }
-    
-    void reserve(unsigned int reserved_size) {
-        reserved_size = (reserved_size + _BLOCK_SIZE - 1) / _BLOCK_SIZE;
-        if(reserved_size > physical_size) {
-            unsigned int num_new_blocks = (reserved_size - physical_size - 1) / _BLOCK_SIZE + 1;
-            physical_size += num_new_blocks * _BLOCK_SIZE;
-            Type* new_data = new Type[physical_size];
-            for(int i = 0; i < size; i++)
-                new_data[i] = data[i];
-            delete data;
-            data = new_data;
-        }
-    }
-    
-    unsigned int getSize() {
+    unsigned int getSize() const {
         return size;
     }
     
     void erase(unsigned int start, unsigned int end) {
         for(int i = start; i < size - (end - start); i++) {
-            data[i] = data[i + end - start];
+            data[i] = data[i + (end - start)];
         }
         resize(size - (end - start));
     }
@@ -96,14 +103,14 @@ public:
         erase(size - 1);
     }
     
-    unsigned int find(const Type& item) {
+    unsigned int find(const Type& item) const {
         for(int i = 0; i < size; i++)
             if(item == data[i])
                 return i;
         return size;
     }
     
-    bool contains(const Type& item) {
+    bool contains(const Type& item) const {
         return find(item) != size;
     }
     

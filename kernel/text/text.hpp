@@ -1,5 +1,7 @@
 #pragma once
 
+#include <library.hpp>
+
 namespace text {
 
 struct _hex {};
@@ -9,6 +11,7 @@ struct _endl {};
 class _out_stream {
 public:
     _out_stream operator<<(const char* string);
+    _out_stream operator<<(const String& string);
     _out_stream operator<<(char character);
     _out_stream operator<<(long number);
     _out_stream operator<<(int number);
