@@ -20,13 +20,15 @@ Array<unsigned char> fs::__FileDescriptor::serializeMetadata() {
     metadata.push((size >> 16) & 0xFF);
     metadata.push((size >> 24) & 0xFF);
     
-    metadata.push(sector & 0xFF);
-    metadata.push((sector >> 8) & 0xFF);
-    metadata.push((sector >> 16) & 0xFF);
-    metadata.push((sector >> 24) & 0xFF);
-    
     metadata.push(flags & 0xFF);
     metadata.push((flags >> 8) & 0xFF);
+    
+    for(int i = 0; i < sectors.getSize(); i++) {
+        metadata.push(sectors[i] & 0xFF);
+        metadata.push((sectors[i] >> 8) & 0xFF);
+        metadata.push((sectors[i] >> 16) & 0xFF);
+        metadata.push((sectors[i] >> 24) & 0xFF);
+    }
     
     return metadata;
 }
@@ -62,16 +64,16 @@ void fs::File::load(void *ptr) {
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
-    unsigned int next_sector = descriptor->sector;
+    unsigned int curr_sector = 0;
     unsigned int bytes_read = 0;
     
     while(bytes_read < getSize()) {
-        disk.read(next_sector, 1, temp->bytes);
-        next_sector = *(unsigned int*)(temp->bytes + 508);
-        for(int i = 0; i < 508 && bytes_read < getSize(); i++) {
+        disk.read(descriptor->sectors[curr_sector], 1, temp->bytes);
+        for(int i = 0; i < 512 && bytes_read < getSize(); i++) {
             iter[bytes_read] = temp->bytes[i];
             bytes_read++;
         }
+        curr_sector++;
     }
     
     delete temp;
@@ -85,18 +87,17 @@ void fs::File::save(void *ptr, unsigned int size) {
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
-    unsigned int next_sector = descriptor->sector;
+    unsigned int curr_sector = 0;
     unsigned int bytes_written = 0;
     
     while(bytes_written < getSize()) {
-        disk.read(next_sector, 1, temp->bytes);
-        for(int i = 0; i < 508 && bytes_written < getSize(); i++) {
+        for(int i = 0; i < 512 && bytes_written < getSize(); i++) {
             temp->bytes[i] = iter[bytes_written];
             bytes_written++;
         }
-        disk.write(next_sector, 1, temp->bytes);
+        disk.write(descriptor->sectors[curr_sector], 1, temp->bytes);
         
-        next_sector = *(unsigned int*)(temp->bytes + 508);
+        curr_sector++;
     }
     
     delete temp;
@@ -107,7 +108,7 @@ void fs::File::resize(unsigned int new_size) {
         return;
     
     unsigned int old_size = getSize();
-    unsigned int new_sector_count = (new_size + 507) / 508, old_sector_count = (old_size + 507) / 508;
+    unsigned int new_sector_count = (new_size + 511) / 512, old_sector_count = (old_size + 511) / 512;
     descriptor->size = new_size;
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
@@ -115,40 +116,16 @@ void fs::File::resize(unsigned int new_size) {
     __Sector* temp = new __Sector;
     
     if(new_sector_count < old_sector_count) {
-        unsigned int curr_sector = descriptor->sector;
-        for(int i = 0; i < old_sector_count; i++) {
-            if(i >= new_sector_count)
-                filesystem->setSectorBit(curr_sector, false);
-            
-            disk.read(curr_sector, 1, temp->bytes);
-            curr_sector = *(unsigned int*)(temp->bytes + 508);
+        while(descriptor->sectors.getSize() > new_sector_count) {
+            filesystem->setSectorBit(descriptor->sectors[descriptor->sectors.getSize() - 1], false);
+            descriptor->sectors.pop();
         }
     } else if(new_sector_count > old_sector_count) {
-        unsigned int curr_sector = descriptor->sector;
-        for(int i = 0; i < old_sector_count - 1; i++) {
-            disk.read(curr_sector, 1, temp->bytes);
-            curr_sector = *(unsigned int*)(temp->bytes + 508);
+        while(descriptor->sectors.getSize() < new_sector_count) {
+            unsigned int new_sector = filesystem->getFreeSector();
+            filesystem->setSectorBit(new_sector, true);
+            descriptor->sectors.push(new_sector);
         }
-        
-        disk.read(curr_sector, 1, temp->bytes);
-        unsigned int next_sector = filesystem->getFreeSector();
-        filesystem->setSectorBit(next_sector, true);
-        *(unsigned int*)(temp->bytes + 508) = next_sector;
-        disk.write(curr_sector, 1, temp->bytes);
-        curr_sector = next_sector;
-        
-        for(int i = 0; i < 512; i++)
-            temp->bytes[i] = 0;
-            
-        for(int i = old_sector_count; i < new_sector_count - 1; i++) {
-            unsigned int next_sector = filesystem->getFreeSector();
-            filesystem->setSectorBit(next_sector, true);
-            *(unsigned int*)(temp->bytes + 508) = next_sector;
-            disk.write(curr_sector, 1, temp->bytes);
-            curr_sector = next_sector;
-        }
-        
-        disk.write(curr_sector, 1, temp->bytes);
     }
     
     if(getParentDirectory().descriptor == descriptor)

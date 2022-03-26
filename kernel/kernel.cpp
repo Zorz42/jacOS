@@ -85,14 +85,6 @@ void kernelMain() {
     
     fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
     
-    root_directory.removeFile("file1");
-    /*root_directory.createFile("new_file", "txt");
-    
-    fs::File new_file = root_directory.getFile("new_file");
-    char* data = new char[100];
-    new_file.save(data, 100);
-    delete data;*/
-    
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
     printDirectory(root_directory, 0);

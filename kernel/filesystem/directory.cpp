@@ -16,8 +16,9 @@ fs::File fs::Directory::getFile(unsigned int index) {
 fs::File fs::Directory::getFile(const String& name) {
     for(int i = 0; i < getFileCount(); i++) {
         File file = getFile(i);
-        if(file.getName() == name)
+        if(file.getName() == name) {
             return file;
+        }
     }
     return File();
 }
@@ -33,18 +34,19 @@ void fs::__Directory::load(fs::FileSystem* filesystem) {
         file_descriptor->name = (char*)&dir_data[i];
         i += file_descriptor->name.getSize() + 1;
         
-        __Directory* directory_desc = new __Directory(*file_descriptor);
-        delete directory_desc;
-        
         file_descriptor->type = (char*)&dir_data[i];
         i += file_descriptor->type.getSize() + 1;
         
         file_descriptor->size = *(unsigned int*)&dir_data[i];
         i += 4;
-        file_descriptor->sector = *(unsigned int*)&dir_data[i];
-        i += 4;
+        
         file_descriptor->flags = *(unsigned short*)&dir_data[i];
         i += 2;
+        
+        for(int j = 0; j < (file_descriptor->size + 511) / 512; j++) {
+            file_descriptor->sectors.push(*(unsigned int*)&dir_data[i]);
+            i += 4;
+        }
         
         file_descriptor->parent_directory = this;
         

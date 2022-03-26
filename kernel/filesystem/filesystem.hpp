@@ -11,8 +11,9 @@ struct __Directory;
 struct __FileDescriptor {
     __Directory* parent_directory;
     String name, type;
-    unsigned int sector, size;
+    unsigned int size;
     unsigned int flags: 16;
+    Array<unsigned int> sectors;
     bool getFlag(int flag);
     Array<unsigned char> serializeMetadata();
 };

@@ -35,7 +35,10 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
     __Sector* first_sector = new __Sector;
     disk.read(0, 1, first_sector->bytes);
     bool is_mountable = *(unsigned int*)(first_sector->bytes + 508) == 0xAABBCCDD;
-    unsigned int root_sector = *(unsigned int*)&first_sector->bytes[0], root_size = *(unsigned int*)&first_sector->bytes[4];
+    unsigned int root_size = *(unsigned int*)&first_sector->bytes[0];
+    Array<unsigned int> root_sectors;
+    for(int i = 0; i < (root_size + 511) / 512; i++)
+        root_sectors.push(*(unsigned int*)&first_sector->bytes[i * 4 + 4]);
     delete first_sector;
     
     if(!is_mountable)
@@ -52,7 +55,7 @@ bool fs::FileSystem::mount(unsigned int disk_id_) {
         if(getSectorBit(i))
             sectors_taken++;
     
-    root.sector = root_sector;
+    root.sectors = root_sectors;
     root.size = root_size;
     root.parent_directory = &root;
     
@@ -101,8 +104,9 @@ void fs::FileSystem::flushRootMetadata() {
     disks::Disk disk = disks::getDisk(disk_id);
     disk.read(0, 1, first_sector->bytes);
     
-    *(unsigned int*)first_sector->bytes = root.sector;
-    *(unsigned int*)(first_sector->bytes + 4) = root.size;
+    *(unsigned int*)first_sector->bytes = root.size;
+    for(int i = 0; i < root.sectors.getSize(); i++)
+        *(unsigned int*)(first_sector->bytes + 4 + i * 4) = root.sectors[i];
     
     disk.write(0, 1, first_sector->bytes);
     
