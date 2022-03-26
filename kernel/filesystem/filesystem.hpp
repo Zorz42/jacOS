@@ -99,4 +99,8 @@ public:
 void init();
 FileSystem* getFileSystem();
 
+File openFile(String path);
+void deleteFile(const String& path);
+void createFile(const String& path);
+
 };

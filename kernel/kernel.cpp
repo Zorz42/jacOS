@@ -87,9 +87,24 @@ void kernelMain() {
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
+    fs::File data_file = fs::openFile("////data/more_data/////file4");
+    char* file_data = new char[data_file.getSize()];
+    
+    data_file.load(file_data);
+    
+    for(int i = 0; i < data_file.getSize() && i < 200; i++) {
+        text::out << file_data[i];
+    }
+    
+    text::out << text::endl;
+    
+    fs::deleteFile("file2");
+    
+    delete file_data;
+    
     printDirectory(root_directory, 0);
     
-    fs::File program_file = root_directory.getFile("program");
+    fs::File program_file = fs::openFile("/program");
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
@@ -106,3 +121,4 @@ void kernelMain() {
     asm volatile("mov $0, %eax");
     asm volatile("int $0x40");
 }
+

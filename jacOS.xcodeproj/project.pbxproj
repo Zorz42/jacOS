@@ -40,6 +40,7 @@
 		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
 		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
 		365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _lib_keys.hpp; sourceTree = "<group>"; };
+		36680F1327EFC52F0083B5C4 /* path.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = path.cpp; sourceTree = "<group>"; };
 		366D22D327EB5AD100A1024E /* file.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
 		366D22D427EB5ADA00A1024E /* directory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = directory.cpp; sourceTree = "<group>"; };
 		36858F2127E7363F00D4B360 /* filesystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filesystem.cpp; sourceTree = "<group>"; };
@@ -215,6 +216,7 @@
 				36858F2127E7363F00D4B360 /* filesystem.cpp */,
 				366D22D327EB5AD100A1024E /* file.cpp */,
 				366D22D427EB5ADA00A1024E /* directory.cpp */,
+				36680F1327EFC52F0083B5C4 /* path.cpp */,
 			);
 			path = filesystem;
 			sourceTree = "<group>";
