@@ -85,7 +85,6 @@ void fs::File::write(const Array<unsigned char>& array) {
     resize(array.getSize());
     
     __Sector* temp = new __Sector;
-    unsigned char* iter = &array[0];
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
@@ -94,7 +93,7 @@ void fs::File::write(const Array<unsigned char>& array) {
     
     while(bytes_written < getSize()) {
         for(int i = 0; i < 512 && bytes_written < getSize(); i++) {
-            temp->bytes[i] = iter[bytes_written];
+            temp->bytes[i] = array[bytes_written];
             bytes_written++;
         }
         disk.write(descriptor->sectors[curr_sector], 1, temp->bytes);

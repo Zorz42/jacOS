@@ -47,6 +47,8 @@ fs::File fs::openFile(String path) {
 
 
 void fs::deleteFile(const String& path) {
+    
+    
     File file = openFile(path);
     if(!file.exists())
         return;

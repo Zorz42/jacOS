@@ -2,6 +2,8 @@
 
 #define _BLOCK_SIZE 16
 
+inline int const_access = 0, ref_access = 0;
+
 template<class Type>
 class Array {
     Type *data;
@@ -13,7 +15,11 @@ public:
         data = nullptr;
     }
     
-    Type& operator[](int index) const {
+    const Type& operator[](int index) const {
+        return data[index];
+    }
+    
+    Type& operator[](int index) {
         return data[index];
     }
     
