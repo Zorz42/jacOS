@@ -47,17 +47,14 @@ fs::File fs::openFile(String path) {
 
 
 void fs::deleteFile(const String& path) {
-    
-    
     File file = openFile(path);
     if(!file.exists())
         return;
     
     Directory parent_directory = file.getParentDirectory();
     String file_name;
-    for(int i = path.getSize() - 1; i >= 0 && path[i] != '/'; i--) {
+    for(int i = path.getSize() - 1; i >= 0 && path[i] != '/'; i--)
         file_name.insert(path[i], 0);
-    }
     
     parent_directory.removeFile(file_name);
 }

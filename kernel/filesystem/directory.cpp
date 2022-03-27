@@ -68,6 +68,13 @@ void fs::Directory::flushMetadata() {
 
 void fs::Directory::removeFile(unsigned int index) {
     fs::File file = getFile(index);
+    
+    if(file.isDirectory()) {
+        Directory dir = (Directory)file;
+        while(dir.getFileCount() != 0)
+            dir.removeFile(0);
+    }
+    
     file.resize(0);
     delete getDirectory()->files[index];
     getDirectory()->files.erase(index);

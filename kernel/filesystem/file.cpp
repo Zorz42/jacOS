@@ -129,7 +129,7 @@ void fs::File::resize(unsigned int new_size) {
         }
     }
     
-    if(getParentDirectory().descriptor == descriptor)
+    if(getParentDirectory() == *this)
         filesystem->flushRootMetadata();
     else;
         getParentDirectory().flushMetadata();
