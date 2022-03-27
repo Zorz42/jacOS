@@ -83,7 +83,7 @@
 				167A739A2626DF7A00328331 /* kernel */,
 				368F99A027ECBA7D00300857 /* library */,
 				368BD4E727D2698400D134DF /* program */,
-				167E4AD62634354300BE05BA /* test-program */,
+				167E4AD62634354300BE05BA /* jshell */,
 				3687C9C027D36BD000F0F62C /* jacOS */,
 				3687C9C127D36BD000F0F62C /* jacOS-build-only */,
 			);
@@ -160,12 +160,12 @@
 			path = boot;
 			sourceTree = "<group>";
 		};
-		167E4AD62634354300BE05BA /* test-program */ = {
+		167E4AD62634354300BE05BA /* jshell */ = {
 			isa = PBXGroup;
 			children = (
 				368BD4EA27D272A800D134DF /* main.cpp */,
 			);
-			path = "test-program";
+			path = jshell;
 			sourceTree = "<group>";
 		};
 		167FB5B9262C41BA00AA5F51 /* ports */ = {

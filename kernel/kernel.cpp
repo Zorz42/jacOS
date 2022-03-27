@@ -93,7 +93,7 @@ void kernelMain() {
     
     printDirectory(root_directory, 0);
     
-    fs::File program_file = fs::openFile("/program");
+    fs::File program_file = fs::openFile("jshell");
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);

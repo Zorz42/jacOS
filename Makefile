@@ -2,7 +2,7 @@
 CC = i386-elf-gcc
 LD = i386-elf-ld
 
-PROGRAM_NAME = test-program
+PROGRAM_NAME = jshell
 
 KERNEL_SOURCES = $(shell find kernel -type f -name '*.cpp') $(shell find library -type f -name '*.cpp') $(shell find kernel -type f -name '*.asm')
 KERNEL_HEADERS = $(shell find kernel -type f -name '*.hpp') $(shell find library -type f -name '*.hpp')
@@ -53,6 +53,7 @@ filesystem.img:
 # rule for custom program
 ${PROGRAM_NAME}.img: ${PROGRAM_OBJ} program/link.ld
 	${LD} -Tprogram/link.ld -o $@ ${PROGRAM_OBJ} --oformat binary
+	cp $@ filesystem/${PROGRAM_NAME}.program
 
 clean:
 	rm -rf build
