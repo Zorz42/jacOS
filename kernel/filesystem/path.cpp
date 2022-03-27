@@ -82,3 +82,45 @@ fs::File fs::copyFile(const String& original_path, const String& copy_path) {
     copy.write(original.read());
     return copy;
 }
+
+fs::File fs::moveFile(String original_path, String new_path) {
+    File original = openFile(original_path);
+    
+    if(!original.exists())
+        return File();
+    
+    if(original_path[0] != '/')
+        original_path.insert('/', 0);
+    while(original_path[original_path.getSize() - 1] != '/')
+        original_path.pop();
+    
+    String new_file_name;
+    if(new_path[0] != '/')
+        new_path.insert('/', 0);
+    while(new_path[new_path.getSize() - 1] != '/') {
+        new_file_name.insert(new_path[new_path.getSize() - 1], 0);
+        new_path.pop();
+    }
+    
+    File original_parent_file = openFile(original_path);
+    Directory original_parent = (Directory)original_parent_file;
+    
+    File new_parent_file = openFile(new_path);
+    Directory new_parent = (Directory)new_parent_file;
+    
+    __FileDescriptor* descriptor = nullptr;
+    for(int i = 0; i < original_parent.getFileCount(); i++)
+        if(original_parent.getFile(i) == original) {
+            descriptor = original_parent.getDirectory()->files[i];
+            original_parent.getDirectory()->files.erase(i);
+        }
+    
+    new_parent.getDirectory()->files.push(descriptor);
+    descriptor->parent_directory = new_parent.getDirectory();
+    descriptor->name = new_file_name;
+    
+    original_parent.flushMetadata();
+    new_parent.flushMetadata();
+    
+    return new_parent.getFile(new_file_name);
+}

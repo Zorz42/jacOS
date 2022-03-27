@@ -90,6 +90,7 @@ void kernelMain() {
     fs::deleteFile("file2");
     fs::createFile("completely_new_file", "txt");
     fs::copyFile("file1", "file3");
+    fs::moveFile("test", "data/test");
     
     printDirectory(root_directory, 0);
     

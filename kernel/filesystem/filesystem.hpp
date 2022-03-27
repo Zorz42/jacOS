@@ -79,6 +79,7 @@ public:
 };
 
 class Directory : public File {
+    friend File moveFile(String original_path, String new_path);
     friend File;
     __Directory* getDirectory();
     void flushMetadata();
@@ -103,5 +104,6 @@ File openFile(String path);
 void deleteFile(const String& path);
 File createFile(String path, const String& file_type);
 File copyFile(const String& original_path, const String& copy_path);
+File moveFile(String original_path, String new_path);
 
 };

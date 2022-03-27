@@ -10,6 +10,7 @@ public:
     const char* getCharArr();
     bool operator==(const String& string) const;
     void operator=(const String& string) {
+        clear();
         for(int i = 0; i < string.getSize(); i++)
             push(string[i]);
     }
