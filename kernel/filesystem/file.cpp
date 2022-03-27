@@ -58,9 +58,10 @@ fs::Directory fs::File::getParentDirectory() {
 }
 
 
-void fs::File::load(void *ptr) {
+Array<unsigned char> fs::File::load() {
     __Sector* temp = new __Sector;
-    unsigned char* iter = (unsigned char*)ptr;
+    Array<unsigned char> data;
+    data.reserve(getSize());
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     
@@ -70,20 +71,21 @@ void fs::File::load(void *ptr) {
     while(bytes_read < getSize()) {
         disk.read(descriptor->sectors[curr_sector], 1, temp->bytes);
         for(int i = 0; i < 512 && bytes_read < getSize(); i++) {
-            iter[bytes_read] = temp->bytes[i];
+            data.push(temp->bytes[i]);
             bytes_read++;
         }
         curr_sector++;
     }
     
     delete temp;
+    return data;
 }
 
-void fs::File::save(void *ptr, unsigned int size) {
-    resize(size);
+void fs::File::save(const Array<unsigned char>& array) {
+    resize(array.getSize());
     
     __Sector* temp = new __Sector;
-    unsigned char* iter = (unsigned char*)ptr;
+    unsigned char* iter = &array[0];
     
     disks::Disk disk = disks::getDisk(filesystem->getDiskId());
     

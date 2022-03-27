@@ -16,17 +16,15 @@ fs::File fs::Directory::getFile(unsigned int index) {
 fs::File fs::Directory::getFile(const String& name) {
     for(int i = 0; i < getFileCount(); i++) {
         File file = getFile(i);
-        if(file.getName() == name) {
+        if(file.getName() == name)
             return file;
-        }
     }
     return File();
 }
 
 void fs::__Directory::load(fs::FileSystem* filesystem) {
     File dir_file = File(filesystem, this);
-    unsigned char* dir_data = new unsigned char[dir_file.getSize()];
-    dir_file.load(dir_data);
+    Array<unsigned char> dir_data = dir_file.load();
     
     for(int i = 0; i < dir_file.getSize();) {
         __FileDescriptor* file_descriptor = new __FileDescriptor;
@@ -65,7 +63,7 @@ void fs::Directory::flushMetadata() {
     for(int i = 0; i < getFileCount(); i++) {
         metadata.insert(getDirectory()->files[i]->serializeMetadata(), metadata.getSize());
     }
-    save(&metadata[0], metadata.getSize());
+    save(metadata);
 }
 
 void fs::Directory::removeFile(unsigned int index) {

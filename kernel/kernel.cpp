@@ -87,20 +87,8 @@ void kernelMain() {
     
     text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
     
-    fs::File data_file = fs::openFile("////data/more_data/////file4");
-    char* file_data = new char[data_file.getSize()];
-    
-    data_file.load(file_data);
-    
-    for(int i = 0; i < data_file.getSize() && i < 200; i++) {
-        text::out << file_data[i];
-    }
-    
-    text::out << text::endl;
-    
     fs::deleteFile("file2");
-    
-    delete file_data;
+    fs::createFile("completely_new_file", "txt");
     
     printDirectory(root_directory, 0);
     
@@ -109,7 +97,10 @@ void kernelMain() {
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
     
-    program_file.load((void*)0x100000);
+    Array<unsigned char> program_data = program_file.load();
+    for(int i = 0; i < program_data.getSize(); i++)
+        *(unsigned char*)(0x100000 + i) = program_data[i];
+    
     typedef int (*CallModule)(void);
     CallModule program = (CallModule)0x100000;
     
