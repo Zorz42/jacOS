@@ -71,8 +71,8 @@ public:
     unsigned int getSize();
     Directory getParentDirectory();
     
-    Array<unsigned char> load();
-    void save(const Array<unsigned char>& array);
+    Array<unsigned char> read();
+    void write(const Array<unsigned char>& array);
     
     bool isDirectory();
     bool exists();
@@ -100,9 +100,8 @@ void init();
 FileSystem* getFileSystem();
 
 File openFile(String path);
-
 void deleteFile(const String& path);
 File createFile(String path, const String& file_type);
-Array<unsigned char> readFile(const String& path);
+File copyFile(const String& original_path, const String& copy_path);
 
 };

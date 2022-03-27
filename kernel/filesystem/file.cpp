@@ -58,7 +58,7 @@ fs::Directory fs::File::getParentDirectory() {
 }
 
 
-Array<unsigned char> fs::File::load() {
+Array<unsigned char> fs::File::read() {
     __Sector* temp = new __Sector;
     Array<unsigned char> data;
     data.reserve(getSize());
@@ -81,7 +81,7 @@ Array<unsigned char> fs::File::load() {
     return data;
 }
 
-void fs::File::save(const Array<unsigned char>& array) {
+void fs::File::write(const Array<unsigned char>& array) {
     resize(array.getSize());
     
     __Sector* temp = new __Sector;

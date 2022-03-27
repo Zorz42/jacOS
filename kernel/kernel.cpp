@@ -89,6 +89,7 @@ void kernelMain() {
     
     fs::deleteFile("file2");
     fs::createFile("completely_new_file", "txt");
+    fs::copyFile("file1", "file3");
     
     printDirectory(root_directory, 0);
     
@@ -97,7 +98,7 @@ void kernelMain() {
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
     
-    Array<unsigned char> program_data = program_file.load();
+    Array<unsigned char> program_data = program_file.read();
     for(int i = 0; i < program_data.getSize(); i++)
         *(unsigned char*)(0x100000 + i) = program_data[i];
     
@@ -112,4 +113,3 @@ void kernelMain() {
     asm volatile("mov $0, %eax");
     asm volatile("int $0x40");
 }
-

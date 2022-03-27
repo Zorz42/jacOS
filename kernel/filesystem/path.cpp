@@ -75,3 +75,10 @@ fs::File fs::createFile(String path, const String& file_type) {
     parent_directory.createFile(file_name, file_type);
     return parent_directory.getFile(file_name);
 }
+
+fs::File fs::copyFile(const String& original_path, const String& copy_path) {
+    File original = openFile(original_path);
+    File copy = createFile(copy_path, original.getType());
+    copy.write(original.read());
+    return copy;
+}

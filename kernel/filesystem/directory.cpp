@@ -24,7 +24,7 @@ fs::File fs::Directory::getFile(const String& name) {
 
 void fs::__Directory::load(fs::FileSystem* filesystem) {
     File dir_file = File(filesystem, this);
-    Array<unsigned char> dir_data = dir_file.load();
+    Array<unsigned char> dir_data = dir_file.read();
     
     for(int i = 0; i < dir_file.getSize();) {
         __FileDescriptor* file_descriptor = new __FileDescriptor;
@@ -63,7 +63,7 @@ void fs::Directory::flushMetadata() {
     for(int i = 0; i < getFileCount(); i++) {
         metadata.insert(getDirectory()->files[i]->serializeMetadata(), metadata.getSize());
     }
-    save(metadata);
+    write(metadata);
 }
 
 void fs::Directory::removeFile(unsigned int index) {
