@@ -56,12 +56,15 @@
 		368BE99527E3A54A004B8573 /* gdt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gdt.cpp; sourceTree = "<group>"; };
 		368BE99627E3A54A004B8573 /* gdt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gdt.hpp; sourceTree = "<group>"; };
 		368BE99727E3BB88004B8573 /* gdt_flush.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = gdt_flush.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
-		368F99A227ECBA9700300857 /* library.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = library.hpp; sourceTree = "<group>"; };
+		368F99A227ECBA9700300857 /* library */ = {isa = PBXFileReference; lastKnownFileType = text; path = library; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		36902F9D27ECC95C00B24E11 /* __string.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __string.hpp; sourceTree = "<group>"; };
 		36902F9E27ECC9F100B24E11 /* string.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = string.cpp; sourceTree = "<group>"; };
 		3693A42227DF95A5005CA2CA /* load_kernel.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = load_kernel.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42327DF97CE005CA2CA /* get_ram_info.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = get_ram_info.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
 		3693A42427DFA508005CA2CA /* print.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = print.asm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.asm.arm; };
+		369692AC27F3849E00086EFF /* __syscalls.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __syscalls.hpp; sourceTree = "<group>"; };
+		369692AD27F3924800086EFF /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
+		369692AE27F3924800086EFF /* __out.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __out.hpp; sourceTree = "<group>"; };
 		36A2FB3E27EA0F8200F60DB5 /* __array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __array.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -272,10 +275,13 @@
 		368F99A027ECBA7D00300857 /* library */ = {
 			isa = PBXGroup;
 			children = (
-				368F99A227ECBA9700300857 /* library.hpp */,
+				368F99A227ECBA9700300857 /* library */,
 				36A2FB3E27EA0F8200F60DB5 /* __array.hpp */,
 				36902F9D27ECC95C00B24E11 /* __string.hpp */,
 				36902F9E27ECC9F100B24E11 /* string.cpp */,
+				369692AC27F3849E00086EFF /* __syscalls.hpp */,
+				369692AE27F3924800086EFF /* __out.hpp */,
+				369692AD27F3924800086EFF /* out.cpp */,
 			);
 			path = library;
 			sourceTree = "<group>";

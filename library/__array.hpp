@@ -2,8 +2,6 @@
 
 #define _BLOCK_SIZE 16
 
-inline int const_access = 0, ref_access = 0;
-
 template<class Type>
 class Array {
     Type *data;

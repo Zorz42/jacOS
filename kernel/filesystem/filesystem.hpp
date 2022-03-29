@@ -1,5 +1,5 @@
 #pragma once
-#include <library.hpp>
+#include <library>
 
 #define DIRECTORY_FLAG 0
 

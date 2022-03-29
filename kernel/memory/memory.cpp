@@ -154,7 +154,7 @@ unsigned int mem::virtualToPhysicalAddress(unsigned int virtual_address, PageDir
 }
 
 
-void* mem::alloc(unsigned int size) {
+void* alloc(unsigned int size) {
     MallocHead* head = (MallocHead*)heap_base;
     
     // find a free block
@@ -172,7 +172,7 @@ void* mem::alloc(unsigned int size) {
                 unsigned int address = (unsigned int)head + sizeof(MallocHead) + head->size;
                 
                 if(current_page_directory != nullptr)
-                    allocateFrame(getPage(address), false, true);
+                    mem::allocateFrame(mem::getPage(address), false, true);
                 
                 if(head->free == HEAD_FREE)
                     head->size += 0x1000;
@@ -221,7 +221,7 @@ static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
     block1->next = block2->next;
 }
 
-void mem::free(void* ptr) {
+void free(void* ptr) {
     MallocHead* head = (MallocHead*)((unsigned int)ptr - sizeof(MallocHead));
     if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
         debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
@@ -326,13 +326,13 @@ void mem::init() {
 }
 
 void *operator new(unsigned long size) {
-    return mem::alloc(size);
+    return alloc(size);
 }
 
 void *operator new[](unsigned long size) {
-    return mem::alloc(size);
+    return alloc(size);
 }
 
 void operator delete(void* ptr, unsigned long _) {
-    mem::free(ptr);
+    free(ptr);
 }

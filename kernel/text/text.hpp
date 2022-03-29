@@ -1,6 +1,6 @@
 #pragma once
 
-#include <library.hpp>
+#include <library>
 
 namespace text {
 

@@ -178,7 +178,7 @@ text::_out_stream text::_out_stream::operator<<(_endl _) {
     return *this;
 }
 
-unsigned int syscallTextOut(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+unsigned int syscallTextOutString(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
     text::out << (const char*)arg1;
     return 0;
 }
@@ -188,7 +188,7 @@ unsigned int syscallTextEndl(unsigned int arg1, unsigned int arg2, unsigned int 
     return 0;
 }
 
-unsigned int syscallTextInt(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+unsigned int syscallTextOutInt(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
     text::out << arg1;
     return 0;
 }
@@ -222,9 +222,9 @@ unsigned int syscallTextSetCursorPos(unsigned int arg1, unsigned int arg2, unsig
 }
 
 void text::init() {
-    interrupts::registerSyscallHandler(&syscallTextOut, "text::out");
+    interrupts::registerSyscallHandler(&syscallTextOutString, "text::out << string");
     interrupts::registerSyscallHandler(&syscallTextEndl, "text::endl");
-    interrupts::registerSyscallHandler(&syscallTextInt, "text << int");
+    interrupts::registerSyscallHandler(&syscallTextOutInt, "text::out << int");
     interrupts::registerSyscallHandler(&syscallTextDec, "text::dec");
     interrupts::registerSyscallHandler(&syscallTextHex, "text::hex");
     interrupts::registerSyscallHandler(&syscallTextFlush, "text::flush");

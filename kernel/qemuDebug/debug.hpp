@@ -1,5 +1,5 @@
 #pragma once
-#include <library.hpp>
+#include <library>
 
 #define DEBUG_ENABLED
 #define DEBUG_LEVEL DEBUG_INFO

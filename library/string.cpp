@@ -1,4 +1,4 @@
-#include <library.hpp>
+#include <library>
 
 String::String(const char* string) {
     unsigned int strlen = 0;
@@ -29,4 +29,10 @@ bool String::operator==(const String& string) const {
             return false;
     
     return true;
+}
+
+String String::operator+(const String& string) const {
+    String result = *this;
+    result.insert(string, result.getSize());
+    return result;
 }

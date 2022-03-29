@@ -24,9 +24,6 @@ struct PageDirectory {
 
 void init();
 
-void* alloc(unsigned int size);
-void free(void* ptr);
-
 void allocateFrame(PageHead* page_head, bool is_kernel, bool is_writable);
 void freeFrame(PageHead* page_head);
 void switchPageDirectory(PageDirectory* page_directory);
@@ -35,7 +32,3 @@ void identityMapPage(unsigned int address, bool is_kernel, bool is_writable, Pag
 unsigned int virtualToPhysicalAddress(unsigned int virtual_address, PageDirectory* page_directory=nullptr);
 
 }
-
-void *operator new(unsigned long size);
-void *operator new[](unsigned long size);
-void operator delete(void* ptr, unsigned long _);
