@@ -79,8 +79,6 @@ void kernelMain() {
     disks::init();
     fs::init();
     
-    switchToUserMode();
-    
     debug::out << "Kernel initialized" << debug::endl;
     
     fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
@@ -98,6 +96,7 @@ void kernelMain() {
     for(int i = 0; i < program_data.getSize(); i++)
         *(unsigned char*)(0x100000 + i) = program_data[i];
     
+    switchToUserMode();
     typedef int (*CallModule)(void);
     CallModule program = (CallModule)0x100000;
     
