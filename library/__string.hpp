@@ -5,6 +5,8 @@ class String : public Array<char> {
 public:
     String(const char* string);
     String(const String& string);
+    String(int number);
+    String(float number);
     String() = default;
     
     const char* getCharArr();

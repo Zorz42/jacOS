@@ -1,5 +1,5 @@
 void kernelMain();
 
-extern "C" void kernelEntry() {
+extern "C" void start() {
     kernelMain();
 }

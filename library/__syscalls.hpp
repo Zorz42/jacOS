@@ -14,3 +14,9 @@
 #define __SYSCALL_SLEEP                    12
 #define __SYSCALL_GET_KEY_EVENT            13
 #define __SYSCALL_GET_KEY_STATE            14
+
+inline unsigned int __sysCall(unsigned int func, unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    unsigned int return_value = 0;
+    asm volatile("int $0x40" : "=a"(return_value) : "a"(func), "b"(arg1), "c"(arg2), "d"(arg3));
+    return return_value;
+}

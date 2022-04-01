@@ -14,6 +14,14 @@ String::String(const String& string) {
     *this = string;
 }
 
+String::String(int number) {
+    
+}
+
+String::String(float number) {
+    
+}
+
 const char* String::getCharArr() {
     reserve(getSize() + 1);
     (*this)[getSize()] = 0;
