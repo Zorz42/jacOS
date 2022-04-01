@@ -54,6 +54,7 @@ filesystem.img:
 ${PROGRAM_NAME}.img: ${PROGRAM_OBJ} program/link.ld
 	${LD} -Tprogram/link.ld -o $@ ${PROGRAM_OBJ} --oformat binary
 	cp $@ filesystem/${PROGRAM_NAME}.program
+	python3 filesystem-builder.py
 
 clean:
 	rm -rf build
