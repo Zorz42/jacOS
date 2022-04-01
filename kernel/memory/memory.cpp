@@ -2,16 +2,7 @@
 #include "text/text.hpp"
 #include "qemuDebug/debug.hpp"
 #include "interrupts/interrupts.hpp"
-
-#define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
-#define HEAD_FREE 'F'
-
-struct MallocHead {
-    unsigned int size;
-    char free;
-    MallocHead *next, *prev;
-    MallocHead* getNext() { if(next != nullptr) return (MallocHead*)((unsigned int)this + (unsigned int)sizeof(MallocHead) + (unsigned int)size); else return nullptr; }
-};
+#include "heap/heap.hpp"
 
 struct MemInfo {
     unsigned int base, base_high;
@@ -19,7 +10,7 @@ struct MemInfo {
     unsigned int type;
 } __attribute__((packed));
 
-static unsigned int heap_base, total_memory;
+static unsigned int total_memory;
 static unsigned int allocated_frames;
 static unsigned int *free_frames, free_frames_size;
 static mem::PageDirectory *kernel_page_directory = nullptr, *current_page_directory = nullptr;
@@ -153,95 +144,6 @@ unsigned int mem::virtualToPhysicalAddress(unsigned int virtual_address, PageDir
         return page_directory->tables[table_index].pages[page_index % 1024].frame * 0x1000 + (virtual_address & 0xFFF);
 }
 
-
-void* alloc(unsigned int size) {
-    MallocHead* head = (MallocHead*)heap_base;
-    
-    // find a free block
-    while(true) {
-        if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-            debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
-            asm("int $0x13");
-        }
-        
-        if(head->free == HEAD_FREE && head->size >= size)
-            break;
-        
-        if(head->next == nullptr) {
-            for(int i = 0; i <= size; i += 0x1000) {
-                unsigned int address = (unsigned int)head + sizeof(MallocHead) + head->size;
-                
-                if(current_page_directory != nullptr)
-                    mem::allocateFrame(mem::getPage(address), false, true);
-                
-                if(head->free == HEAD_FREE)
-                    head->size += 0x1000;
-                else if(head->free == HEAD_ALLOCATED) {
-                    MallocHead* new_head = (MallocHead*)address;
-                    new_head->free = HEAD_FREE;
-                    new_head->size = 0x1000 - sizeof(MallocHead);
-                    new_head->next = nullptr;
-                    new_head->prev = head;
-                    head->next = new_head;
-                    head = new_head;
-                } else {
-                    debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
-                    asm("int $0x13");
-                }
-            }
-            
-            return alloc(size);
-        }
-        
-        head = head->next;
-    }
-    
-    if(head->size - size > sizeof(MallocHead)) {
-        // split that block into two blocks
-        MallocHead* next_head = (MallocHead*)((unsigned int)head + sizeof(MallocHead) + size);
-        next_head->free = HEAD_FREE;
-        next_head->size = head->size - size - sizeof(MallocHead);
-        next_head->next = head->next;
-        next_head->prev = head;
-        
-        if(next_head->next)
-            next_head->next->prev = next_head;
-        
-        head->size = size;
-        head->next = next_head;
-    }
-    
-    head->free = HEAD_ALLOCATED;
-    
-    return (void*)((unsigned int)head + sizeof(MallocHead));
-}
-
-static void mergeBlocks(MallocHead* block1, MallocHead* block2) {
-    block1->size += block2->size + sizeof(MallocHead);
-    block1->next = block2->next;
-}
-
-void free(void* ptr) {
-    MallocHead* head = (MallocHead*)((unsigned int)ptr - sizeof(MallocHead));
-    if(head->free != HEAD_ALLOCATED && head->free != HEAD_FREE) {
-        debug::out << DEBUG_ERROR << "Heap corruption" << debug::endl;
-        asm("int $0x13");
-    }
-    
-    if(head->free == HEAD_FREE) {
-        debug::out << DEBUG_ERROR << "Freeing freed memory" << debug::endl;
-        asm("int $0x16");
-    }
-    
-    head->free = HEAD_FREE;
-    
-    if(head->next != nullptr && head->next->free == HEAD_FREE)
-        mergeBlocks(head, (MallocHead*)head->next);
-    
-    if(head->prev != nullptr && head->prev->free == HEAD_FREE)
-        mergeBlocks((MallocHead*)head->prev, head);
-}
-
 static MemInfo* getFreeRegion() {
     for(int i = 0x7f00; ; i += 24) {
         MemInfo* curr_info = (MemInfo*)i;
@@ -264,31 +166,23 @@ unsigned int syscallGetUsed(unsigned int arg1, unsigned int arg2, unsigned int a
 void mem::init() {
     MemInfo* target_info = getFreeRegion();
     
-    heap_base = 0x400000;
+    unsigned int base = 0x400000;
     total_memory = target_info->base + target_info->length;
     debug::out << "Total memory is: " << debug::hex << total_memory << debug::endl;
     
-    kernel_page_directory = (PageDirectory*)heap_base;
+    kernel_page_directory = (PageDirectory*)base;
+    current_page_directory = kernel_page_directory;
     memset(kernel_page_directory, 0, sizeof(PageDirectory));
-    heap_base += sizeof(PageDirectory);
+    base += sizeof(PageDirectory);
     debug::out << "Kernel page directory is from: " << debug::hex << (unsigned int)kernel_page_directory << " to: " << (unsigned int)kernel_page_directory + sizeof(PageDirectory) << debug::endl;
     
-    heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
+    base = (base - 1) / 0x1000 * 0x1000 + 0x1000;
     
     free_frames_size = 1024 * 1024;
-    free_frames = (unsigned int*)heap_base;
+    free_frames = (unsigned int*)base;
     memset(free_frames, 0, free_frames_size / 8);
-    heap_base += free_frames_size / 8;
+    base += free_frames_size / 8;
     allocated_frames = 0;
-    
-    heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
-    debug::out << "Heap base is at: " << debug::hex << heap_base << debug::endl;
-    
-    MallocHead* main_head = (MallocHead*)heap_base;
-    main_head->free = HEAD_FREE;
-    main_head->size = 0x2000 - sizeof(MallocHead);
-    main_head->next = nullptr;
-    main_head->prev = nullptr;
     
     debug::out << "Setting up first three page tables" << debug::endl;
     int to_alloc[] = {1, 2, 0};
@@ -311,28 +205,11 @@ void mem::init() {
     for(int i = (unsigned int)free_frames; i < (unsigned int)free_frames + free_frames_size / 8; i += 0x1000)
         identityMapPage(i, false, true, kernel_page_directory);
     
-    debug::out << "Identity mapping heap" << debug::endl;
-    MallocHead* curr_head = main_head;
-    while(curr_head->next != nullptr)
-        curr_head = curr_head->next;
-    for(int i = heap_base; i <= (unsigned int)curr_head + sizeof(MallocHead) + curr_head->size; i += 0x1000)
-        identityMapPage(i, false, true, kernel_page_directory);
+    initHeap(base);
     
     debug::out << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);
     
     interrupts::registerSyscallHandler(syscallGetTotal, "getTotalMemory");
     interrupts::registerSyscallHandler(syscallGetUsed, "getUsedMemory");
-}
-
-void *operator new(unsigned long size) {
-    return alloc(size);
-}
-
-void *operator new[](unsigned long size) {
-    return alloc(size);
-}
-
-void operator delete(void* ptr, unsigned long _) {
-    free(ptr);
 }

@@ -63,6 +63,8 @@
 		369692B027F74BFD00086EFF /* __memory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __memory.hpp; sourceTree = "<group>"; };
 		369692B727F74D5300086EFF /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
 		369692B827F74D5300086EFF /* __keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __keyboard.hpp; sourceTree = "<group>"; };
+		369692BA27F74F9100086EFF /* heap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = heap.cpp; sourceTree = "<group>"; };
+		369692BC27F7508700086EFF /* heap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = heap.hpp; sourceTree = "<group>"; };
 		36A2FB3E27EA0F8200F60DB5 /* __array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __array.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,6 +101,7 @@
 				3687C9C727D388E800F0F62C /* interrupts */,
 				368640FA27DB817000B4B35A /* qemuDebug */,
 				167A73A12626DF7A00328331 /* memory */,
+				369692B927F74F8600086EFF /* heap */,
 				168CF16D2631E79400C0C0F2 /* disk */,
 				36858F2027E7362900D4B360 /* filesystem */,
 				167FB5BE262C45C100AA5F51 /* vesa */,
@@ -320,6 +323,15 @@
 				369692B727F74D5300086EFF /* keyboard.cpp */,
 			);
 			path = keyboard;
+			sourceTree = "<group>";
+		};
+		369692B927F74F8600086EFF /* heap */ = {
+			isa = PBXGroup;
+			children = (
+				369692BC27F7508700086EFF /* heap.hpp */,
+				369692BA27F74F9100086EFF /* heap.cpp */,
+			);
+			path = heap;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

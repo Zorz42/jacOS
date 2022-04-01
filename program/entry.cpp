@@ -1,5 +1,5 @@
 extern int main();
 
-int entry() {
+extern "C" int start() {
     return main();
 }
