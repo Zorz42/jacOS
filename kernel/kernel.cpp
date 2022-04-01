@@ -35,16 +35,16 @@ static void switchToUserMode() {
 }
 
 void printDirectory(fs::Directory directory, int offset) {
-    text::out << text::endl;
+    out << endl;
     for(int j = 0; j < offset; j++)
-        text::out << "    ";
-    text::out << directory.getName() << "/" << text::endl;
+        out << "    ";
+    out << directory.getName() << "/" << endl;
     for(int i = 0; i < directory.getFileCount(); i++) {
         fs::File file = directory.getFile(i);
         if(!file.isDirectory()) {
             for(int j = 0; j < offset + 1; j++)
-                text::out << "    ";
-            text::out << file.getSize() << " " << file.getName() << " " << file.getType() << text::endl;
+                out << "    ";
+            out << file.getSize() << " " << file.getName() << " " << file.getType() << endl;
             
             /*char* file_data = new char[file.getSize()];
             
@@ -62,7 +62,7 @@ void printDirectory(fs::Directory directory, int offset) {
             printDirectory(dir, offset + 1);
         }
     }
-    text::out << text::endl;
+    out << endl;
 }
 
 void kernelMain() {
@@ -85,13 +85,7 @@ void kernelMain() {
     
     fs::Directory root_directory = fs::getFileSystem()->getRootDirectory();
     
-    text::out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << text::endl;
-    
-    //while(root_directory.getFileCount() != 0)
-        //root_directory.removeFile(0);
-    //fs::createFile("completely_new_file", "txt");
-    //fs::copyFile("file1", "file3");
-    //fs::moveFile("test", "data/test");
+    out << fs::getFileSystem()->getSectorsTaken() << "/" << disks::getDisk(fs::getFileSystem()->getDiskId()).size << endl;
     
     printDirectory(root_directory, 0);
     

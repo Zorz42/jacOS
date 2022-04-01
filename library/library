@@ -1,5 +1,7 @@
 #pragma once
 
-#include <__array.hpp>
-#include <__string.hpp>
-#include <__out.hpp>
+#include <array/__array.hpp>
+#include <string/__string.hpp>
+#include <out/__out.hpp>
+#include <memory/__memory.hpp>
+#include <keyboard/__keyboard.hpp>

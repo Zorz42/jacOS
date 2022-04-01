@@ -23,10 +23,10 @@ public:
     _out_stream operator<<(_endl _);
 };
 
-inline _hex hex;
+/*inline _hex hex;
 inline _dec dec;
 inline _endl endl;
-inline _out_stream out;
+inline _out_stream out;*/
 
 void init();
 

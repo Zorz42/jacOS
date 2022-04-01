@@ -1,5 +1,5 @@
 #pragma once
-#include <__string.hpp>
+#include <string/__string.hpp>
 
 struct __Hex {};
 struct __Dec {};
@@ -12,6 +12,8 @@ public:
     __Out operator<<(const String& string);
     __Out operator<<(char character);
     __Out operator<<(int number);
+    __Out operator<<(unsigned int number);
+    __Out operator<<(double number);
     __Out operator<<(float number);
     __Out operator<<(__Hex _);
     __Out operator<<(__Dec _);
@@ -24,3 +26,7 @@ inline __Dec dec;
 inline __Endl endl;
 inline __Flush flush;
 inline __Out out;
+
+unsigned int getCursorX();
+unsigned int getCursorY();
+void moveCursorTo(unsigned int x, unsigned int y);

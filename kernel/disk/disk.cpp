@@ -41,7 +41,7 @@ void disks::Disk::read(unsigned int sector, unsigned int sector_count, void* ptr
             // wait until it finishes reading
             while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 3)) == 0)
                 if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
-                    text::out << "Drive read error on byte " << i << " sector " << sector << " sector count " << sector_count << text::endl;
+                    out << "Drive read error on byte " << i << " sector " << sector << " sector count " << sector_count << endl;
                     while(true);
                 }
         }
@@ -67,7 +67,7 @@ void disks::Disk::write(unsigned int sector, unsigned int sector_count, void* pt
             // wait until it finishes writing
             while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 3)) == 0)
                 if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
-                    text::out << "Drive write error on byte " << i << " sector " << sector << " sector count " << sector_count << text::endl;
+                    out << "Drive write error on byte " << i << " sector " << sector << " sector count " << sector_count << endl;
                     while(true);
                 }
         }
@@ -79,7 +79,7 @@ void disks::Disk::write(unsigned int sector, unsigned int sector_count, void* pt
     
     while((ports::byteIn(port_base + ATA_STATUS) & (1 << 7)) != 0)
         if((ports::byteIn(port_base + ATA_STATUS) & (1 << 0)) != 0 || (ports::byteIn(port_base + ATA_STATUS) & (1 << 5)) != 0) {
-            text::out << "Drive cache flush error" << text::endl;
+            out << "Drive cache flush error" << endl;
             while(true);
         }
 }

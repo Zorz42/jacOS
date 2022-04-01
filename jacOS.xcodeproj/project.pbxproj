@@ -33,13 +33,7 @@
 		167FB5C0262C467500AA5F51 /* vesa.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vesa.hpp; sourceTree = "<group>"; };
 		168CF1712631E9BF00C0C0F2 /* disk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disk.cpp; sourceTree = "<group>"; };
 		168CF1722631E9BF00C0C0F2 /* disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disk.hpp; sourceTree = "<group>"; };
-		365DFD1327E5497A009EC3DB /* lib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lib.hpp; sourceTree = "<group>"; };
-		365DFD1427E549A1009EC3DB /* systemCall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = systemCall.cpp; sourceTree = "<group>"; };
-		365DFD1527E54BB9009EC3DB /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
-		365DFD1627E54C54009EC3DB /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
-		365DFD1827E556FC009EC3DB /* time.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
-		365DFD1927E5F38F009EC3DB /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
-		365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _lib_keys.hpp; sourceTree = "<group>"; };
+		365DFD1A27E5F686009EC3DB /* __keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __keys.hpp; sourceTree = "<group>"; };
 		36680F1327EFC52F0083B5C4 /* path.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = path.cpp; sourceTree = "<group>"; };
 		366D22D327EB5AD100A1024E /* file.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
 		366D22D427EB5ADA00A1024E /* directory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = directory.cpp; sourceTree = "<group>"; };
@@ -65,6 +59,10 @@
 		369692AC27F3849E00086EFF /* __syscalls.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __syscalls.hpp; sourceTree = "<group>"; };
 		369692AD27F3924800086EFF /* out.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = out.cpp; sourceTree = "<group>"; };
 		369692AE27F3924800086EFF /* __out.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __out.hpp; sourceTree = "<group>"; };
+		369692AF27F74BFD00086EFF /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
+		369692B027F74BFD00086EFF /* __memory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __memory.hpp; sourceTree = "<group>"; };
+		369692B727F74D5300086EFF /* keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keyboard.cpp; sourceTree = "<group>"; };
+		369692B827F74D5300086EFF /* __keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __keyboard.hpp; sourceTree = "<group>"; };
 		36A2FB3E27EA0F8200F60DB5 /* __array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = __array.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -198,20 +196,6 @@
 			path = disk;
 			sourceTree = "<group>";
 		};
-		365DFD1227E5496B009EC3DB /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				365DFD1327E5497A009EC3DB /* lib.hpp */,
-				365DFD1A27E5F686009EC3DB /* _lib_keys.hpp */,
-				365DFD1427E549A1009EC3DB /* systemCall.cpp */,
-				365DFD1527E54BB9009EC3DB /* out.cpp */,
-				365DFD1627E54C54009EC3DB /* keyboard.cpp */,
-				365DFD1827E556FC009EC3DB /* time.cpp */,
-				365DFD1927E5F38F009EC3DB /* memory.cpp */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
 		36858F2027E7362900D4B360 /* filesystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,7 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				36858F2427E7379300D4B360 /* link.ld */,
-				365DFD1227E5496B009EC3DB /* lib */,
 				368BD4E927D26D3600D134DF /* entry.cpp */,
 			);
 			path = program;
@@ -276,14 +259,67 @@
 			isa = PBXGroup;
 			children = (
 				368F99A227ECBA9700300857 /* library */,
+				369692B327F74C4E00086EFF /* syscalls */,
+				369692B127F74C4500086EFF /* array */,
+				369692B227F74C4900086EFF /* string */,
+				369692B627F74C5D00086EFF /* keyboard */,
+				369692B527F74C5900086EFF /* memory */,
+				369692B427F74C5600086EFF /* out */,
+			);
+			path = library;
+			sourceTree = "<group>";
+		};
+		369692B127F74C4500086EFF /* array */ = {
+			isa = PBXGroup;
+			children = (
 				36A2FB3E27EA0F8200F60DB5 /* __array.hpp */,
+			);
+			path = array;
+			sourceTree = "<group>";
+		};
+		369692B227F74C4900086EFF /* string */ = {
+			isa = PBXGroup;
+			children = (
 				36902F9D27ECC95C00B24E11 /* __string.hpp */,
 				36902F9E27ECC9F100B24E11 /* string.cpp */,
+			);
+			path = string;
+			sourceTree = "<group>";
+		};
+		369692B327F74C4E00086EFF /* syscalls */ = {
+			isa = PBXGroup;
+			children = (
 				369692AC27F3849E00086EFF /* __syscalls.hpp */,
+			);
+			path = syscalls;
+			sourceTree = "<group>";
+		};
+		369692B427F74C5600086EFF /* out */ = {
+			isa = PBXGroup;
+			children = (
 				369692AE27F3924800086EFF /* __out.hpp */,
 				369692AD27F3924800086EFF /* out.cpp */,
 			);
-			path = library;
+			path = out;
+			sourceTree = "<group>";
+		};
+		369692B527F74C5900086EFF /* memory */ = {
+			isa = PBXGroup;
+			children = (
+				369692B027F74BFD00086EFF /* __memory.hpp */,
+				369692AF27F74BFD00086EFF /* memory.cpp */,
+			);
+			path = memory;
+			sourceTree = "<group>";
+		};
+		369692B627F74C5D00086EFF /* keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				369692B827F74D5300086EFF /* __keyboard.hpp */,
+				365DFD1A27E5F686009EC3DB /* __keys.hpp */,
+				369692B727F74D5300086EFF /* keyboard.cpp */,
+			);
+			path = keyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

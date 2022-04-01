@@ -10,6 +10,13 @@ static int cursor_x = 0, cursor_y = 0, text_width, text_height, prev_x = cursor_
 static char* text_buffer = nullptr;
 static PrintMode print_mode = PrintMode::decimal;
 
+namespace text {
+inline _hex hex;
+inline _dec dec;
+inline _endl endl;
+inline _out_stream out;
+}
+
 static void updateChar(int x, int y) {
     gfx::drawChar(x << 3, y << 4, text_buffer[x + y * text_width]);
 }
@@ -183,6 +190,11 @@ unsigned int syscallTextOutString(unsigned int arg1, unsigned int arg2, unsigned
     return 0;
 }
 
+unsigned int syscallTextOutChar(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    text::out << (char)arg1;
+    return 0;
+}
+
 unsigned int syscallTextEndl(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
     text::out << text::endl;
     return 0;
@@ -223,10 +235,7 @@ unsigned int syscallTextSetCursorPos(unsigned int arg1, unsigned int arg2, unsig
 
 void text::init() {
     interrupts::registerSyscallHandler(&syscallTextOutString, "text::out << string");
-    interrupts::registerSyscallHandler(&syscallTextEndl, "text::endl");
-    interrupts::registerSyscallHandler(&syscallTextOutInt, "text::out << int");
-    interrupts::registerSyscallHandler(&syscallTextDec, "text::dec");
-    interrupts::registerSyscallHandler(&syscallTextHex, "text::hex");
+    interrupts::registerSyscallHandler(&syscallTextOutChar, "text::out << char");
     interrupts::registerSyscallHandler(&syscallTextFlush, "text::flush");
     interrupts::registerSyscallHandler(&syscallTextGetCursorX, "text::getCursorX");
     interrupts::registerSyscallHandler(&syscallTextGetCursorY, "text::getCursorY");

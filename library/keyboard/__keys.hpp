@@ -1,7 +1,5 @@
 #pragma once
 
-namespace lib {
-
 enum Key : unsigned char {
     KEY_UNKNOWN = 0x00,
     
@@ -69,5 +67,3 @@ enum Key : unsigned char {
     KEY_RSHIFT        = 0x36,
     KEY_LALT          = 0x38,
 };
-
-}

@@ -11,8 +11,8 @@ KERNEL_OBJ = build/kernel/entry/entry.o $(filter-out build/kernel/entry/entry.o,
 
 BOOT_SOURCES = $(shell find boot -type f -name '*.asm')
 
-PROGRAM_SOURCES = $(shell find ${PROGRAM_NAME} -type f -name '*.cpp') $(shell find program -type f -name '*.cpp')
-PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp') $(shell find program -type f -name '*.hpp')
+PROGRAM_SOURCES = $(shell find ${PROGRAM_NAME} -type f -name '*.cpp') $(shell find program -type f -name '*.cpp') $(shell find library -type f -name '*.cpp')
+PROGRAM_HEADERS = $(shell find ${PROGRAM_NAME} -type f -name '*.hpp') $(shell find program -type f -name '*.hpp') $(shell find library -type f -name '*.hpp')
 PROGRAM_OBJ = build/program/entry.o $(filter-out build/program/entry.o, $(addprefix build/, ${PROGRAM_SOURCES:.cpp=.o}))
 
 # default flags

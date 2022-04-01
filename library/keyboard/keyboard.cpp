@@ -1,12 +1,10 @@
-#include <lib.hpp>
+#include <library>
+#include <syscalls/__syscalls.hpp>
 
-#define SYSCALL_GET_KEY_EVENT 13
-#define SYSCALL_GET_KEY_STATE 14
+static Key scancodeToKey(unsigned char scancode);
 
-static lib::Key scancodeToKey(unsigned char scancode);
-
-lib::KeyEvent lib::getKeyEvent() {
-    unsigned char scancode = lib::__systemCall(SYSCALL_GET_KEY_EVENT);
+KeyEvent getKeyEvent() {
+    unsigned char scancode = __syscall(__SYSCALL_GET_KEY_EVENT);
     KeyEvent event;
     if(scancode == 0) {
         event.key = KEY_UNKNOWN;
@@ -27,7 +25,7 @@ const char* top_chars = "qwertyuiop";
 const char* mid_chars = "asdfghjkl";
 const char* low_chars = "zxcvbnm";
 
-char lib::keyToAscii(Key key) {
+char keyToAscii(Key key) {
     if(key >= KEY_Q && key <= KEY_P)
         return top_chars[key - KEY_Q] + (getKeyState(KEY_LSHIFT) || getKeyState(KEY_RSHIFT) ? 'A' - 'a' : 0);
     
@@ -45,6 +43,6 @@ char lib::keyToAscii(Key key) {
     return 0;
 }
 
-bool lib::getKeyState(Key key) {
-    return __systemCall(SYSCALL_GET_KEY_STATE, (unsigned char)key);
+bool getKeyState(Key key) {
+    return __syscall(__SYSCALL_GET_KEY_STATE, (unsigned char)key);
 }

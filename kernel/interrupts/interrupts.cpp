@@ -181,11 +181,11 @@ extern "C" void irqHandler(Registers registers) {
 }
 
 extern "C" void isrHandler(Registers registers) {
-    text::out << "Received interrupt: " << text::hex << registers.int_no << ": " << exception_messages[registers.int_no] << text::endl;
+    debug::out << "Received interrupt: " << debug::hex << registers.int_no << ": " << exception_messages[registers.int_no] << debug::endl;
     if(registers.int_no == 0xE) { // Paging fault
         unsigned int faulty_address;
         asm volatile("mov %%cr2, %0" : "=r"(faulty_address));
-        text::out << "Faulty address: " << text::hex << faulty_address << text::endl;
+        debug::out << "Faulty address: " << debug::hex << faulty_address << debug::endl;
     }
     while(true)
         asm volatile("hlt");
