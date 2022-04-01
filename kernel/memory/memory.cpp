@@ -2,7 +2,6 @@
 #include "text/text.hpp"
 #include "qemuDebug/debug.hpp"
 #include "interrupts/interrupts.hpp"
-#include "heap/heap.hpp"
 
 struct MemInfo {
     unsigned int base, base_high;
@@ -163,7 +162,15 @@ unsigned int syscallGetUsed(unsigned int arg1, unsigned int arg2, unsigned int a
     return allocated_frames * 0x1000;
 }
 
+unsigned int syscallAllocateFrame(unsigned int arg1, unsigned int arg2, unsigned int arg3) {
+    mem::allocateFrame(mem::getPage(arg1), false, true);
+    return 0;
+}
+    
+
 void mem::init() {
+    interrupts::registerSyscallHandler(&syscallAllocateFrame, "allocateFrame");
+    
     MemInfo* target_info = getFreeRegion();
     
     unsigned int base = 0x400000;
@@ -205,10 +212,10 @@ void mem::init() {
     for(int i = (unsigned int)free_frames; i < (unsigned int)free_frames + free_frames_size / 8; i += 0x1000)
         identityMapPage(i, false, true, kernel_page_directory);
     
-    initHeap(base);
-    
     debug::out << "Enabling paging" << debug::endl;
     switchPageDirectory(kernel_page_directory);
+    
+    initHeap(base);
     
     interrupts::registerSyscallHandler(syscallGetTotal, "getTotalMemory");
     interrupts::registerSyscallHandler(syscallGetUsed, "getUsedMemory");

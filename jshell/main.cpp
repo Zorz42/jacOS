@@ -5,18 +5,6 @@ static char curr_shell_cmd[MAX_CMD_LENGTH];
 static int cmd_length;
 static bool shell_running = true;
 
-void *operator new(unsigned long size) {
-    return nullptr;
-}
-
-void *operator new[](unsigned long size) {
-    return nullptr;
-}
-
-void operator delete(void* ptr, unsigned long _) {
-    
-}
-
 
 static bool strcmp(const char* a, const char* b) {
     for(int i = 0; a[i] != 0 || b[i] != 0; i++)
@@ -28,7 +16,7 @@ static bool strcmp(const char* a, const char* b) {
 static void resetCommand() {
     cmd_length = 0;
     curr_shell_cmd[0] = 0;
-    out << "> ";
+    out << "> " << flush;
 }
 
 static void printSize(int bytes) {
@@ -95,7 +83,6 @@ static void onKeyEvent(KeyEvent key_event) {
 
 int main() {
     resetCommand();
-    out << flush;
     
     while(shell_running) {
         while(shell_running) {

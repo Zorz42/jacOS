@@ -71,7 +71,7 @@ void kernelMain() {
     
     mem::init();
     vesa::init();
-    text::init();
+    initText();
     
     timer::init(1000);
     keyboard::init();

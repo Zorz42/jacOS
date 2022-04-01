@@ -1,6 +1,7 @@
-#include "heap.hpp"
 //#include "qemuDebug/debug.hpp"
 #include "memory/memory.hpp"
+#include <library>
+#include <syscalls/__syscalls.hpp>
 
 #define HEAD_ALLOCATED 'A' // something random which is not likely to spontaneously show up in random memory
 #define HEAD_FREE 'F'
@@ -30,7 +31,7 @@ void* alloc(unsigned int size) {
             for(int i = 0; i <= size; i += 0x1000) {
                 unsigned int address = (unsigned int)head + sizeof(MallocHead) + head->size;
                 
-                mem::allocateFrame(mem::getPage(address), false, true);
+                __syscall(__SYSCALL_ALLOCATE_FRAME, address);
                 
                 if(head->free == HEAD_FREE)
                     head->size += 0x1000;
@@ -116,11 +117,11 @@ void initHeap(unsigned int base) {
     heap_base = base;
     heap_base = (heap_base - 1) / 0x1000 * 0x1000 + 0x1000;
     
+    __syscall(__SYSCALL_ALLOCATE_FRAME, heap_base);
+    
     MallocHead* main_head = (MallocHead*)heap_base;
     main_head->free = HEAD_FREE;
     main_head->size = 0x1000 - sizeof(MallocHead); // make it one frame long
     main_head->next = nullptr;
     main_head->prev = nullptr;
-    
-    mem::identityMapPage(heap_base, false, true);
 }
