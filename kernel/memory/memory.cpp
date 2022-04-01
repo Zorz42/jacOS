@@ -202,6 +202,10 @@ void mem::init() {
     
     debug::out << "Identity mapping first megabyte of memory" << debug::endl;
     for(int i = 0; i < 0x100000; i += 0x1000)
+        identityMapPage(i, /*is_kernel*/true, /*is_writable*/true, kernel_page_directory);
+    
+    debug::out << "Identity mapping stack" << debug::endl;
+    for(int i = 0x100000; i < 0x110000; i += 0x1000)
         identityMapPage(i, /*is_kernel*/false, /*is_writable*/true, kernel_page_directory);
     
     debug::out << "Identity mapping kernel page directory" << debug::endl;

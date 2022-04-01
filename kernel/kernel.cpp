@@ -11,7 +11,7 @@
 #include "filesystem/filesystem.hpp"
 #include <library>
 
-static void switchToUserMode() {
+static void switchToUserMode(unsigned int jump_to) {
     asm volatile("cli");
     asm volatile("mov $0x23, %ax");
     asm volatile("mov %ax, %ds");
@@ -29,9 +29,8 @@ static void switchToUserMode() {
     asm volatile("push %eax");
     
     asm volatile("pushl $0x1B");
-    asm volatile("push $1f");
+    asm volatile("push %0" : : "r"(jump_to));
     asm volatile("iret");
-    asm volatile("1:");
 }
 
 void printDirectory(fs::Directory directory, int offset) {
@@ -45,18 +44,6 @@ void printDirectory(fs::Directory directory, int offset) {
             for(int j = 0; j < offset + 1; j++)
                 out << "    ";
             out << file.getSize() << " " << file.getName() << " " << file.getType() << endl;
-            
-            /*char* file_data = new char[file.getSize()];
-            
-            file.load(file_data);
-            
-            for(int i = 0; i < file.getSize() && i < 200; i++) {
-                text::out << file_data[i];
-            }
-            
-            text::out << text::endl << text::endl;
-            
-            delete file_data;*/
         } else {
             fs::Directory dir = file;
             printDirectory(dir, offset + 1);
@@ -90,20 +77,20 @@ void kernelMain() {
     fs::File program_file = fs::openFile("jshell");
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
-        mem::allocateFrame(mem::getPage(0x100000 + i * 0x1000), false, true);
+        mem::allocateFrame(mem::getPage(0x110000 + i * 0x1000), false, true);
     
     Array<unsigned char> program_data = program_file.read();
     for(int i = 0; i < program_data.getSize(); i++)
-        *(unsigned char*)(0x100000 + i) = program_data[i];
+        *(unsigned char*)(0x110000 + i) = program_data[i];
     
-    switchToUserMode();
-    typedef int (*CallModule)(void);
-    CallModule program = (CallModule)0x100000;
-    
-    program();
+    switchToUserMode(0x110000);
+    //typedef int (*CallModule)(void);
+    //CallModule program = (CallModule)0x110000;
+        
+    //program();
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
-        mem::freeFrame(mem::getPage(0x100000 + i * 0x1000));
+        mem::freeFrame(mem::getPage(0x110000 + i * 0x1000));
     
     asm volatile("mov $0, %eax");
     asm volatile("int $0x40");
