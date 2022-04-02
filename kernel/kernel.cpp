@@ -87,7 +87,4 @@ void kernelMain() {
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::freeFrame(mem::getPage(0x110000 + i * 0x1000));
-    
-    asm volatile("mov $0, %eax");
-    asm volatile("int $0x40");
 }
