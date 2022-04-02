@@ -84,10 +84,6 @@ void kernelMain() {
         *(unsigned char*)(0x110000 + i) = program_data[i];
     
     switchToUserMode(0x110000);
-    //typedef int (*CallModule)(void);
-    //CallModule program = (CallModule)0x110000;
-        
-    //program();
     
     for(int i = 0; i < program_file.getSize() / 0x1000 + 1; i++)
         mem::freeFrame(mem::getPage(0x110000 + i * 0x1000));
