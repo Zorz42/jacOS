@@ -1,5 +1,5 @@
 # jacOS
-My own extremelly simple operating system
+My own extremely simple operating system
 
 It is heavily inspired by this beautiful tutorial: https://github.com/cfenollosa/os-tutorial
 
